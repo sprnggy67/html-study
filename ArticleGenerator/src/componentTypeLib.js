@@ -1,4 +1,5 @@
 function ComponentTypeLib () {
+	this.root = null;
 	this.children = [];
 }
 
@@ -6,28 +7,31 @@ ComponentTypeLib.prototype.getInfo = function() {
 	return 'ComponentTypeLib(' + this.children + ')';
 };
 
-ComponentTypeLib.prototype.loadComponentsFromRegistry = function() {
-	var file = "components.json";
-	$.get(file, null, function (data) {
+ComponentTypeLib.prototype.loadRegistry = function(rootUrl) {
+	this.root = rootUrl;
+	var registryFile = rootUrl + "/components.json";
+	var typeLib = this;
+	$.getJSON(registryFile, function (data) {
 		var length = data.length;
 		for (var i = 0; i < length; i ++) {
 			var child = data[i];
-			this.loadComponent(child);
+			typeLib.loadComponent(child);
 		}
 	});
 };
 
 ComponentTypeLib.prototype.loadComponent = function(name) {
-	var file = formatComponentPath(name);
-	$.get(file, null, function (template) {
+	var file = this.formatComponentPath(name);
+	var typeLib = this;
+	$.get(file, function (template) {
 		var tmpl = jsviews.templates(template);
 		var cmp = new ComponentType(name, tmpl);
-		this.add(cmp);
+		typeLib.add(cmp);
 	});
 };
 
 ComponentTypeLib.prototype.formatComponentPath = function(name) {
-	return "/components/" + name + "/tmpl.html";
+	return this.root + "/components/" + name + "/_tmpl.html";
 };
 
 ComponentTypeLib.prototype.add = function(child) {

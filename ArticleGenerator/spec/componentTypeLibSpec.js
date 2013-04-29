@@ -9,10 +9,14 @@ describe("ComponentTypeLib", function() {
   });
 
  it("should init", function() {
-    var input = new ComponentTypeLib();
-
-    input.loadComponentsFromRegistry();
-    expect(input.length).toEqual(3);
+    runs (function() {
+        typeLib = new ComponentTypeLib();
+        typeLib.loadRegistry("src");
+    });
+    waits(1000);
+    runs (function() {
+       expect(typeLib.length()).toEqual(4);
+    });
  });
 
  it("should add component types", function() {
