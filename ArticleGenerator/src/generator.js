@@ -1,20 +1,28 @@
-var isCommonJS = typeof window == "undefined" && typeof exports == "object";
+function Generator(typeLib) {
+    this.typeLib = typeLib;
+}
 
 /**
- * Top level namespace for Jasmine, a lightweight JavaScript BDD/spec/testing framework.
- *
- * @namespace
- */
-var generator = {};
-if (isCommonJS) exports.generator = generator;
-/**
- * @private
- */
-generator.unimplementedMethod_ = function() {
-  throw new Error("unimplemented method");
-};
+ Generates the <body> element for a document from an input of the form:
 
-generator.generate = function(input) {
-	return "Foo";
+ input = {
+      "name":"Big Text",
+      "root":{
+        type:"Text",
+        data:"Hello World"
+      }
+ };
+
+ */
+Generator.prototype.generate = function(input) {
+	var component = input.root;
+	var typeDef = typeLib.objectByType(component.type);
+	if (typeDef == null) {
+		return null;
+	} else {}
+		var template = typeDef.getTemplate();
+		var result = '<body>' + jsRender.render(template, null, component) + '</body>';
+		return result;
+	}
 };
 

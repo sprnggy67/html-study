@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>jsRender Exploration</title>
+
+  <script type="text/javascript" src="../../lib/jq.mobi.js"></script>
+  <script type="text/javascript" src="../../lib/jsrender-1.0.js"></script>
+
+  <script id="myMovieTemplate" type="text/x-jsrender ">
+  <div>{{:#index+1}}: {{:name}} ({{:releaseYear}})</div>
+  </script>
+
+  <script type="text/javascript">
+  (function() {
+    var movies = [
+    { name:"Star Wars", releaseYear:"1979"},
+    { name:"Raiders of the Lost Article", releaseYear:"1982"}
+    ];
+    
+    var currentWindowOnload = window.onload;
+
+    window.onload = function() {
+      if (currentWindowOnload) {
+        currentWindowOnload();
+      }
+      onLoad();
+    };
+
+    function onLoad() {
+      var templateString = $("#myMovieTemplate").html();
+      var template = jsviews.templates(templateString);
+      var htmlString = template.render(movies);
+      $("#movieContainer").html(htmlString);
+
+      $.get("_item.tmpl.html", function (template) {
+        var tmpl = jsviews.templates(template);
+        var htmlString = tmpl.render(movies);
+        $("#movieContainer2").html(htmlString);
+      });
+
+    }
+
+  })();
+  </script>
+
+</head>
+
+<body>
+  This HTML demonstrates how you can pull a string out of a script tag and use it as a jsRender template. 
+  The templates are loaded in two ways:
+
+  <h1>From a script tag</h1>
+  <div id="movieContainer">
+  </div>
+
+  <h1>From an external file</h1>
+  <div id="movieContainer2">
+  </div>
+</body>
+</html>
