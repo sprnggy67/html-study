@@ -1,5 +1,4 @@
 function ComponentTypeLib () {
-	this.root = null;
 	this.children = [];
 }
 
@@ -7,38 +6,18 @@ ComponentTypeLib.prototype.getInfo = function() {
 	return 'ComponentTypeLib(' + this.children + ')';
 };
 
-ComponentTypeLib.prototype.loadRegistry = function(rootUrl) {
-	this.root = rootUrl;
-	var registryFile = rootUrl + "/components.json";
-	var typeLib = this;
-	$.getJSON(registryFile, function (data) {
-		var length = data.length;
-		for (var i = 0; i < length; i ++) {
-			var child = data[i];
-			typeLib.loadComponent(child);
-		}
-	});
-};
-
-ComponentTypeLib.prototype.loadComponent = function(name) {
-	var file = this.formatComponentPath(name);
-	var typeLib = this;
-	$.get(file, function (template) {
-		var tmpl = jsviews.templates(template);
-		var cmp = new ComponentType(name, tmpl);
-		typeLib.add(cmp);
-	});
-};
-
-ComponentTypeLib.prototype.formatComponentPath = function(name) {
-	return this.root + "/components/" + name + "/_tmpl.html";
+ComponentTypeLib.prototype.loadRegistry = function() {
+	this.add(makeComponentType("headline", "<h1>{{:headline}}</h1>"));
+	this.add(makeComponentType("body", "{{:body}}"));
 };
 
 ComponentTypeLib.prototype.add = function(child) {
+	if (!(child instanceof ComponentType))
+		throw "Invalid child:" + child;
 	this.children.push(child); 
 };
 
-ComponentTypeLib.prototype.length = function(child) {
+ComponentTypeLib.prototype.length = function() {
 	return this.children.length; 
 };
 
@@ -46,11 +25,11 @@ ComponentTypeLib.prototype.objectAt = function(index) {
 	return this.children[index]; 
 };
 
-ComponentTypeLib.prototype.objectByType = function(type) {
+ComponentTypeLib.prototype.objectNamed = function(name) {
 	var length = this.children.length;
 	for (var i = 0; i < length; i ++) {
 		var child = this.children[i];
-		if (type == child.getType())
+		if (name == child.getName())
 			return child;
 	}
 	return null;

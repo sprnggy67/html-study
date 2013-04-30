@@ -8,15 +8,10 @@ describe("ComponentTypeLib", function() {
     expect(actualOutput).toBeDefined();
   });
 
- it("should init", function() {
-    runs (function() {
-        typeLib = new ComponentTypeLib();
-        typeLib.loadRegistry("src");
-    });
-    waits(1000);
-    runs (function() {
-       expect(typeLib.length()).toEqual(4);
-    });
+ it("should load registry", function() {
+    typeLib = new ComponentTypeLib();
+    typeLib.loadRegistry();
+    expect(typeLib.length()).toBeGreaterThan(0);
  });
 
  it("should add component types", function() {
@@ -30,6 +25,17 @@ describe("ComponentTypeLib", function() {
     input.add(c2);
     expect(input.objectAt(0)).toBe(c1);
     expect(input.objectAt(1)).toBe(c2);
+ });
+
+ it("throws an exception when adding invalid children", function() {
+    var input = new ComponentTypeLib();
+    var exceptionThrown = false;
+    try {
+        input.add("Foo", "Bar");
+    } catch (e) {
+        exceptionThrown = true;
+    }
+    expect(exceptionThrown).toBe(true);
  });
 
  it("should return size 0 when empty", function() {
@@ -48,24 +54,24 @@ describe("ComponentTypeLib", function() {
     expect(actualSize).toEqual(expectedSize);
  });
 
- it("should return children by type", function() {
+ it("should return children named:", function() {
     var input = new ComponentTypeLib();
 
     var c1 = new ComponentType("Text","{{>data}}");
     input.add(c1);
-    expect(input.objectByType("Text")).toBe(c1);
+    expect(input.objectNamed("Text")).toBe(c1);
  
     var c2 = new ComponentType("Image","{{>data}}");
     input.add(c2);
-    expect(input.objectByType("Text")).toBe(c1);
-    expect(input.objectByType("Image")).toBe(c2);
+    expect(input.objectNamed("Text")).toBe(c1);
+    expect(input.objectNamed("Image")).toBe(c2);
  });
 
- it("should return null when child of type does not exist", function() {
+ it("should return null when child named does not exist", function() {
     var input = new ComponentTypeLib();
 
     var c1 = new ComponentType("Text","{{>data}}");
     input.add(c1);
-    expect(input.objectByType("Image")).toBeNull();
+    expect(input.objectNamed("Image")).toBeNull();
  });
 });

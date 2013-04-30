@@ -6,7 +6,16 @@ describe("ComponentType", function() {
   it("should be defined", function() {
     var actualOutput = new ComponentType("Text", "{{>data}}");
     expect(actualOutput).toBeDefined();
+    expect(actualOutput.getName()).toEqual("Text");
+    expect(actualOutput.getTemplate()).toBeDefined();
   });
+
+ it("implements makeComponentType", function() {
+    var actualOutput = makeComponentType("Text", "{{>data}}");
+    expect(actualOutput).toBeDefined();
+    expect(actualOutput.getName()).toEqual("Text");
+    expect(actualOutput.getTemplate()).toBeDefined();
+ });
 
  it("implements getInfo", function() {
     var input = new ComponentType("Text","{{>data}}");
@@ -18,7 +27,7 @@ describe("ComponentType", function() {
  it("implements getName", function() {
     var input = new ComponentType("Text","{{>data}}");
     var expectedOutput = "Text";
-    var actualOutput = input.getType();
+    var actualOutput = input.getName();
     expect(actualOutput).toEqual(expectedOutput);
  });
 
@@ -27,5 +36,12 @@ describe("ComponentType", function() {
     var expectedOutput = "{{>data}}";
     var actualOutput = input.getTemplate();
     expect(actualOutput).toEqual(expectedOutput);
+ });
+
+it("implements does render", function() {
+    var cType = makeComponentType("Text","{{>data}}");
+    var article = { "data":"FooBar" };
+    var actualOutput = cType.render(article);
+    expect(actualOutput).toEqual(article.data);
  });
 });
