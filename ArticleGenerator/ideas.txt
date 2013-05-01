@@ -1,0 +1,132 @@
+How can I render an article within a template?
+
+Given an article object ..
+
+    var simplifiedArticle = {
+      "id":"001",
+      "children":[
+        { "id":"001.1", "headline":"h1", "standFirst":"sf1", "body":"b1", "image":"img1.jpg" },
+      ]
+    };
+
+And an article template ..
+
+    var template = {
+      "name":"Flow",
+      "root":{
+        componentType:"flow",
+        children: [
+          {
+            componentType:"headline",
+            dataPath:"children",
+            dataIndex:0
+            realData: // has to be linked at render time.
+          },
+          {
+            componentType:"body",
+            dataPath:"children",
+            dataIndex:0
+            realData: // has to be linked at render time.
+          }
+        ]
+      }
+    };
+
+
+Define the component templates ..
+
+    jsviews.templates({
+      headline: "<h1>{{:realData.headline}}</h1>",
+      body: "{{:realData.body}}",
+      flow: "
+        <div>
+          {{for children tmpl="component"}}
+        </div>
+      ",
+    });
+
+Add the real article data to the template data. This gives us a single data model which can be rendered using jsRender.
+
+Now we can render the article template using js render ..
+
+    var html = jsviews.render.flow(theTemplateAndArticleData);
+
+What about a grid?  A grid looks like this ..
+
+    var template = {
+      "root":{
+        componentType:"grid",
+        rows:3,
+        columns:4,
+        children: [
+          {
+            left:0,
+            top:0,
+            width:2,
+            height:1,
+            component:{
+              componentType:"headline",
+              dataPath:"children",
+              dataIndex:0,
+              realData: // has to be linked at render time.
+            }
+          },
+          {
+            left:0,
+            top:1,
+            width:2,
+            height:2
+            component:{
+              componentType:"body",
+              dataPath:"children",
+              dataIndex:0,
+              realData: // has to be linked at render time.
+            }
+          }
+        ]
+      }
+    };
+
+The grid will be rendered as a series of divs which are positioned absolutely.  We can specify the left, right, top and bottom to a px value or a % value.  The grid HTML would look like this.
+
+    <div>
+      {{for children}}
+        <div left={{:left * ~root.columnWidth}} top={{:top * ~root.rowWidth}} etc>
+          {{if component tmpl="component"/}}
+        </div>
+      {{/for}}
+    </div>
+
+This leads to the following set of templates ..
+
+    $.templates({
+      headline: "<h1>{{:realData.headline}}</h1>",
+      body: "{{:realData.body}}",
+      flow: "
+        <div>
+          {{for children tmpl="component"}}
+        </div>
+      ",
+      grid: "
+        <div>
+          {{for children}}
+            <div left={{:left * ~root.columnWidth}} top={{:top * ~root.rowWidth}} etc>
+              {{for component tmpl="component"/}}
+            </div>
+          {{/for}}
+        </div>
+      ",
+      component: "
+        {{if componentType==="headline" tmpl="headline"/}}
+        {{if componentType==="body" tmpl="body"/}}
+        {{if componentType==="flow" tmpl="flow"/}}
+        {{if componentType==="grid" tmpl="grid"/}}
+      "
+    });
+
+
+
+
+
+
+
