@@ -1,35 +1,41 @@
-/**
- * Creates a new component type with a name and template string.
- */
-makeComponentType = function(name, htmlTmpl, composite) {
-	var jsRenderTmpl = jsviews.templates(htmlTmpl);
-	if (jsRenderTmpl == null)
-		throw "Invalid template:" + htmlTmpl;
-	var cmp = new ComponentType(name, jsRenderTmpl);
-	if (composite)
-		cmp.setComposite(composite);
-	return cmp;
-}
+var ds = ds || {};
 
-function ComponentType (name, template) {
+/**
+ * Creates a new component type with a name and a jsRender template.
+ * If you have a template string use makeComponentType instead.
+ */
+ds.ComponentType = function(name, template) {
     this.name = name;
     this.template = template;
     this.composite = false;
 }
  
-ComponentType.prototype.getInfo = function() {
+/**
+ * Creates a new component type with a name and template string.
+ */
+ds.ComponentType.makeComponentType = function(name, htmlTmpl, composite) {
+	var jsRenderTmpl = jsviews.templates(htmlTmpl);
+	if (jsRenderTmpl == null)
+		throw "Invalid template:" + htmlTmpl;
+	var cmp = new ds.ComponentType(name, jsRenderTmpl);
+	if (composite)
+		cmp.setComposite(composite);
+	return cmp;
+}
+
+ds.ComponentType.prototype.getInfo = function() {
     return 'ComponentType(' + this.name + ')';
 };
 
-ComponentType.prototype.getName = function() {
+ds.ComponentType.prototype.getName = function() {
     return this.name;
 };
 
-ComponentType.prototype.getTemplate = function() {
+ds.ComponentType.prototype.getTemplate = function() {
     return this.template;
 };
 
-ComponentType.prototype.render = function(data, targetSelector) {
+ds.ComponentType.prototype.render = function(data, targetSelector) {
 	var htmlString = this.template.render(data);
 	if (targetSelector) {
 		$(targetSelector).html(htmlString);
@@ -37,10 +43,10 @@ ComponentType.prototype.render = function(data, targetSelector) {
 	return htmlString;
 };
 
-ComponentType.prototype.setComposite = function(composite) {
+ds.ComponentType.prototype.setComposite = function(composite) {
 	this.composite = composite;
 };
 
-ComponentType.prototype.isComposite = function() {
+ds.ComponentType.prototype.isComposite = function() {
 	return this.composite;
 };

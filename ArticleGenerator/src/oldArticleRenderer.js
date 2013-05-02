@@ -17,15 +17,17 @@
  to let jsRender do all of the work for me.
  */
 
-function OldArticleRenderer(typeLib) {
+var ds = ds || {};
+
+ds.OldArticleRenderer = function(typeLib) {
     this.typeLib = typeLib;
 }
 
-OldArticleRenderer.prototype.render = function(template, article) {
+ds.OldArticleRenderer.prototype.render = function(template, article) {
 	return this.renderComponent(template.root, article);
 };
 
-OldArticleRenderer.prototype.renderComponent = function(component, article) {
+ds.OldArticleRenderer.prototype.renderComponent = function(component, article) {
 	var typeDef = typeLib.objectNamed(component.componentType);
 	if (typeDef == null || typeDef.getTemplate() == null) {
 		console.log("Invalid component type:" + component);
@@ -33,13 +35,13 @@ OldArticleRenderer.prototype.renderComponent = function(component, article) {
 	} 
 
 	if (typeDef.isComposite()) {
-		return null;
+		throw "renderComponent cannot render composites";
 	} else {
 		return this.renderSimpleComponent(component, article);
 	}	
 };
 
-OldArticleRenderer.prototype.renderSimpleComponent = function(component, article) {
+ds.OldArticleRenderer.prototype.renderSimpleComponent = function(component, article) {
 	var typeDef = typeLib.objectNamed(component.componentType);
 	var input = this.findPath(article, component.dataPath);
 	if (component.dataIndex != undefined) 
@@ -48,7 +50,7 @@ OldArticleRenderer.prototype.renderSimpleComponent = function(component, article
 	return output;
 };
 
-OldArticleRenderer.prototype.findPath = function(obj, path) {
+ds.OldArticleRenderer.prototype.findPath = function(obj, path) {
   var paths = path.split('.');
   var current = obj;
   var i;

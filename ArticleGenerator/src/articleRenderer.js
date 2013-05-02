@@ -23,15 +23,17 @@
  The tests for this can be found in articleRendererSpec.js
  */
 
-function ArticleRenderer() {
-	if (!initialised)
-		initClass();
+var ds = ds || {};
+
+ds.ArticleRenderer = function() {
+	if (!ds.ArticleRenderer.initialised)
+		ds.ArticleRenderer.initClass();
 }
 
-var initialised = false;
+ds.ArticleRenderer.initialised = false;
 
-initClass = function() {
-	initialised = true;
+ds.ArticleRenderer.initClass = function() {
+	ds.ArticleRenderer.initialised = true;
 	jsviews.templates({
 		headline: '<h1>{{:realData.headline}}</h1>',
 		standfirst: '<h2>{{:realData.standFirst}}</h2>',
@@ -65,7 +67,7 @@ initClass = function() {
  Render the complete HTML for a given template and article.
  Return the HTML.
  */
-ArticleRenderer.prototype.renderPage = function(template, article) {
+ds.ArticleRenderer.prototype.renderPage = function(template, article) {
 	// Clone the template and add article data to it.
 	// This gives us a single model which can be passed to the jsRender renderer.
 	var inputData = JSON.parse(JSON.stringify(template));
@@ -84,7 +86,7 @@ ArticleRenderer.prototype.renderPage = function(template, article) {
  The component may contain sub components.
  Return the HTML.
  */
-ArticleRenderer.prototype.renderComponent = function(component, article) {
+ds.ArticleRenderer.prototype.renderComponent = function(component, article) {
 	// Clone the component and add article data to it.
 	// This gives us a single model which can be passed to the jsRender renderer.
 	var inputData = JSON.parse(JSON.stringify(component));
@@ -108,7 +110,7 @@ ArticleRenderer.prototype.renderComponent = function(component, article) {
  The algorithm also recursively descends when it finds "children" or a property called "component" in the
  root object.
  */
-ArticleRenderer.prototype.link = function(component, article) {
+ds.ArticleRenderer.prototype.link = function(component, article) {
 	if (component.dataPath) {
 		var realData = this.findData(article, component.dataPath);
 		if (component.dataIndex != undefined) 
@@ -127,7 +129,7 @@ ArticleRenderer.prototype.link = function(component, article) {
 	return component;
 };
 
-ArticleRenderer.prototype.findData = function(obj, path) {
+ds.ArticleRenderer.prototype.findData = function(obj, path) {
 	var paths = path.split('.');
 	var current = obj;
 	var i;

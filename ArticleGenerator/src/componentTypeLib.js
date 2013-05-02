@@ -10,36 +10,38 @@
  
  */
 
-function ComponentTypeLib () {
+var ds = ds || {};
+
+ds.ComponentTypeLib = function() {
 	this.children = [];
 }
 
-ComponentTypeLib.prototype.getInfo = function() {
+ds.ComponentTypeLib.prototype.getInfo = function() {
 	return 'ComponentTypeLib(' + this.children + ')';
 };
 
-ComponentTypeLib.prototype.loadRegistry = function() {
-	this.add(makeComponentType("headline", "<h1>{{:headline}}</h1>"));
-	this.add(makeComponentType("standFirst", "<h2>{{:standFirst}}</h2>"));
-	this.add(makeComponentType("body", "{{:body}}"));
-	this.add(makeComponentType("image", '<img src="{{:image}}">'));
+ds.ComponentTypeLib.prototype.loadRegistry = function() {
+	this.add(ds.ComponentType.makeComponentType("headline", "<h1>{{:headline}}</h1>"));
+	this.add(ds.ComponentType.makeComponentType("standFirst", "<h2>{{:standFirst}}</h2>"));
+	this.add(ds.ComponentType.makeComponentType("body", "{{:body}}"));
+	this.add(ds.ComponentType.makeComponentType("image", '<img src="{{:image}}">'));
 };
 
-ComponentTypeLib.prototype.add = function(child) {
-	if (!(child instanceof ComponentType))
+ds.ComponentTypeLib.prototype.add = function(child) {
+	if (!(child instanceof ds.ComponentType))
 		throw "Invalid child:" + child;
 	this.children.push(child); 
 };
 
-ComponentTypeLib.prototype.length = function() {
+ds.ComponentTypeLib.prototype.length = function() {
 	return this.children.length; 
 };
 
-ComponentTypeLib.prototype.objectAt = function(index) {
+ds.ComponentTypeLib.prototype.objectAt = function(index) {
 	return this.children[index]; 
 };
 
-ComponentTypeLib.prototype.objectNamed = function(name) {
+ds.ComponentTypeLib.prototype.objectNamed = function(name) {
 	var length = this.children.length;
 	for (var i = 0; i < length; i ++) {
 		var child = this.children[i];

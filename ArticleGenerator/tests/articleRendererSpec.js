@@ -1,4 +1,4 @@
-describe("ArticleRenderer", function() {
+describe("ds.ArticleRenderer", function() {
  
 	var navigationArticle = {
 		"id":"001",
@@ -36,12 +36,12 @@ describe("ArticleRenderer", function() {
 	});
 
 	it("should be defined", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 		expect(renderer).toBeDefined();
 	});
 
 	it("should findData in shallow objects", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 
 		var expectedOutput = "001";
 		var actualOutput = renderer.findData(navigationArticle, "id");
@@ -49,7 +49,7 @@ describe("ArticleRenderer", function() {
 	});
 
 	it("should findData in deep objects", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 
 		var expectedOutput = "red";
 		var actualOutput = renderer.findData(navigationArticle, "style.textColor");
@@ -57,7 +57,7 @@ describe("ArticleRenderer", function() {
 	});
 
 	it("should generate the first headline component", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 		var component = {
 			componentType:"headline",
 			dataPath:"children",
@@ -69,7 +69,7 @@ describe("ArticleRenderer", function() {
 	});
 
 	it("should generate the second headline component", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 		var component = {
 			componentType:"headline",
 			dataPath:"children",
@@ -81,7 +81,7 @@ describe("ArticleRenderer", function() {
 	});
 
 	it("should generate the first body component", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 		var component = {
 			componentType:"body",
 			dataPath:"children",
@@ -93,7 +93,7 @@ describe("ArticleRenderer", function() {
 	});
 
 	it("should generate the first image component", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 		var component = {
 			componentType:"image",
 			dataPath:"children",
@@ -105,7 +105,7 @@ describe("ArticleRenderer", function() {
 	});
 
 	it("should generate the first standfirst component", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 		var component = {
 			componentType:"standfirst",
 			dataPath:"children",
@@ -117,7 +117,7 @@ describe("ArticleRenderer", function() {
 	});
 
 	it("should generate a flow component for the first article", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 		var component = {
 			componentType:"flow",
 			children: [
@@ -139,7 +139,7 @@ describe("ArticleRenderer", function() {
 	});
 
 	it("should generate a flow component for the second article", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 		var component = {
 			componentType:"flow",
 			children: [
@@ -161,7 +161,7 @@ describe("ArticleRenderer", function() {
 	});
 
 	it("should generate a grid component for the first article", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 		var component = {
 			componentType:"grid",
 			orientation:"landscape",
@@ -202,7 +202,7 @@ describe("ArticleRenderer", function() {
 	});
 
 	it("should generate a simple HTML page with a headline component", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 		var template = {
 			root: {
 				componentType:"headline",
@@ -216,7 +216,7 @@ describe("ArticleRenderer", function() {
 	});
 
 	it("should generate a complex HTML page with a grid component", function() {
-		var renderer = new ArticleRenderer();
+		var renderer = new ds.ArticleRenderer();
 		var template = {
 			root: {
 				componentType:"grid",

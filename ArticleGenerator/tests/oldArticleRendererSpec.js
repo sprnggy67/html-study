@@ -1,4 +1,4 @@
-describe("OldArticleRenderer", function() {
+describe("ds.OldArticleRenderer", function() {
  
   var typeLib;
 
@@ -35,17 +35,17 @@ describe("OldArticleRenderer", function() {
   };
 
   beforeEach(function() {
-    typeLib = new ComponentTypeLib();
+    typeLib = new ds.ComponentTypeLib();
     typeLib.loadRegistry();
   });
 
   it("should be defined", function() {
-    var renderer = new OldArticleRenderer(typeLib);
+    var renderer = new ds.OldArticleRenderer(typeLib);
     expect(renderer).toBeDefined();
   });
 
   it("should navigate into shallow objects", function() {
-    var renderer = new OldArticleRenderer(typeLib);
+    var renderer = new ds.OldArticleRenderer(typeLib);
 
     var expectedOutput = "001";
     var actualOutput = renderer.findPath(navigationArticle, "id");
@@ -53,7 +53,7 @@ describe("OldArticleRenderer", function() {
   });
 
   it("should navigate into deep objects", function() {
-    var renderer = new OldArticleRenderer(typeLib);
+    var renderer = new ds.OldArticleRenderer(typeLib);
 
     var expectedOutput = "red";
     var actualOutput = renderer.findPath(navigationArticle, "style.textColor");
@@ -61,7 +61,7 @@ describe("OldArticleRenderer", function() {
   });
 
   it("should generate the first headline component", function() {
-    var renderer = new OldArticleRenderer(typeLib);
+    var renderer = new ds.OldArticleRenderer(typeLib);
     var template = {
       "name":"Simple Headline",
       "root":{
@@ -76,7 +76,7 @@ describe("OldArticleRenderer", function() {
   });
 
   it("should generate the second headline component", function() {
-    var renderer = new OldArticleRenderer(typeLib);
+    var renderer = new ds.OldArticleRenderer(typeLib);
     var template = {
       "name":"Simple Headline",
       "root":{
@@ -91,7 +91,7 @@ describe("OldArticleRenderer", function() {
   });
 
   it("should generate the first body component", function() {
-    var renderer = new OldArticleRenderer(typeLib);
+    var renderer = new ds.OldArticleRenderer(typeLib);
     var template = {
       "name":"Simple Body",
       "root":{
@@ -106,7 +106,7 @@ describe("OldArticleRenderer", function() {
   });
 
   it("should generate the second body component", function() {
-    var renderer = new OldArticleRenderer(typeLib);
+    var renderer = new ds.OldArticleRenderer(typeLib);
     var template = {
       "name":"Simple Body",
       "root":{
@@ -121,7 +121,7 @@ describe("OldArticleRenderer", function() {
   });
 
   it("should generate the first image component", function() {
-    var renderer = new OldArticleRenderer(typeLib);
+    var renderer = new ds.OldArticleRenderer(typeLib);
     var template = {
       "name":"Simple Image",
       "root":{
@@ -136,7 +136,7 @@ describe("OldArticleRenderer", function() {
   });
 
   it("should generate the first standfirst component", function() {
-    var renderer = new OldArticleRenderer(typeLib);
+    var renderer = new ds.OldArticleRenderer(typeLib);
     var template = {
       "name":"Simple StandFirst",
       "root":{

@@ -1,10 +1,10 @@
-describe("ComponentType", function() {
+describe("ds.ComponentType", function() {
 
   beforeEach(function() {
   });
 
   it("should be defined", function() {
-    var actualOutput = new ComponentType("Text", "{{>data}}");
+    var actualOutput = new ds.ComponentType("Text", "{{>data}}");
     expect(actualOutput).toBeDefined();
     expect(actualOutput.getName()).toEqual("Text");
     expect(actualOutput.getTemplate()).toBeDefined();
@@ -12,42 +12,42 @@ describe("ComponentType", function() {
   });
 
   it("implements makeComponentType", function() {
-    var actualOutput = makeComponentType("Text", "{{>data}}");
+    var actualOutput = ds.ComponentType.makeComponentType("Text", "{{>data}}");
     expect(actualOutput).toBeDefined();
     expect(actualOutput.getName()).toEqual("Text");
     expect(actualOutput.getTemplate()).toBeDefined();
   });
 
   it("implements getInfo", function() {
-    var input = new ComponentType("Text","{{>data}}");
+    var input = new ds.ComponentType("Text","{{>data}}");
     var expectedOutput = 'ComponentType(Text)';
     var actualOutput = input.getInfo();
     expect(actualOutput).toEqual(expectedOutput);
   });
 
   it("implements getName", function() {
-    var input = new ComponentType("Text","{{>data}}");
+    var input = new ds.ComponentType("Text","{{>data}}");
     var expectedOutput = "Text";
     var actualOutput = input.getName();
     expect(actualOutput).toEqual(expectedOutput);
   });
 
   it("implements getTemplate", function() {
-    var input = new ComponentType("Text","{{>data}}");
+    var input = new ds.ComponentType("Text","{{>data}}");
     var expectedOutput = "{{>data}}";
     var actualOutput = input.getTemplate();
     expect(actualOutput).toEqual(expectedOutput);
   });
 
   it("implements does render", function() {
-    var cType = makeComponentType("Text","{{>data}}");
+    var cType = ds.ComponentType.makeComponentType("Text","{{>data}}");
     var article = { "data":"FooBar" };
     var actualOutput = cType.render(article);
     expect(actualOutput).toEqual(article.data);
   });
 
   it("implements can be a composite", function() {
-    var cType = makeComponentType("Text","{{>data}}", true);
+    var cType = ds.ComponentType.makeComponentType("Text","{{>data}}", true);
     expect(cType.isComposite()).toBeTruthy();
   });
 });
