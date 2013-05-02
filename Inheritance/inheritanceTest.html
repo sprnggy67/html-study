@@ -23,7 +23,7 @@
     } 
 
     function Cat(name){ 
-      this.name=name;
+      Mammal.call(this,name);
     } 
     Cat.prototype = new Mammal();        // Here's where the inheritance occurs 
     Cat.prototype.constructor=Cat;       // Otherwise instances of Cat would have a constructor of Mammal 
@@ -33,8 +33,11 @@
     }
     Cat.prototype.haveABaby=function(){ 
       var kitten = this.parent.haveABaby.call(this); // You can pass parameters to the function by adding them after the this.
-      $("#output").append('<p>meow!</p>');
+      $("#output").append('<p>' + this.getSound() + '</p>');
       return kitten;  
+    } 
+    Cat.prototype.getSound=function(){ 
+      return 'meow!';
     } 
 
     window.onload = function() {
@@ -46,6 +49,18 @@
       myPet.haveABaby();                    // calls a method inherited from Mammal 
       $("#output").append('<p>myPet has ' + myPet.offspring.length + ' baby</p>');        // shows that the cat has one baby now 
       $("#output").append('<p>The baby is ' + myPet.offspring[0] + '</p>');            // results in '[Mammal "Baby Felix"]' 
+
+      $("#output").append('<hr>');
+
+      $("#output").append('<p>someAnimal instanceof Cat = ' + (someAnimal instanceof Cat)+ '</p>'); 
+      $("#output").append('<p>someAnimal constructor = ' + someAnimal.constructor + '</p>'); 
+      $("#output").append('<p>someAnimal getSound = ' + someAnimal.getSound + '</p>'); 
+
+      $("#output").append('<hr>');
+
+      $("#output").append('<p>myPet instanceof Cat = ' + (myPet instanceof Cat) + '</p>'); 
+      $("#output").append('<p>myPet constructor = ' + myPet.constructor + '</p>'); 
+      $("#output").append('<p>myPet getSound = ' + myPet.getSound + '</p>'); 
     };
 
   })();

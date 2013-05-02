@@ -21,15 +21,15 @@ ds.ComponentTypeLib.prototype.getInfo = function() {
 };
 
 ds.ComponentTypeLib.prototype.loadRegistry = function() {
-	this.add(ds.ComponentType.makeComponentType("headline", "<h1>{{:headline}}</h1>"));
-	this.add(ds.ComponentType.makeComponentType("standFirst", "<h2>{{:standFirst}}</h2>"));
-	this.add(ds.ComponentType.makeComponentType("body", "{{:body}}"));
-	this.add(ds.ComponentType.makeComponentType("image", '<img src="{{:image}}">'));
+	this.add(ds.ComponentType.makeComponentType('headline', '<h1>{{:headline}}</h1>'));
+	this.add(ds.ComponentType.makeComponentType('standFirst', '<h2>{{:standFirst}}</h2>'));
+	this.add(ds.ComponentType.makeComponentType('body', '{{:body}}'));
+	this.add(ds.ComponentType.makeComponentType('image', '<img src="{{:image}}">'));
 };
 
 ds.ComponentTypeLib.prototype.add = function(child) {
 	if (!(child instanceof ds.ComponentType))
-		throw "Invalid child:" + child;
+		throw 'Child must be instance of ds.ComponentType' + child;
 	this.children.push(child); 
 };
 

@@ -16,7 +16,7 @@ ds.ComponentType = function(name, template) {
 ds.ComponentType.makeComponentType = function(name, htmlTmpl, composite) {
 	var jsRenderTmpl = jsviews.templates(htmlTmpl);
 	if (jsRenderTmpl == null)
-		throw "Invalid template:" + htmlTmpl;
+		throw 'Invalid template:' + htmlTmpl;
 	var cmp = new ds.ComponentType(name, jsRenderTmpl);
 	if (composite)
 		cmp.setComposite(composite);

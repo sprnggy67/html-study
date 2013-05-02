@@ -1,6 +1,9 @@
-How can I render an article within a template?
+How to render an article within a template
+-------------------------------------------
 
-Given an article object ..
+During the development of this code I started down a path where I wrote a componentType, componentTypeLibrary, and renderer. This worked until I started to implement hierarchical components, and then it became too complicated. On further reflection I started to feel that jsRender could do hierarchical rendering for me quite easily, so I took that path instead. It worked out well.
+
+Here's an article object ..
 
     var simplifiedArticle = {
       "id":"001",
@@ -9,7 +12,7 @@ Given an article object ..
       ]
     };
 
-And an article template ..
+Here's article template which contains a flow and two children ..
 
     var template = {
       "name":"Flow",
@@ -32,8 +35,7 @@ And an article template ..
       }
     };
 
-
-Define the component templates ..
+We can define a set of jsRender templates for each component and the flow ..
 
     jsviews.templates({
       headline: "<h1>{{:realData.headline}}</h1>",
@@ -45,13 +47,11 @@ Define the component templates ..
       ",
     });
 
-Add the real article data to the template data. This gives us a single data model which can be rendered using jsRender.
-
-Now we can render the article template using js render ..
+If we combine the article template and article object together, we can render the combination using jsRender ..
 
     var html = jsviews.render.flow(theTemplateAndArticleData);
 
-What about a grid?  A grid looks like this ..
+Here's a grid template. The grid has a number of children which are layed out on, you guessed it, a grid.
 
     var template = {
       "root":{

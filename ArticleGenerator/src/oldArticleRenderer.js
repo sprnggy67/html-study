@@ -30,12 +30,12 @@ ds.OldArticleRenderer.prototype.render = function(template, article) {
 ds.OldArticleRenderer.prototype.renderComponent = function(component, article) {
 	var typeDef = typeLib.objectNamed(component.componentType);
 	if (typeDef == null || typeDef.getTemplate() == null) {
-		console.log("Invalid component type:" + component);
+		console.log('Invalid component type:' + component);
 		return null;
 	} 
 
 	if (typeDef.isComposite()) {
-		throw "renderComponent cannot render composites";
+		throw 'renderComponent cannot render composites';
 	} else {
 		return this.renderSimpleComponent(component, article);
 	}	

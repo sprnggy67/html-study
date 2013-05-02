@@ -1,0 +1,17 @@
+How to render an opinion article
+--------------------------------
+
+In this exercise I wanted to render a list of articles in an opinion style. The list is rendered on the left. If you tap one of the articles it appears on the right.
+
+I implemented in opinion1.html and then reviewed it with a colleague.  The following points emerged:
+
+1. Move the css and js moved into separate files. This creates a better separation of concerns.
+
+2. Run the javascript code in an anonymous function. Don't pollute the global namespace. Be unobtrusive.
+
+3. Use a closure in fillMenu to handle clicks.
+
+4. In opinion1 I added methods to the Object prototype to add and remove classes. This is bad practice, because these methods may conflict with the work of others. Move these into distinct methods.
+
+The output of the review is shown in opinion2.html.
+

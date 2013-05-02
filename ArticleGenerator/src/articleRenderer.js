@@ -39,27 +39,29 @@ ds.ArticleRenderer.initClass = function() {
 		standfirst: '<h2>{{:realData.standFirst}}</h2>',
 		body: '{{:realData.body}}',
 		image: '<img src="{{:realData.image}}">',
-		flow: '<div>\
-{{for children tmpl="component"/}}\
-</div>',
-		grid: '\
-<div>\
-{{for children}}\
-<div style="position:absolute; left:{{:left * #parent.parent.data.width / #parent.parent.data.columns}}px; top:{{:top * #parent.parent.data.height / #parent.parent.data.rows}}px; width:{{:width * #parent.parent.data.width / #parent.parent.data.columns}}px; height:{{:height * #parent.parent.data.height / #parent.parent.data.rows}}px;">\
-{{for component tmpl="component"/}}\
-</div>\
-{{/for}}\
-</div>',
-		component: '\
-{{if componentType==="headline" tmpl="headline"/}}\
-{{if componentType==="standfirst" tmpl="standfirst"/}}\
-{{if componentType==="body" tmpl="body"/}}\
-{{if componentType==="image" tmpl="image"/}}\
-{{if componentType==="flow" tmpl="flow"/}}\
-{{if componentType==="grid" tmpl="grid"/}}',
-		root: '<html><body>\
-{{for root tmpl="component"/}}\
-</body></html>',
+		flow: 
+			'<div>' +
+			'{{for children tmpl="component"/}}' +
+			'</div>',
+		grid: 
+			'<div>' +
+			'{{for children}}' +
+			'<div style="position:absolute; left:{{:left * #parent.parent.data.width / #parent.parent.data.columns}}px; top:{{:top * #parent.parent.data.height / #parent.parent.data.rows}}px; width:{{:width * #parent.parent.data.width / #parent.parent.data.columns}}px; height:{{:height * #parent.parent.data.height / #parent.parent.data.rows}}px;">' +
+			'{{for component tmpl="component"/}}' +
+			'</div>' +
+			'{{/for}}' +
+			'</div>',
+		component: 
+			'{{if componentType==="headline" tmpl="headline"/}}' +
+			'{{if componentType==="standfirst" tmpl="standfirst"/}}' +
+			'{{if componentType==="body" tmpl="body"/}}' +
+			'{{if componentType==="image" tmpl="image"/}}' +
+			'{{if componentType==="flow" tmpl="flow"/}}' +
+			'{{if componentType==="grid" tmpl="grid"/}}',
+		root: 
+			'<html><body>' +
+			'{{for root tmpl="component"/}}' +
+			'</body></html>',
 	});
 };
 
@@ -71,7 +73,7 @@ ds.ArticleRenderer.prototype.renderPage = function(template, article) {
 	// Clone the template and add article data to it.
 	// This gives us a single model which can be passed to the jsRender renderer.
 	var inputData = JSON.parse(JSON.stringify(template));
-	this.link(inputData.root, article);
+	this.privateLink(inputData.root, article);
 
 	// Render the HTML.
 	var html = jsviews.render.root(inputData);
@@ -90,7 +92,7 @@ ds.ArticleRenderer.prototype.renderComponent = function(component, article) {
 	// Clone the component and add article data to it.
 	// This gives us a single model which can be passed to the jsRender renderer.
 	var inputData = JSON.parse(JSON.stringify(component));
-	this.link(inputData, article);
+	this.privateLink(inputData, article);
 
 	// Render the HTML.
 	var html = jsviews.render.component(inputData);
@@ -109,8 +111,14 @@ ds.ArticleRenderer.prototype.renderComponent = function(component, article) {
 
  The algorithm also recursively descends when it finds "children" or a property called "component" in the
  root object.
+
+ @private
+
+ This method could be moved into the constructor, but if I do that it will be defined every time
+ the constructor is invoked, for no benefit. Gotta love javascript.
+ 
  */
-ds.ArticleRenderer.prototype.link = function(component, article) {
+ds.ArticleRenderer.prototype.privateLink = function(component, article) {
 	if (component.dataPath) {
 		var realData = this.findData(article, component.dataPath);
 		if (component.dataIndex != undefined) 
@@ -120,11 +128,11 @@ ds.ArticleRenderer.prototype.link = function(component, article) {
 	if (component.children) {
 		var length = component.children.length;
 		for (i = 0; i < length; ++i) {
-			this.link(component.children[i], article);
+			this.privateLink(component.children[i], article);
 		}
 	}
 	if (component.component) {
-		this.link(component.component, article);
+		this.privateLink(component.component, article);
 	}
 	return component;
 };
