@@ -17,6 +17,8 @@
  to let jsRender do all of the work for me.
  */
 
+'use strict';
+
 var ds = ds || {};
 
 ds.OldArticleRenderer = function(typeLib) {

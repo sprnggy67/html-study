@@ -1,9 +1,12 @@
-var ds = ds || {};
-
 /**
  * Creates a new component type with a name and a jsRender template.
  * If you have a template string use makeComponentType instead.
  */
+
+'use strict';
+
+var ds = ds || {};
+
 ds.ComponentType = function(name, template) {
     this.name = name;
     this.template = template;

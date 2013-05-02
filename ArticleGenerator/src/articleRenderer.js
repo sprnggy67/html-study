@@ -23,6 +23,8 @@
  The tests for this can be found in articleRendererSpec.js
  */
 
+'use strict';
+
 var ds = ds || {};
 
 ds.ArticleRenderer = function() {
@@ -127,7 +129,7 @@ ds.ArticleRenderer.prototype.privateLink = function(component, article) {
 	}
 	if (component.children) {
 		var length = component.children.length;
-		for (i = 0; i < length; ++i) {
+		for (var i = 0; i < length; ++i) {
 			this.privateLink(component.children[i], article);
 		}
 	}

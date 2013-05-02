@@ -10,6 +10,8 @@
  
  */
 
+'use strict'
+
 var ds = ds || {};
 
 ds.ComponentTypeLib = function() {
