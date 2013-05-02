@@ -124,6 +124,8 @@ This leads to the following set of templates ..
       "
     });
 
+A class diagram for the Article model and the Template models can be found in the Models folder
+
 
 
 

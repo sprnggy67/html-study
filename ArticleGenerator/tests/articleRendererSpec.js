@@ -171,28 +171,22 @@ describe("ds.ArticleRenderer", function() {
 			columns:4,
 			children: [
 				{
-					  left:0, top:0, width:1, height:1,
-					  component:{
-						componentType:"headline",
-						dataPath:"children",
-						dataIndex:0
-					}
+					componentType:"headline",
+					dataPath:"children",
+					dataIndex:0,
+					position: { left:0, top:0, width:1, height:1 }
 				},
 				{
-					  left:0, top:1, width:1, height:2,
-				  component:{
-						componentType:"body",
-						dataPath:"children",
-						dataIndex:0
-					}
+					componentType:"body",
+					dataPath:"children",
+					dataIndex:0,
+					position: { left:0, top:1, width:1, height:2 },
 				},
 				{
-				  left:1, top:0, width:3, height:3,
-				  component:{
-						componentType:"image",
-						dataPath:"children",
-						dataIndex:0
-					}
+					componentType:"image",
+					dataPath:"children",
+					dataIndex:0,
+					position: { left:1, top:0, width:3, height:3 },
 				},
 			]
 		};
@@ -227,28 +221,22 @@ describe("ds.ArticleRenderer", function() {
 				columns:4,
 				children: [
 					{
-						  left:0, top:0, width:1, height:1,
-						  component:{
-								componentType:"headline",
-								dataPath:"children",
-								dataIndex:0
-							}
+						componentType:"headline",
+						dataPath:"children",
+						dataIndex:0,
+						position: { left:0, top:0, width:1, height:1 }
 					},
 					{
-						  left:0, top:1, width:1, height:2,
-						  component:{
-								componentType:"body",
-								dataPath:"children",
-								dataIndex:0
-							}
+						componentType:"body",
+						dataPath:"children",
+						dataIndex:0,
+						position: { left:0, top:1, width:1, height:2 },
 					},
 					{
-					  left:1, top:0, width:3, height:3,
-					  component:{
-							componentType:"image",
-							dataPath:"children",
-							dataIndex:0
-						}
+						componentType:"image",
+						dataPath:"children",
+						dataIndex:0,
+						position: { left:1, top:0, width:3, height:3 },
 					},
 				]
 			}

@@ -37,22 +37,10 @@ ds.ArticleRenderer.initialised = false;
 ds.ArticleRenderer.initClass = function() {
 	ds.ArticleRenderer.initialised = true;
 	jsviews.templates({
-		headline: '<h1>{{:realData.headline}}</h1>',
-		standfirst: '<h2>{{:realData.standFirst}}</h2>',
-		body: '{{:realData.body}}',
-		image: '<img src="{{:realData.image}}">',
-		flow: 
-			'<div>' +
-			'{{for children tmpl="component"/}}' +
-			'</div>',
-		grid: 
-			'<div>' +
-			'{{for children}}' +
-			'<div style="position:absolute; left:{{:left * #parent.parent.data.width / #parent.parent.data.columns}}px; top:{{:top * #parent.parent.data.height / #parent.parent.data.rows}}px; width:{{:width * #parent.parent.data.width / #parent.parent.data.columns}}px; height:{{:height * #parent.parent.data.height / #parent.parent.data.rows}}px;">' +
-			'{{for component tmpl="component"/}}' +
-			'</div>' +
-			'{{/for}}' +
-			'</div>',
+		root: 
+			'<html><body>' +
+				'{{for root tmpl="component"/}}' +
+			'</body></html>',
 		component: 
 			'{{if componentType==="headline" tmpl="headline"/}}' +
 			'{{if componentType==="standfirst" tmpl="standfirst"/}}' +
@@ -60,10 +48,33 @@ ds.ArticleRenderer.initClass = function() {
 			'{{if componentType==="image" tmpl="image"/}}' +
 			'{{if componentType==="flow" tmpl="flow"/}}' +
 			'{{if componentType==="grid" tmpl="grid"/}}',
-		root: 
-			'<html><body>' +
-			'{{for root tmpl="component"/}}' +
-			'</body></html>',
+		headline: '<h1>{{:realData.headline}}</h1>',
+		standfirst: '<h2>{{:realData.standFirst}}</h2>',
+		body: '{{:realData.body}}',
+		image: '<img src="{{:realData.image}}">',
+		flow: 
+			'<div>' +
+				'{{for children tmpl="component"/}}' +
+			'</div>',
+		grid: 
+			'<div>' +
+				'{{for children}}' +
+					'<div style="position:absolute; ' +
+							'left:{{:position.left * #parent.parent.data.width / #parent.parent.data.columns}}px; ' +
+							'top:{{:position.top * #parent.parent.data.height / #parent.parent.data.rows}}px; ' +
+							'width:{{:position.width * #parent.parent.data.width / #parent.parent.data.columns}}px; ' +
+							'height:{{:position.height * #parent.parent.data.height / #parent.parent.data.rows}}px;">' +
+						'{{if true tmpl="component"/}}' +
+					'</div>' +
+				'{{/for}}' +
+			'</div>',
+	});
+	jsviews.views.helpers({
+		breakHere:function() {
+			// If you want to break here, add the following to your template:
+			// '{{:~breakHere()}}' +
+			console.log("In breakHere");
+		}
 	});
 };
 
