@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>javascript Inheritance Exploration</title>
+
+  <script type="text/javascript" src="lib/jq.mobi.js"></script>
+
+  <script type="text/javascript">
+  (function() {
+
+    function Mammal(name){ 
+      this.name=name;
+      this.offspring=[];
+    } 
+    Mammal.prototype.haveABaby=function(){ 
+      var newBaby=new this.constructor("Baby "+this.name);
+      this.offspring.push(newBaby);
+      return newBaby;
+    } 
+    Mammal.prototype.toString=function(){ 
+      return '[Mammal "'+this.name+'"]';
+    } 
+
+    function Cat(name){ 
+      this.name=name;
+    } 
+    Cat.prototype = new Mammal();        // Here's where the inheritance occurs 
+    Cat.prototype.constructor=Cat;       // Otherwise instances of Cat would have a constructor of Mammal 
+    Cat.prototype.parent = Mammal.prototype; // Define a property for the super class. Note: "super" is a reserved keyword, so we use parent.
+    Cat.prototype.toString=function(){ 
+      return '[Cat "'+this.name+'"]';
+    }
+    Cat.prototype.haveABaby=function(){ 
+      var kitten = this.parent.haveABaby.call(this); // You can pass parameters to the function by adding them after the this.
+      $("#output").append('<p>meow!</p>');
+      return kitten;  
+    } 
+
+    window.onload = function() {
+      var someAnimal = new Mammal('Mr. Biggles');
+      var myPet = new Cat('Felix');
+      $("#output").append('<p>someAnimal is '+someAnimal + '</p>');   // results in 'someAnimal is [Mammal "Mr. Biggles"]' 
+      $("#output").append('<p>myPet is '+myPet + '</p>');             // results in 'myPet is [Cat "Felix"]' 
+
+      myPet.haveABaby();                    // calls a method inherited from Mammal 
+      $("#output").append('<p>myPet has ' + myPet.offspring.length + ' baby</p>');        // shows that the cat has one baby now 
+      $("#output").append('<p>The baby is ' + myPet.offspring[0] + '</p>');            // results in '[Mammal "Baby Felix"]' 
+    };
+
+  })();
+  </script>
+
+</head>
+
+<body>
+  This HTML demonstrates how you can do inheritance in Javascript.
+  <hr>
+  <div id="output">
+  </div>
+</body>
+</html>
