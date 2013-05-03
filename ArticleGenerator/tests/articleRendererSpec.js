@@ -190,7 +190,7 @@ describe("ds.ArticleRenderer", function() {
 				},
 			]
 		};
-		var expectedOutput = '<div><div style="position:absolute; left:0px; top:0px; width:256px; height:256px;"><h1>h1</h1></div><div style="position:absolute; left:0px; top:256px; width:256px; height:512px;">body1</div><div style="position:absolute; left:256px; top:0px; width:768px; height:768px;"><img src="img1.jpg"></div></div>';
+		var expectedOutput = '<div><div style="position:absolute; overflow:hidden; left:0px; top:0px; width:256px; height:256px;"><h1>h1</h1></div><div style="position:absolute; overflow:hidden; left:0px; top:256px; width:256px; height:512px;">body1</div><div style="position:absolute; overflow:hidden; left:256px; top:0px; width:768px; height:768px;"><img src="img1.jpg"></div></div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -243,7 +243,7 @@ describe("ds.ArticleRenderer", function() {
 		};
 		var actualOutput = renderer.renderPage(template, navigationArticle);
 		expect(actualOutput).toMatch(/<html><body>/);
-		expect(actualOutput).toMatch(/<div style="position:absolute; left:0px; top:0px; width:256px; height:256px;"><h1>h1<\/h1><\/div>/);
+		expect(actualOutput).toMatch(/<div style="position:absolute; overflow:hidden; left:0px; top:0px; width:256px; height:256px;"><h1>h1<\/h1><\/div>/);
 		expect(actualOutput).toMatch(/<\/body><\/html>/);
 	});
 

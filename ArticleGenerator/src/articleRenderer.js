@@ -21,6 +21,8 @@
  The renderPage and renderComponent functions below are used to render an article in a given template.
 
  The tests for this can be found in articleRendererSpec.js
+
+ If you need to debug this code please use the breakHere helper below.
  */
 
 'use strict';
@@ -59,7 +61,7 @@ ds.ArticleRenderer.initClass = function() {
 		grid: 
 			'<div>' +
 				'{{for children}}' +
-					'<div style="position:absolute; ' +
+					'<div style="position:absolute; overflow:hidden; ' +
 							'left:{{:position.left * #parent.parent.data.width / #parent.parent.data.columns}}px; ' +
 							'top:{{:position.top * #parent.parent.data.height / #parent.parent.data.rows}}px; ' +
 							'width:{{:position.width * #parent.parent.data.width / #parent.parent.data.columns}}px; ' +
@@ -70,9 +72,9 @@ ds.ArticleRenderer.initClass = function() {
 			'</div>',
 	});
 	jsviews.views.helpers({
+		// Add the following code to your template if you want to break somewhere and look at the jsRender stack: 
+		// '{{:~breakHere()}}' +
 		breakHere:function() {
-			// If you want to break here, add the following to your template:
-			// '{{:~breakHere()}}' +
 			console.log("In breakHere");
 		}
 	});

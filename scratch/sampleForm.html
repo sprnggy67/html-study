@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title>Sample form</title>
+    <style type="text/css">
+    .container {
+        width: 500px;
+        clear: both;
+        border:solid 2px #b7ddf2;
+        background:#ebf4fb;
+        margin:0 auto;
+        width:400px;
+        padding:14px;
+   }
+    .container label {
+        display:block;
+        font-weight:bold;
+        text-align:right;
+        width:140px;
+        float:left;
+        margin-top:5px;
+    }
+    .container input, .container select {
+        float:left;
+        font-size:12px;
+        padding:4px 2px;
+        border:solid 1px #aacfe4;
+        width:200px;
+        margin:2px 0 20px 10px;
+    }
+    .spacer{clear:both; height:1px;}
+
+    </style>
+</head>
+<body>
+<div class="container">
+<form>
+    <label>First Name</label>
+    <input type="text" name="first"><br />
+    <label>Last Name</label>
+    <input type="text" name="last"><br />
+    <label>Email</label>
+    <input type="text" name="email"><br />
+    <label>Credit Card</label>
+    <select id="articleList" name="article">
+            <option value="mastercard">Mastercard</option>
+    </select>
+    <div class="spacer"></div>
+</form>
+</div>
+</body>
+</html>
