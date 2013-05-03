@@ -31,16 +31,58 @@ var ds = ds || {};
 
 ds.ArticleRenderer = function() {
 	if (!ds.ArticleRenderer.initialised)
-		ds.ArticleRenderer.initClass();
+		ds.ArticleRenderer._initClass();
 }
 
 ds.ArticleRenderer.initialised = false;
 
-ds.ArticleRenderer.initClass = function() {
+/**
+ Render the complete HTML for a given template and article.
+ Return the HTML.
+ */
+ds.ArticleRenderer.prototype.renderPage = function(template, article) {
+	// Clone the template and add article data to it.
+	// This gives us a single model which can be passed to the jsRender renderer.
+	var inputData = JSON.parse(JSON.stringify(template));
+	this._linkRealData(inputData.root, article);
+
+	// Render the HTML.
+	var html = jsviews.render.root(inputData);
+
+	// Trim the whitespace.
+	html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+	return html;
+};
+
+/**
+ Render the HTML for a given component and article. 
+ The component may contain sub components.
+ Return the HTML.
+ */
+ds.ArticleRenderer.prototype.renderComponent = function(component, article) {
+	// Clone the component and add article data to it.
+	// This gives us a single model which can be passed to the jsRender renderer.
+	var inputData = JSON.parse(JSON.stringify(component));
+	this._linkRealData(inputData, article);
+
+	// Render the HTML.
+	var html = jsviews.render.component(inputData);
+
+	// Trim the whitespace.
+	html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+	return html;
+};
+
+ds.ArticleRenderer._initClass = function() {
 	ds.ArticleRenderer.initialised = true;
 	jsviews.templates({
 		root: 
-			'<html><body>' +
+			'<html>' +
+			'<head>' +
+			'<link rel="stylesheet" type="text/css" href="src/renderRuntime.css">' +
+			'<script type="text/javascript" src="src/renderRuntime.js"></script>' +
+			'</head>' +
+			'<body>' +
 				'{{for root tmpl="component"/}}' +
 			'</body></html>',
 		component: 
@@ -77,10 +119,10 @@ ds.ArticleRenderer.initClass = function() {
 			'<div>' +
 				'{{for children}}' +
 					'<div style="position:absolute; overflow:hidden; ' +
-							'left:{{:position.left * #parent.parent.data.width / #parent.parent.data.columns}}px; ' +
-							'top:{{:position.top * #parent.parent.data.height / #parent.parent.data.rows}}px; ' +
-							'width:{{:position.width * #parent.parent.data.width / #parent.parent.data.columns}}px; ' +
-							'height:{{:position.height * #parent.parent.data.height / #parent.parent.data.rows}}px;">' +
+							'left:{{:~getLeftPx(position, #parent.parent.data)}}px; ' +
+							'top:{{:~getTopPx(position, #parent.parent.data)}}px; ' +
+							'width:{{:~getWidthPx(position, #parent.parent.data)}}px; ' +
+							'height:{{:~getHeightPx(position, #parent.parent.data)}}px;">' +
 						'{{if true tmpl="component"/}}' +
 					'</div>' +
 				'{{/for}}' +
@@ -91,46 +133,48 @@ ds.ArticleRenderer.initClass = function() {
 		// '{{:~breakHere()}}' +
 		breakHere:function() {
 			console.log("In breakHere");
-		}
+		},
+		getLeftPx:function(position, grid) {
+			return ds.ArticleRenderer._calcStartPx(position.left, grid.width, grid.columns, grid.columnGutter);
+		},
+		getTopPx:function(position, grid) {
+			return ds.ArticleRenderer._calcStartPx(position.top, grid.height, grid.rows, grid.rowGutter);
+		},
+		getWidthPx:function(position, grid) {
+			return ds.ArticleRenderer._calcWidthPx(position.left, position.width, grid.width, grid.columns, grid.columnGutter);
+		},
+		getHeightPx:function(position, grid) {
+			return ds.ArticleRenderer._calcWidthPx(position.top, position.height, grid.height, grid.rows, grid.rowGutter);
+		},
 	});
+
 };
 
 /**
- Render the complete HTML for a given template and article.
- Return the HTML.
+ * Calculates the start position for an element in a grid. This can be used to calculate the left edge of
+ * a cell or the top edge of a cell. You just need to pass in the row or column dimensions, as appropriate.
  */
-ds.ArticleRenderer.prototype.renderPage = function(template, article) {
-	// Clone the template and add article data to it.
-	// This gives us a single model which can be passed to the jsRender renderer.
-	var inputData = JSON.parse(JSON.stringify(template));
-	this.privateLink(inputData.root, article);
-
-	// Render the HTML.
-	var html = jsviews.render.root(inputData);
-
-	// Trim the whitespace.
-	html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-	return html;
-};
+ds.ArticleRenderer._calcStartPx = function(start, gridWidth, gridColumns, gridGutter) {
+	var result = start * gridWidth / gridColumns;
+	if (gridGutter && start > 0) { 
+		result = result + gridGutter / 2;
+	}
+	return result;
+}
 
 /**
- Render the HTML for a given component and article. 
- The component may contain sub components.
- Return the HTML.
+ * Calculates the width for an element in a grid. This can be used to calculate the width or height of a cell. 
+ * You just need to pass in the row or column dimensions, as appropriate.
  */
-ds.ArticleRenderer.prototype.renderComponent = function(component, article) {
-	// Clone the component and add article data to it.
-	// This gives us a single model which can be passed to the jsRender renderer.
-	var inputData = JSON.parse(JSON.stringify(component));
-	this.privateLink(inputData, article);
-
-	// Render the HTML.
-	var html = jsviews.render.component(inputData);
-
-	// Trim the whitespace.
-	html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-	return html;
-};
+ds.ArticleRenderer._calcWidthPx = function(start, width, gridWidth, gridColumns, gridGutter) {
+	var result = width * gridWidth / gridColumns;
+	if (gridGutter) {
+		var delta = gridGutter / 2;
+		if (start > 0) result = result - delta;
+		if (start + width < gridColumns) result = result - delta;
+	}
+	return result;
+}
 
 /**
  Adds real article data to a hierarchical component model.
@@ -148,7 +192,7 @@ ds.ArticleRenderer.prototype.renderComponent = function(component, article) {
  the constructor is invoked, for no benefit. Gotta love javascript.
  
  */
-ds.ArticleRenderer.prototype.privateLink = function(component, article) {
+ds.ArticleRenderer.prototype._linkRealData = function(component, article) {
 	if (component.dataPath) {
 		var realData = this.findData(article, component.dataPath);
 		if (component.dataIndex != undefined) 
@@ -158,11 +202,11 @@ ds.ArticleRenderer.prototype.privateLink = function(component, article) {
 	if (component.children) {
 		var length = component.children.length;
 		for (var i = 0; i < length; ++i) {
-			this.privateLink(component.children[i], article);
+			this._linkRealData(component.children[i], article);
 		}
 	}
 	if (component.component) {
-		this.privateLink(component.component, article);
+		this._linkRealData(component.component, article);
 	}
 	return component;
 };
@@ -182,5 +226,4 @@ ds.ArticleRenderer.prototype.findData = function(obj, path) {
 
 	return current;
 };
-
 

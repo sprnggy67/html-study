@@ -8,6 +8,8 @@ var sampleTemplates = [
 			height:600,
 			rows:3, 
 			columns:4,
+			rowGutter:10,
+			columnGutter:10,
 			children: [
 				{
 					componentType:"flow",
@@ -48,6 +50,8 @@ var sampleTemplates = [
 			height:600,
 			rows:3, 
 			columns:4,
+			rowGutter:10,
+			columnGutter:10,
 			children: [
 				{
 					componentType:"flow",
@@ -91,13 +95,14 @@ var sampleTemplates = [
 			height:600,
 			rows:3, 
 			columns:4,
+			rowGutter:10,
+			columnGutter:10,
 			children: [
 				{
 					componentType:"flow",
 					children: [
 						{
 							componentType:"headline",
-							style:"margin-top:0px",
 							dataPath:"children",
 							dataIndex:0
 						},
@@ -126,7 +131,6 @@ var sampleTemplates = [
 					children: [
 						{
 							componentType:"headline",
-							style:"margin-top:0px",
 							dataPath:"children",
 							dataIndex:1
 						},
@@ -144,7 +148,6 @@ var sampleTemplates = [
 					children: [
 						{
 							componentType:"headline",
-							style:"margin-top:0px",
 							dataPath:"children",
 							dataIndex:2
 						},

@@ -234,6 +234,47 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
+	it("should generate a grid component with gutters", function() {
+		var renderer = new ds.ArticleRenderer();
+		var component = {
+			componentType:"grid",
+			orientation:"landscape",
+			width:500, 
+			height:500,
+			rows:2, 
+			columns:2,
+			rowGutter:10,
+			columnGutter:10,
+			children: [
+				{
+					componentType:"headline",
+					dataPath:"children",
+					dataIndex:0,
+					position: { left:0, top:0, width:1, height:1 }
+				},
+				{
+					componentType:"body",
+					dataPath:"children",
+					dataIndex:0,
+					position: { left:0, top:1, width:1, height:1 },
+				},
+				{
+					componentType:"image",
+					dataPath:"children",
+					dataIndex:0,
+					position: { left:1, top:0, width:1, height:2 },
+				},
+			]
+		};
+		var expectedOutput = '<div>' +
+			'<div style="position:absolute; overflow:hidden; left:0px; top:0px; width:245px; height:245px;"><h1>h1</h1></div>' +
+			'<div style="position:absolute; overflow:hidden; left:0px; top:255px; width:245px; height:245px;">body1</div>' +
+			'<div style="position:absolute; overflow:hidden; left:255px; top:0px; width:245px; height:500px;"><img src="img1.jpg"></div>' +
+			'</div>';
+		var actualOutput = renderer.renderComponent(component, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
 	it("should generate a simple HTML page with a headline component", function() {
 		var renderer = new ds.ArticleRenderer();
 		var template = {
@@ -243,7 +284,9 @@ describe("ds.ArticleRenderer", function() {
 				dataIndex:0
 			}
 		};
-		var expectedOutput = "<html><body><h1>h1</h1></body></html>";
+		var expectedOutput = '<html>' +
+			'<head><link rel="stylesheet" type="text/css" href="src/renderRuntime.css"><script type="text/javascript" src="src/renderRuntime.js"></script></head>' +
+			'<body><h1>h1</h1></body></html>';
 		var actualOutput = renderer.renderPage(template, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -281,7 +324,7 @@ describe("ds.ArticleRenderer", function() {
 			}
 		};
 		var actualOutput = renderer.renderPage(template, navigationArticle);
-		expect(actualOutput).toMatch(/<html><body>/);
+		expect(actualOutput).toMatch(/<html><head>/);
 		expect(actualOutput).toMatch(/<div style="position:absolute; overflow:hidden; left:0px; top:0px; width:256px; height:256px;"><h1>h1<\/h1><\/div>/);
 		expect(actualOutput).toMatch(/<\/body><\/html>/);
 	});
