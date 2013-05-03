@@ -80,6 +80,19 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
+	it("should generate styles in a headline component", function() {
+		var renderer = new ds.ArticleRenderer();
+		var component = {
+			componentType:"headline",
+			style:"font-size:20px",
+			dataPath:"children",
+			dataIndex:1
+		};
+		var expectedOutput = '<h1 style="font-size:20px">h2</h1>';
+		var actualOutput = renderer.renderComponent(component, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
 	it("should generate the first body component", function() {
 		var renderer = new ds.ArticleRenderer();
 		var component = {
@@ -88,6 +101,19 @@ describe("ds.ArticleRenderer", function() {
 			dataIndex:0
 		};
 		var expectedOutput = navigationArticle.children[0].body;
+		var actualOutput = renderer.renderComponent(component, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
+	it("should generate styles in a body component", function() {
+		var renderer = new ds.ArticleRenderer();
+		var component = {
+			componentType:"body",
+			style:"font-size:20px",
+			dataPath:"children",
+			dataIndex:0
+		};
+		var expectedOutput = '<span style="font-size:20px">body1</span>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -112,6 +138,19 @@ describe("ds.ArticleRenderer", function() {
 			dataIndex:0
 		};
 		var expectedOutput = "<h2>sf1</h2>";
+		var actualOutput = renderer.renderComponent(component, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
+	it("should generate styles in a standfirst component", function() {
+		var renderer = new ds.ArticleRenderer();
+		var component = {
+			componentType:"standfirst",
+			style:"font-size:20px",
+			dataPath:"children",
+			dataIndex:0
+		};
+		var expectedOutput = '<h2 style="font-size:20px">sf1</h2>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});

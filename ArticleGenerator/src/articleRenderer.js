@@ -50,9 +50,24 @@ ds.ArticleRenderer.initClass = function() {
 			'{{if componentType==="image" tmpl="image"/}}' +
 			'{{if componentType==="flow" tmpl="flow"/}}' +
 			'{{if componentType==="grid" tmpl="grid"/}}',
-		headline: '<h1>{{:realData.headline}}</h1>',
-		standfirst: '<h2>{{:realData.standFirst}}</h2>',
-		body: '{{:realData.body}}',
+		headline: '<h1' +
+			'{{if style}}' +
+			' style="{{:style}}"' +
+			'{{/if}}' +
+			'>{{:realData.headline}}</h1>',
+		standfirst: '<h2' +
+			'{{if style}}' +
+			' style="{{:style}}"' +
+			'{{/if}}' +
+			'>{{:realData.standFirst}}</h2>',
+		body: 
+			'{{if style}}' +
+			'<span style="{{:style}}">' +
+			'{{/if}}' +
+			'{{:realData.body}}' +
+			'{{if style}}' +
+			'</span>' +
+			'{{/if}}',
 		image: '<img src="{{:realData.image}}">',
 		flow: 
 			'<div>' +

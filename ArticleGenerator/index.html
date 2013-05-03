@@ -27,7 +27,7 @@
     .container input[type="checkbox"] {
         margin-top:6px;
     }
-    #runTemplate, #savePage {
+    #runTemplate, #savePage, #loadPage {
         clear: both;
         font-size:12px;
         border:solid 1px #aacfe4;
@@ -65,6 +65,7 @@
 		// Add click handlers
 		$("#runTemplate").click(function() { runTemplate(); });
 		$("#savePage").click(function() { savePage(); });
+		$("#loadPage").click(function() { loadPage(); });
 	};
 
 	function runTemplate() {
@@ -107,14 +108,22 @@
 	};
 
 	function renderPage(template, article) {
+		console.time("renderPage");
 		var renderer = new ds.ArticleRenderer();
 		var actualOutput = renderer.renderPage(template, article);
+		console.timeEnd("renderPage");
 		return actualOutput;
 	};
 
 	function savePage() {
 		var uriContent = "data:application/octet-stream," + encodeURIComponent($("#htmlOutput").val());
 		window.open(uriContent, 'Save');		
+	}
+
+	function loadPage() {
+		console.time("loadPage");
+		document.documentElement.innerHTML = $("#htmlOutput").val();
+		console.timeEnd("loadPage");
 	}
 
 </script>
@@ -144,6 +153,7 @@
 	</textarea>
 	<form>
 		<input id="savePage" type="button" value="Save">
+		<input id="loadPage" type="button" value="Load">
 	</form>
 </body>
 </html>
