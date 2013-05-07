@@ -7,6 +7,9 @@
 
 var ds = ds || {};
 
+// Define the path to jsRender when jQuery is present and not present.
+var $views = (typeof jQuery === 'undefined') ? jsviews : jQuery.views;
+
 ds.ComponentType = function(name, template) {
     this.name = name;
     this.template = template;
@@ -17,7 +20,7 @@ ds.ComponentType = function(name, template) {
  * Creates a new component type with a name and template string.
  */
 ds.ComponentType.makeComponentType = function(name, htmlTmpl, composite) {
-	var jsRenderTmpl = jsviews.templates(htmlTmpl);
+	var jsRenderTmpl = $views.templates(htmlTmpl);
 	if (jsRenderTmpl == null)
 		throw 'Invalid template:' + htmlTmpl;
 	var cmp = new ds.ComponentType(name, jsRenderTmpl);

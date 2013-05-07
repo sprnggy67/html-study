@@ -2,110 +2,43 @@
 	"http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>Article Rendering</title>
+	<title>Template Designer</title>
 
-   <style type="text/css">
-    .container {
-        width:400px;
-        clear: both;
-   	}
-    .container label {
-        display:block;
-        font-weight:bold;
-        width:140px;
-        float:left;
-        margin-top:5px;
-    }
-    .container input, .container select {
-        float:left;
-        font-size:12px;
-        padding:4px 2px;
-        border:solid 1px #aacfe4;
-        width:200px;
-        margin:2px 0 10px 10px;
-    }
-    .container input[type="checkbox"] {
-        margin-top:6px;
-    }
-    #runTemplate, #savePage, #loadPage {
-        clear: both;
-        font-size:12px;
-        border:solid 1px #aacfe4;
-        width:100px;
-        margin:10px 0px 10px 0px;
-    }
-    .spacer{clear:both; height:1px;}
+	<link rel="stylesheet" type="text/css" href="src/templateDesigner.css">
 
-    </style>
-
-	<script type="text/javascript" src="lib/jq.mobi.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script type="text/javascript" src="lib/jsrender-1.0.js"></script>
 	<script type="text/javascript" src="src/articleRenderer.js"></script>
-	<script type="text/javascript" src="tests/sampleArticles.js"></script>
-	<script type="text/javascript" src="tests/sampleTemplates.js"></script>
+	<script type="text/javascript" src="src/publication.js"></script>
+	<script type="text/javascript" src="src/templateDesigner.js"></script>
 
 	<script type="text/javascript">
 
 	'use strict'
 	window.onload = function() {
-		// Load the articles
-		var articleList = $("#articleList");
-		$(sampleArticles).each(function() {
-			var option = '<option value="' + this.name + '">' + this.name + '</option>';
-			articleList.append(option);
-		})
-
-		// Load the templates
-		var templateList = $("#templateList");
-		$(sampleTemplates).each(function() {
-			var option = '<option value="' + this.name + '">' + this.name + '</option>';
-			templateList.append(option);
-		})
-
-		// Add click handlers
-		$("#runTemplate").click(function() { runTemplate(); });
+		createTD();
 		$("#savePage").click(function() { savePage(); });
-		$("#loadPage").click(function() { loadPage(); });
+		$("#openPage").click(function() { openPage(); });
 	};
 
-	function runTemplate() {
-		// Get the current article.
-		var articleName = $("#articleList").val();
-		var article = findItemNamed(articleName, sampleArticles);
-		if (article == null) {
-			alert("Invalid article");
-			return;
-		}
+	var singleton;
 
-		// Get the current template.
-		var templateName =  $("#templateList").val();
-		var template = findItemNamed(templateName, sampleTemplates);
-		if (template == null) {
-			alert("Invalid template");
-			return;
-		}
-
-		// Run the template
-		var result = renderPage(template.definition, article.definition);
-
-		// Format the output.
-		var format = $("#format").is(':checked');
-		if (format) {
-			result = result.replace(/<(\/?)[a-zA-Z]+(?:[^>"']+|"[^"]*"|'[^']*')*>/g, function($0, $1) {
-			    return $1 === "/" ? $0+"\n" : "\n"+$0;
-			});
-		}
-		$("#htmlOutput").html(result);
+	function createTD() {
+		singleton = new ds.TemplateDesigner();
+		singleton.loadFromServer(function() {
+			var templateStr = JSON.stringify(singleton.getTemplate());
+			$("#templateData").html(templateStr);
+		});
 	}
 
-	function findItemNamed(name, list) {
-		var length = list.length;
-		for (var i = 0; i < length; i ++) {
-			if (list[i].name == name)
-				return list[i];
-		}
-		return null;
-	};
+	function savePage() {
+		var uriContent = "data:application/octet-stream," + encodeURIComponent($("#templateData").val());
+		window.open(uriContent, 'Save');		
+	}
+
+	function openPage() {
+		$("#templateData").html("bar");
+	}
 
 	function renderPage(template, article) {
 		console.time("renderPage");
@@ -115,45 +48,15 @@
 		return actualOutput;
 	};
 
-	function savePage() {
-		var uriContent = "data:application/octet-stream," + encodeURIComponent($("#htmlOutput").val());
-		window.open(uriContent, 'Save');		
-	}
-
-	function loadPage() {
-		console.time("loadPage");
-		document.documentElement.innerHTML = $("#htmlOutput").val();
-		console.timeEnd("loadPage");
-	}
 
 </script>
 
 </head>
 <body>
-	<h1>Article Rendering</h1>
-	<div class="container">
-	<form>
-   		<label>Article Input</label>
-		<select id="articleList" name="article">
-			<!-- <option value="volvo">Volvo</option> -->
-		</select>
-   		<label>Template Type</label>
-		<select id="templateList" name="template">
-			<!-- <option value="volvo">Volvo</option> -->
-		</select>
-   		<label>Format the output </label>
-		<input id="format" type="checkbox" checked="checked" name="format">
-	    <div class="spacer"></div>
-	</form>
-	</div>
-	<form>
-		<input id="runTemplate" type="button" value="Run Template">
-	</form>
-	<textarea id="htmlOutput" class="code" wrap="logical" style="height: 100px; width: 592px; ">
-	</textarea>
 	<form>
 		<input id="savePage" type="button" value="Save">
-		<input id="loadPage" type="button" value="Load">
+		<input id="openPage" type="button" value="Open">
 	</form>
+	<textarea id="templateData" class="code" wrap="logical" style="height: 300px; width: 700px; " />
 </body>
 </html>

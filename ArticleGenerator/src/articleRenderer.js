@@ -29,6 +29,10 @@
 
 var ds = ds || {};
 
+// Define the path to jsRender when jQuery is present and not present.
+var $views = (typeof jQuery === 'undefined') ? jsviews : jQuery.views;
+var $viewHelpers = (typeof jQuery === 'undefined') ? jsviews.views.helpers : $views.helpers;
+
 ds.ArticleRenderer = function() {
 	if (!ds.ArticleRenderer.initialised)
 		ds.ArticleRenderer._initClass();
@@ -47,7 +51,7 @@ ds.ArticleRenderer.prototype.renderPage = function(template, article) {
 	this._linkRealData(inputData.root, article);
 
 	// Render the HTML.
-	var html = jsviews.render.root(inputData);
+	var html = $views.render.root(inputData);
 
 	// Trim the whitespace.
 	html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
@@ -66,7 +70,7 @@ ds.ArticleRenderer.prototype.renderComponent = function(component, article) {
 	this._linkRealData(inputData, article);
 
 	// Render the HTML.
-	var html = jsviews.render.component(inputData);
+	var html = $views.render.component(inputData);
 
 	// Trim the whitespace.
 	html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
@@ -75,7 +79,7 @@ ds.ArticleRenderer.prototype.renderComponent = function(component, article) {
 
 ds.ArticleRenderer._initClass = function() {
 	ds.ArticleRenderer.initialised = true;
-	jsviews.templates({
+	$views.templates({
 		root: 
 			'<html>' +
 			'<head>' +
@@ -128,7 +132,7 @@ ds.ArticleRenderer._initClass = function() {
 				'{{/for}}' +
 			'</div>',
 	});
-	jsviews.views.helpers({
+	$viewHelpers({
 		// Add the following code to your template if you want to break somewhere and look at the jsRender stack: 
 		// '{{:~breakHere()}}' +
 		breakHere:function() {
