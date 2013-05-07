@@ -4,19 +4,23 @@
 <head>
 	<title>Template Designer</title>
 
-	<link rel="stylesheet" type="text/css" href="src/templateDesigner.css">
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="src/templateDesigner.css">
 	<script type="text/javascript" src="lib/jsrender-1.0.js"></script>
 	<script type="text/javascript" src="src/articleRenderer.js"></script>
 	<script type="text/javascript" src="src/publication.js"></script>
 	<script type="text/javascript" src="src/templateDesigner.js"></script>
+	<script type="text/javascript" src="src/openFile.js"></script>
 
 	<script type="text/javascript">
 
 	'use strict'
 	window.onload = function() {
 		createTD();
+
 		$("#savePage").click(function() { savePage(); });
 		$("#openPage").click(function() { openPage(); });
 	};
@@ -27,17 +31,27 @@
 		singleton = new ds.TemplateDesigner();
 		singleton.loadFromServer(function() {
 			var templateStr = JSON.stringify(singleton.getTemplate());
-			$("#templateData").html(templateStr);
+			$("#templateData").val(templateStr);
 		});
 	}
 
 	function savePage() {
 		var uriContent = "data:application/octet-stream," + encodeURIComponent($("#templateData").val());
-		window.open(uriContent, 'Save');		
+		window.location.href = uriContent;		
 	}
 
 	function openPage() {
-		$("#templateData").html("bar");
+		openFileDialog(openFile);
+	}
+
+	function openFile(file) {
+		var reader = new FileReader();
+
+		reader.onload = function(e) {	
+			$("#templateData").val(e.target.result);
+		};
+
+	  	reader.readAsText(file);
 	}
 
 	function renderPage(template, article) {
@@ -53,10 +67,20 @@
 
 </head>
 <body>
+
 	<form>
 		<input id="savePage" type="button" value="Save">
 		<input id="openPage" type="button" value="Open">
 	</form>
-	<textarea id="templateData" class="code" wrap="logical" style="height: 300px; width: 700px; " />
+
+	<textarea id="templateData" class="code" wrap="logical" style="height: 300px; width: 700px; ">
+	</textarea> 
+
+	<div id="openFileDialog" title="Open File">
+		<form>
+			<input type="file" id="files" name="files[]" />
+		</form>
+	</div>
+	
 </body>
 </html>

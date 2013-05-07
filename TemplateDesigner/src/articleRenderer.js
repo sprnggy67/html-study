@@ -14,11 +14,9 @@
  This class uses jsRender to do the heavy lifting. The templates are defined once and used many times
  by the renderPage and renderComponent functions.
 
- The renderer output is defined using a template as shown above. This describes the layout of the
+ The renderer output is defined using a template as shown above. The template describes the layout of the
  article as a series of hierarchical components, such as headline, standfirst, image, body, flow and grid.
  These components can be nested to create a rich layout.  
-
- The renderPage and renderComponent functions below are used to render an article in a given template.
 
  The tests for this can be found in articleRendererSpec.js
 
@@ -43,6 +41,9 @@ ds.ArticleRenderer.initialised = false;
 /**
  Render the complete HTML for a given template and article.
  Return the HTML.
+
+ This method clones the template and then injects the article data into the template.
+ This combined set of data is then used to render the HTML.
  */
 ds.ArticleRenderer.prototype.renderPage = function(template, article) {
 	// Clone the template and add article data to it.
@@ -62,6 +63,9 @@ ds.ArticleRenderer.prototype.renderPage = function(template, article) {
  Render the HTML for a given component and article. 
  The component may contain sub components.
  Return the HTML.
+
+ This method clones the template and then injects the article data into the template.
+ This combined set of data is then used to render the HTML.
  */
 ds.ArticleRenderer.prototype.renderComponent = function(component, article) {
 	// Clone the component and add article data to it.
