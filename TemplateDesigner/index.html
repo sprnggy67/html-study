@@ -13,57 +13,7 @@
 	<script type="text/javascript" src="src/articleRenderer.js"></script>
 	<script type="text/javascript" src="src/publication.js"></script>
 	<script type="text/javascript" src="src/templateDesigner.js"></script>
-	<script type="text/javascript" src="src/openFile.js"></script>
-
-	<script type="text/javascript">
-
-	'use strict'
-	window.onload = function() {
-		createTD();
-
-		$("#savePage").click(function() { savePage(); });
-		$("#openPage").click(function() { openPage(); });
-	};
-
-	var singleton;
-
-	function createTD() {
-		singleton = new ds.TemplateDesigner();
-		singleton.loadFromServer(function() {
-			var templateStr = JSON.stringify(singleton.getTemplate());
-			$("#templateData").val(templateStr);
-		});
-	}
-
-	function savePage() {
-		var uriContent = "data:application/octet-stream," + encodeURIComponent($("#templateData").val());
-		window.location.href = uriContent;		
-	}
-
-	function openPage() {
-		openFileDialog(openFile);
-	}
-
-	function openFile(file) {
-		var reader = new FileReader();
-
-		reader.onload = function(e) {	
-			$("#templateData").val(e.target.result);
-		};
-
-	  	reader.readAsText(file);
-	}
-
-	function renderPage(template, article) {
-		console.time("renderPage");
-		var renderer = new ds.ArticleRenderer();
-		var actualOutput = renderer.renderPage(template, article);
-		console.timeEnd("renderPage");
-		return actualOutput;
-	};
-
-
-</script>
+	<script type="text/javascript" src="src/openFileDialog.js"></script>
 
 </head>
 <body>

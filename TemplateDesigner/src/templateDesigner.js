@@ -1,43 +1,70 @@
 /**
- A TemplateDesigner 
+ The TemplateDesigner implementation
  */
 
 'use strict';
 
-var ds = ds || {};
+$(function () {
 
-ds.TemplateDesigner = function() {
-}
+	var template,
+		publication;
 
-/**
- Loads the default designer state from a server.
- */
-ds.TemplateDesigner.prototype.loadFromServer = function(callback) {
-	this.publication = new ds.Publication();
-	var that = this;
-	this.publication.loadFromServer(function() {
-		// Create the initial template.
-		that.template = JSON.parse(JSON.stringify(that.publication.getDefaultTemplate()));
+	initTD();
 
-		// Notify listeners.
-		callback();
-	});
-};
+	/**
+	 * Initializes the template designer data
+	 */
+	function initTD() {
+		publication = new ds.Publication();
+		publication.loadFromServer(function() {
+			template = JSON.parse(JSON.stringify(publication.getDefaultTemplate()));
+			var templateStr = JSON.stringify(template);
+			$("#templateData").val(templateStr);
+		});
 
-/**
- Returns the publication name.
- */
-ds.TemplateDesigner.prototype.getPublication = function() {
-	return this.publication;
-};
+		$("#savePage").click(function() { saveFile(); });
+		$("#openPage").click(function() { openFile(); });
+	}
 
-/**
- Returns the template.
- */
-ds.TemplateDesigner.prototype.getTemplate = function() {
-	return this.template;
-};
+	/**
+	 * Saves the current template to a file.
+	 */
+	function saveFile() {
+		var uriContent = "data:application/octet-stream," + encodeURIComponent($("#templateData").val());
+		window.location.href = uriContent;		
+	}
 
+	/**
+	 * Asks the user to select a file, and then opens it.
+	 */
+	function openFile() {
+		ds.openFileDialog(openFileNamed);
+	}
 
+	/**
+	 * Opens a named file
+	 */
+	function openFileNamed(file) {
+		var reader = new FileReader();
+
+		reader.onload = function(e) {	
+			$("#templateData").val(e.target.result);
+		};
+
+	  	reader.readAsText(file);
+	}
+
+	/**
+	 * Renders an article
+	 */
+	function renderArticle(template, article) {
+		console.time("renderArticle");
+		var renderer = new ds.ArticleRenderer();
+		var actualOutput = renderer.renderPage(template, article);
+		console.timeEnd("renderArticle");
+		return actualOutput;
+	};
+
+});
 
 
