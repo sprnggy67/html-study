@@ -8,14 +8,23 @@ $(function () {
 
 	var article,
 		publication,
-		template;
+		template,
+		typeLibrary;
 
-	initTD();
+	init();
 
 	/**
 	 * Initializes the template designer data
 	 */
-	function initTD() {
+	function init() {
+		initPalette();
+		initModel();
+
+		$("#savePage").click(function() { saveFile(); });
+		$("#openPage").click(function() { openFile(); });
+	}
+
+	function initModel() {
 		article = sampleArticles[0].definition;
 
 		publication = new ds.Publication();
@@ -24,9 +33,12 @@ $(function () {
 			template.designTime = true;
 			renderArticle();
 		});
+	}
 
-		$("#savePage").click(function() { saveFile(); });
-		$("#openPage").click(function() { openFile(); });
+	function initPalette() {
+		typeLibrary = new ds.ComponentTypeLib();
+    	typeLibrary.loadRegistry();
+		$("#paletteList").html($("#paletteItemTemplate").render(typeLibrary.getChildren()));
 	}
 
 	/**

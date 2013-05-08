@@ -1,13 +1,5 @@
 /**
- @deprecated
-
- A library of comopnents.
-
- This class was deprecated when I moved to a full implementation of templating with jsRender.
-
- In retrospect, the children could be implemented as an javascript object with associative array properties.
- They should all have unique names.
- 
+ A library of components.
  */
 
 'use strict'
@@ -23,10 +15,12 @@ ds.ComponentTypeLib.prototype.getInfo = function() {
 };
 
 ds.ComponentTypeLib.prototype.loadRegistry = function() {
-	this.add(ds.ComponentType.makeComponentType('headline', '<h1>{{:headline}}</h1>'));
-	this.add(ds.ComponentType.makeComponentType('standFirst', '<h2>{{:standFirst}}</h2>'));
-	this.add(ds.ComponentType.makeComponentType('body', '{{:body}}'));
-	this.add(ds.ComponentType.makeComponentType('image', '<img src="{{:image}}">'));
+	this.add(new ds.ComponentType('headline', 'Headline'));
+	this.add(new ds.ComponentType('standFirst', 'Standfirst'));
+	this.add(new ds.ComponentType('body', 'Body'));
+	this.add(new ds.ComponentType('image', 'Main image'));
+	this.add(new ds.ComponentType('flow', 'Flow'));
+	this.add(new ds.ComponentType('grid', 'Grid'));
 };
 
 ds.ComponentTypeLib.prototype.add = function(child) {
@@ -39,11 +33,11 @@ ds.ComponentTypeLib.prototype.length = function() {
 	return this.children.length; 
 };
 
-ds.ComponentTypeLib.prototype.objectAt = function(index) {
+ds.ComponentTypeLib.prototype.componentAt = function(index) {
 	return this.children[index]; 
 };
 
-ds.ComponentTypeLib.prototype.objectNamed = function(name) {
+ds.ComponentTypeLib.prototype.componentNamed = function(name) {
 	var length = this.children.length;
 	for (var i = 0; i < length; i ++) {
 		var child = this.children[i];
@@ -51,6 +45,10 @@ ds.ComponentTypeLib.prototype.objectNamed = function(name) {
 			return child;
 	}
 	return null;
+};
+
+ds.ComponentTypeLib.prototype.getChildren = function() {
+	return this.children;
 };
 
 

@@ -6,10 +6,42 @@
     margin:0px 0px 10px 0px;
 }
 
-#canvas {
+#palette {
+	width: 190px;
     border:solid 1px black;
     margin:0px 0px 10px 0px;
-	position: relative;
+	overflow: auto;
+    float:left; 
+}
+
+#palette {
+	width: 190px;
+    border:solid 1px black;
+    margin:0px 0px 10px 0px;
+	overflow: auto;
+    float:left; 
+}
+
+#paletteList {
+	width: 100%;
+    margin:0px;
+    padding:0px;
+}
+
+.paletteItem {
+	list-style-type: none;
+    margin:5px;
+    padding:5px;
+	background-color:Tan
+}
+
+#canvas {
+	float:left;
+	height: 600px; 
+	width: 800px;
+    border:solid 1px black;
+    margin:0px 0px 10px 10px;
+	position:relative; // The child div's need to sit inside the canvas
 	overflow: auto;
 }
 

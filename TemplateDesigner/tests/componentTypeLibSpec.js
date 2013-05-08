@@ -17,17 +17,17 @@ describe("ds.ComponentTypeLib", function() {
   it("should add component types", function() {
     var input = new ds.ComponentTypeLib();
 
-    var c1 = new ds.ComponentType("Text","{{>data}}");
+    var c1 = new ds.ComponentType("text","DisplayText");
     input.add(c1);
-    expect(input.objectAt(0)).toBe(c1);
+    expect(input.componentAt(0)).toBe(c1);
 
-    var c2 = new ds.ComponentType("Text","{{>data}}");
+    var c2 = new ds.ComponentType("text","DisplayText");
     input.add(c2);
-    expect(input.objectAt(0)).toBe(c1);
-    expect(input.objectAt(1)).toBe(c2);
+    expect(input.componentAt(0)).toBe(c1);
+    expect(input.componentAt(1)).toBe(c2);
   });
 
-  it("throws an exception when adding invalid children", function() {
+  it("throws an exception when adding invalid components", function() {
     var input = new ds.ComponentTypeLib();
     var exceptionThrown = false;
     try {
@@ -45,33 +45,48 @@ describe("ds.ComponentTypeLib", function() {
     expect(actualSize).toEqual(expectedSize);
   });
 
-  it("should return size 2 when there are two children", function() {
+  it("should return size 2 when there are two components", function() {
     var input = new ds.ComponentTypeLib();
-    input.add(new ds.ComponentType("Text","{{>data}}"));
-    input.add(new ds.ComponentType("Image","{{>data}}"));
+    input.add(new ds.ComponentType("text","DisplayText"));
+    input.add(new ds.ComponentType("Image","DisplayText"));
     var expectedSize = 2;
     var actualSize = input.length();
     expect(actualSize).toEqual(expectedSize);
   });
 
-  it("should return children named:", function() {
+  it("should return components named:", function() {
     var input = new ds.ComponentTypeLib();
 
-    var c1 = new ds.ComponentType("Text","{{>data}}");
+    var c1 = new ds.ComponentType("text","DisplayText");
     input.add(c1);
-    expect(input.objectNamed("Text")).toBe(c1);
+    expect(input.componentNamed("text")).toBe(c1);
 
-    var c2 = new ds.ComponentType("Image","{{>data}}");
+    var c2 = new ds.ComponentType("image","DisplayImage");
     input.add(c2);
-    expect(input.objectNamed("Text")).toBe(c1);
-    expect(input.objectNamed("Image")).toBe(c2);
+    expect(input.componentNamed("text")).toBe(c1);
+    expect(input.componentNamed("image")).toBe(c2);
   });
 
   it("should return null when child named does not exist", function() {
     var input = new ds.ComponentTypeLib();
 
-    var c1 = new ds.ComponentType("Text","{{>data}}");
+    var c1 = new ds.ComponentType("text","DisplayText");
     input.add(c1);
-    expect(input.objectNamed("Image")).toBeNull();
+    expect(input.componentNamed("Image")).toBeNull();
   });
+
+  it("should return its children", function() {
+    var input = new ds.ComponentTypeLib();
+
+    var c1 = new ds.ComponentType("text","DisplayText");
+    input.add(c1);
+    var c2 = new ds.ComponentType("image","DisplayImage");
+    input.add(c2);
+ 
+    var children = input.getChildren();
+    expect(children.length).toEqual(2);
+    expect(children[0]).toBe(c1);
+    expect(children[1]).toBe(c2);
+  });
+
 });
