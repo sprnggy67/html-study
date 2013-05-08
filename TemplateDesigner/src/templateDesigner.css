@@ -1,13 +1,13 @@
 .button {
     clear: both;
     font-size:12px;
-    border:solid 1px #aacfe4;
+    border:solid 1px black;
     width:100px;
     margin:0px 0px 10px 0px;
 }
 
 #canvas {
-    border:solid 1px #aacfe4;
+    border:solid 1px black;
     margin:0px 0px 10px 0px;
 	position: relative;
 	overflow: auto;
@@ -16,4 +16,10 @@
 #templateModel {
     margin:0px 0px 10px 0px;
     padding:0px;
+    border:solid 1px black;
 }
+
+.gridCell {
+	background-color:LightYellow
+}
+

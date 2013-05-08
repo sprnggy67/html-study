@@ -16,7 +16,7 @@ ds.Publication = function() {
 ds.Publication.prototype.loadFromServer = function(callback) {
 	// Load the data.
 	this.name = "The National";
-	this.defaultTemplate = defaultTemplates.empty; // front3 contains a full template.
+	this.defaultTemplate = defaultTemplates.front3; // Use empty or front3
 
 	// Invoke the callback.
 	callback();
