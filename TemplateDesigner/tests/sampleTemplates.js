@@ -231,6 +231,20 @@ var sampleTemplates = [
 		}
 	}},
 
+	{ name:"Empty Grid", definition: {
+		designTime:true,
+		root: {
+			componentType:"grid",
+			orientation:"landscape",
+			width:800, 
+			height:600,
+			rows:3, 
+			columns:4,
+			children: [
+			]
+		}
+	}},
+
 
 ];
 	

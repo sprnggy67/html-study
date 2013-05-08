@@ -6,8 +6,9 @@
 
 $(function () {
 
-	var template,
-		publication;
+	var article,
+		publication,
+		template;
 
 	initTD();
 
@@ -15,11 +16,13 @@ $(function () {
 	 * Initializes the template designer data
 	 */
 	function initTD() {
+		article = sampleArticles[0].definition;
+
 		publication = new ds.Publication();
 		publication.loadFromServer(function() {
 			template = JSON.parse(JSON.stringify(publication.getDefaultTemplate()));
-			var templateStr = JSON.stringify(template);
-			$("#templateData").val(templateStr);
+			template.designTime = true;
+			renderArticle();
 		});
 
 		$("#savePage").click(function() { saveFile(); });
@@ -30,7 +33,7 @@ $(function () {
 	 * Saves the current template to a file.
 	 */
 	function saveFile() {
-		var uriContent = "data:application/octet-stream," + encodeURIComponent($("#templateData").val());
+		var uriContent = "data:application/octet-stream," + encodeURIComponent($("#templateModel").val());
 		window.location.href = uriContent;		
 	}
 
@@ -47,8 +50,9 @@ $(function () {
 	function openFileNamed(file) {
 		var reader = new FileReader();
 
-		reader.onload = function(e) {	
-			$("#templateData").val(e.target.result);
+		reader.onload = function(e) {
+			template = 	e.target.result;
+			renderArticle();
 		};
 
 	  	reader.readAsText(file);
@@ -57,13 +61,20 @@ $(function () {
 	/**
 	 * Renders an article
 	 */
-	function renderArticle(template, article) {
+	function renderArticle() {
 		console.time("renderArticle");
 		var renderer = new ds.ArticleRenderer();
 		var actualOutput = renderer.renderPage(template, article);
+		$("#canvas").html(actualOutput);
 		console.timeEnd("renderArticle");
-		return actualOutput;
+
+		renderTemplate();
 	};
+
+	function renderTemplate() {
+		var templateStr = JSON.stringify(template, null, " ");
+		$("#templateModel").val(templateStr);
+	}
 
 });
 

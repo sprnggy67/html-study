@@ -16,20 +16,7 @@ ds.Publication = function() {
 ds.Publication.prototype.loadFromServer = function(callback) {
 	// Load the data.
 	this.name = "The National";
-	this.defaultTemplate = {
-		root: {
-			componentType:"grid",
-			orientation:"landscape",
-			width:800, 
-			height:600,
-			rows:3, 
-			columns:4,
-			rowGutter:10,
-			columnGutter:10,
-			children: [
-			]
-		}
-	};
+	this.defaultTemplate = defaultTemplates.empty; // front3 contains a full template.
 
 	// Invoke the callback.
 	callback();

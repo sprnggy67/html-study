@@ -275,6 +275,24 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
+	it("should generate an empty grid component", function() {
+		var renderer = new ds.ArticleRenderer();
+		var component = {
+			componentType:"grid",
+			orientation:"landscape",
+			width:1024, 
+			height:768,
+			rows:2, 
+			columns:2,
+			designTime:true,
+			children: [
+			]
+		};
+		var expectedOutput = '<div><div class="gridCell" style="position:absolute; left:0px; top:0px; width:512px; height:384px;"></div><div class="gridCell" style="position:absolute; left:512px; top:0px; width:512px; height:384px;"></div><div class="gridCell" style="position:absolute; left:0px; top:384px; width:512px; height:384px;"></div><div class="gridCell" style="position:absolute; left:512px; top:384px; width:512px; height:384px;"></div></div>';
+		var actualOutput = renderer.renderComponent(component, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
 	it("should generate a simple HTML page with a headline component", function() {
 		var renderer = new ds.ArticleRenderer();
 		var template = {

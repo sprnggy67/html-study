@@ -125,6 +125,18 @@ ds.ArticleRenderer._initClass = function() {
 			'</div>',
 		grid: 
 			'<div>' +
+				'{{if ~root.designTime}}' +
+					'{{for ~getRowObjects(#data)}}' +
+						'{{for ~getCellObjects(#data)}}' +
+							'<div class="gridCell" style="position:absolute; ' +
+									'left:{{:~getLeftPx(position, grid)}}px; ' +
+									'top:{{:~getTopPx(position, grid)}}px; ' +
+									'width:{{:~getWidthPx(position, grid)}}px; ' +
+									'height:{{:~getHeightPx(position, grid)}}px;">' +
+							'</div>' +
+						'{{/for}}' +
+					'{{/for}}' +
+				'{{/if}}' +
 				'{{for children}}' +
 					'<div style="position:absolute; overflow:hidden; ' +
 							'left:{{:~getLeftPx(position, #parent.parent.data)}}px; ' +
@@ -153,6 +165,22 @@ ds.ArticleRenderer._initClass = function() {
 		},
 		getHeightPx:function(position, grid) {
 			return ds.ArticleRenderer._calcWidthPx(position.top, position.height, grid.height, grid.rows, grid.rowGutter);
+		},
+		getRowObjects:function(grid) {
+			var result = [];
+			for (var row = 0; row < grid.rows; row ++) {
+				result.push({ "row":row, "grid":grid });
+			}
+			return result;
+		},
+		getCellObjects:function(rowObject) {
+			var row = rowObject.row;
+			var grid = rowObject.grid;
+			var result = [];
+			for (var column = 0; column < grid.columns; column ++) {
+				result.push({ "position": { "left":column, "top":row, "width":1, "height":1 }, "grid":grid });
+			}
+			return result;
 		},
 	});
 

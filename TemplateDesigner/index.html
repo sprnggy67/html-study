@@ -8,10 +8,16 @@
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
-	<link rel="stylesheet" type="text/css" href="src/templateDesigner.css">
 	<script type="text/javascript" src="lib/jsrender-1.0.js"></script>
+
 	<script type="text/javascript" src="src/articleRenderer.js"></script>
+	<script type="text/javascript" src="src/renderRuntime.js"></script>
+	<link rel="stylesheet" type="text/css" href="src/renderRuntime.css">
+
+	<link rel="stylesheet" type="text/css" href="src/templateDesigner.css">
 	<script type="text/javascript" src="src/publication.js"></script>
+	<script type="text/javascript" src="src/sampleArticles.js"></script>
+	<script type="text/javascript" src="src/defaultTemplates.js"></script>
 	<script type="text/javascript" src="src/templateDesigner.js"></script>
 	<script type="text/javascript" src="src/openFileDialog.js"></script>
 
@@ -19,11 +25,14 @@
 <body>
 
 	<form>
-		<input id="savePage" type="button" value="Save">
-		<input id="openPage" type="button" value="Open">
+		<input id="savePage" type="button" value="Save" class="button">
+		<input id="openPage" type="button" value="Open" class="button">
 	</form>
 
-	<textarea id="templateData" class="code" wrap="logical" style="height: 300px; width: 700px; ">
+	<div id="canvas" style="height: 600px; width: 800px;">
+	</div>
+
+	<textarea id="templateModel" class="code" wrap="logical" style="height: 600px; width: 800px; ">
 	</textarea> 
 
 	<div id="openFileDialog" title="Open File">
