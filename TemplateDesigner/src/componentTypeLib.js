@@ -15,12 +15,30 @@ ds.ComponentTypeLib.prototype.getInfo = function() {
 };
 
 ds.ComponentTypeLib.prototype.loadRegistry = function() {
-	this.add(new ds.ComponentType('headline', 'Headline'));
-	this.add(new ds.ComponentType('standfirst', 'Standfirst'));
-	this.add(new ds.ComponentType('body', 'Body'));
-	this.add(new ds.ComponentType('image', 'Main image'));
-	this.add(new ds.ComponentType('flow', 'Flow'));
-	this.add(new ds.ComponentType('grid', 'Grid'));
+	this.add(new ds.ComponentType('headline', 'Headline', ds.ComponentTypeLib.createSimpleComponent));
+	this.add(new ds.ComponentType('standfirst', 'Standfirst', ds.ComponentTypeLib.createSimpleComponent));
+	this.add(new ds.ComponentType('body', 'Body', ds.ComponentTypeLib.createSimpleComponent));
+	this.add(new ds.ComponentType('image', 'Main image', ds.ComponentTypeLib.createSimpleComponent));
+	this.add(new ds.ComponentType('flow', 'Flow', ds.ComponentTypeLib.createCompositeComponent));
+	this.add(new ds.ComponentType('grid', 'Grid', ds.ComponentTypeLib.createCompositeComponent));
+	this.add(new ds.ComponentType('teaser', 'Teaser', ds.ComponentTypeLib.createSimpleComponent));
+};
+
+ds.ComponentTypeLib.idCount = 0;
+
+ds.ComponentTypeLib.createSimpleComponent = function(type) {
+	return {
+		componentType: type,
+		dataPath: "children",
+		dataIndex: 0,
+		uniqueID: "cmp" + (++ds.ComponentTypeLib.idCount)
+	};
+};
+
+ds.ComponentTypeLib.createCompositeComponent = function(type) {
+	var result = ds.ComponentTypeLib.createSimpleComponent(type);
+	result.children = [];
+	return result;
 };
 
 ds.ComponentTypeLib.prototype.add = function(child) {

@@ -6,9 +6,10 @@
 
 var ds = ds || {};
 
-ds.ComponentType = function(name, displayName) {
+ds.ComponentType = function(name, displayName, ctorFunc) {
     this.name = name;
     this.displayName = displayName;
+    this.ctorFunc = ctorFunc;
 }
  
 ds.ComponentType.prototype.getInfo = function() {
@@ -21,5 +22,11 @@ ds.ComponentType.prototype.getName = function() {
 
 ds.ComponentType.prototype.getDisplayName = function() {
     return this.displayName;
+};
+
+ds.ComponentType.prototype.createComponent = function(param1, param2, param3) {
+    if (this.ctorFunc)
+    	return this.ctorFunc(param1, param2, param3);
+    throw "ctorFunc is not defined in ds.ComponentType.createComponent";
 };
 

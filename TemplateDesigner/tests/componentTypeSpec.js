@@ -29,4 +29,13 @@ describe("ds.ComponentType", function() {
     expect(actualOutput).toEqual(expectedOutput);
   });
 
+  it("implements constructor func", function() {
+    var ctorCalled = false;
+    var input = new ds.ComponentType("text", "DisplayText", function(foo, bar) {
+      ctorCalled = true;
+    });
+    input.createComponent();
+    expect(ctorCalled).toBeTruthy();
+  });
+
 });

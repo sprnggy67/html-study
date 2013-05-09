@@ -172,7 +172,7 @@ describe("ds.ArticleRenderer", function() {
 				}
 			]
 		};
-		var expectedOutput = "<div><h1>h1</h1>body1</div>";
+		var expectedOutput = '<div class="flow"><h1>h1</h1>body1</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -194,7 +194,7 @@ describe("ds.ArticleRenderer", function() {
 				}
 			]
 		};
-		var expectedOutput = "<div><h1>h2</h1>body2</div>";
+		var expectedOutput = '<div class="flow"><h1>h2</h1>body2</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});

@@ -93,34 +93,42 @@ $(function () {
 	function addCanvasInteraction() {
 		$(".gridCell").droppable({
 			accept: function( event ) {
-				return canDropPaletteItem(this);
+				return canDropPaletteItemOnGrid(this);
 			},
-      		hoverClass: "gridCellHover",
+      		hoverClass: "dropTarget",
 			drop: function( event, ui ) {
 				var draggable = ui.draggable;
 				if (ui.draggable.hasClass("paletteItem"))
-					dropPaletteItem(draggable, this);
+					dropPaletteItemOnGrid(draggable, this);
+			}
+		});
+		$(".flow").droppable({
+      		hoverClass: "dropTarget",
+			drop: function( event, ui ) {
+				var draggable = ui.draggable;
+				if (ui.draggable.hasClass("paletteItem"))
+					dropPaletteItemOnFlow(draggable, this);
 			}
 		});
 	}
 
 	// TODO: Convert into OO method
-	function canDropPaletteItem(target) {
+	function canDropPaletteItemOnGrid(target) {
 		// Get the drop target.
 		var left = +target.dataset.column;
 		var top = +target.dataset.row;
 
 		// Get the target parent.
 		var parentID = target.parentElement.id;
-		var grid = findComponent(parentID);
-		if (grid == null) {
+		var parent = findComponent(parentID);
+		if (parent == null) {
 			console.log("Unable to find parent in dropPaletteItem");
 			return false;
 		}
 
-		var childCount = grid.children.length;
+		var childCount = parent.children.length;
 		for (var i = 0; i < childCount; ++i) {
-			var position = grid.children[i].position;
+			var position = parent.children[i].position;
 			// TODO: Convert into rectangle function
 			if ((position.left <= left && left < (position.left + position.width)) &&
 				(position.top <= top && top < (position.top + position.height)))
@@ -131,11 +139,11 @@ $(function () {
 	}
 
 	// TODO: Convert into OO method
-	function dropPaletteItem(draggable, target) {
+	function dropPaletteItemOnGrid(draggable, target) {
 		// Get the target parent.
 		var parentID = target.parentElement.id;
-		var grid = findComponent(parentID);
-		if (grid == null) {
+		var parent = findComponent(parentID);
+		if (parent == null) {
 			console.log("Unable to find parent in dropPaletteItem");
 			return;
 		}
@@ -143,19 +151,44 @@ $(function () {
 		// Create the child component.
 		// TODO: Convert into factory method.
 		var paletteItem = draggable[0];
-		var componentType = paletteItem.dataset.ctype;
-		var component = {
-			"componentType": componentType,
-			dataPath: "children",
-			dataIndex: 0,
-			position: {
+		var componentType = typeLibrary.componentNamed(paletteItem.dataset.ctype);
+		if (componentType == null) {
+			console.log("Unable to find ctype in dropPaletteItem");
+			return;
+		}
+		var component = componentType.createComponent(paletteItem.dataset.ctype);
+		component.position = {
 				left: +target.dataset.column,
 				top: +target.dataset.row,
 				width:1,
 				height:1
-			}
 		};
-		grid.children.push(component);
+		parent.children.push(component);
+
+		// Rerender
+		renderArticle();
+	}
+
+	// TODO: Convert into OO method
+	function dropPaletteItemOnFlow(draggable, target) {
+		// Get the target parent.
+		var parentID = target.id;
+		var parent = findComponent(parentID);
+		if (parent == null) {
+			console.log("Unable to find parent in dropPaletteItem");
+			return;
+		}
+
+		// Create the child component.
+		// TODO: Convert into factory method.
+		var paletteItem = draggable[0];
+		var componentType = typeLibrary.componentNamed(paletteItem.dataset.ctype);
+		if (componentType == null) {
+			console.log("Unable to find ctype in dropPaletteItem");
+			return;
+		}
+		var component = componentType.createComponent(paletteItem.dataset.ctype);
+		parent.children.push(component);
 
 		// Rerender
 		renderArticle();
@@ -178,7 +211,9 @@ $(function () {
 		if (component.children) {
 			var length = component.children.length;
 			for (var i = 0; i < length; ++i) {
-				this._linkRealData(component.children[i], article);
+				var result = findComponentIn(id, component.children[i]);
+				if (result != null)
+					return result;
 			}
 		}
 		return null;

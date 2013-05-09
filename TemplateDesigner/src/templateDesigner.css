@@ -60,6 +60,13 @@
 	background-color:LightYellow
 }
 
-.gridCellHover {
+.flow {
+    min-height:100%;
+    height:auto !important;
+    height:100%;     
+    background-color:LightGreen
+}
+
+.dropTarget {
     background-color:Tan
 }

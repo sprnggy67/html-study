@@ -120,7 +120,11 @@ ds.ArticleRenderer._initClass = function() {
 			'{{/if}}',
 		image: '<img src="{{:realData.image}}">',
 		flow: 
-			'<div>' +
+			'<div class="flow"' +
+			'{{if uniqueID}}' +
+				' id="{{:uniqueID}}"' +
+			'{{/if}}' +
+			'>' +
 				'{{for children tmpl="component"/}}' +
 			'</div>',
 		grid: 
