@@ -1,5 +1,5 @@
 /**
- A library of components.
+ * A library of components.
  */
 
 'use strict'
@@ -16,7 +16,7 @@ ds.ComponentTypeLib.prototype.getInfo = function() {
 
 ds.ComponentTypeLib.prototype.loadRegistry = function() {
 	this.add(new ds.ComponentType('headline', 'Headline'));
-	this.add(new ds.ComponentType('standFirst', 'Standfirst'));
+	this.add(new ds.ComponentType('standfirst', 'Standfirst'));
 	this.add(new ds.ComponentType('body', 'Body'));
 	this.add(new ds.ComponentType('image', 'Main image'));
 	this.add(new ds.ComponentType('flow', 'Flow'));

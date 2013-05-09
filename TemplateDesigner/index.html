@@ -23,10 +23,11 @@
 	<script type="text/javascript" src="src/openFileDialog.js"></script>
 	<script type="text/javascript" src="src/componentType.js"></script>
 	<script type="text/javascript" src="src/componentTypeLib.js"></script>
+	<script type="text/javascript" src="src/template.js"></script>
 	<script type="text/javascript" src="src/templateDesigner.js"></script>
 
 	<script id="paletteItemTemplate" type="text/x-jsrender ">
-	  <li class="paletteItem">{{:displayName}}</li>
+	  <li class="paletteItem" data-ctype="{{:name}}">{{:displayName}}</li>
 	</script>
 
 </head>
@@ -45,7 +46,7 @@
 	<div id="canvas">
 	</div>
 
-	<textarea id="templateModel" class="code" wrap="logical" style="height: 600px; width: 800px; ">
+	<textarea id="templateModel" class="code" wrap="logical">
 	</textarea> 
 
 	<div id="openFileDialog" title="Open File">

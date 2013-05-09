@@ -10,6 +10,7 @@ var defaultTemplates = {
 			columns:4,
 			rowGutter:10,
 			columnGutter:10,
+			uniqueID:"grid001",
 			children: [
 			]
 		}
@@ -25,6 +26,7 @@ var defaultTemplates = {
 			columns:4,
 			rowGutter:10,
 			columnGutter:10,
+			uniqueID:"grid001",
 			children: [
 				{
 					componentType:"flow",
@@ -43,7 +45,8 @@ var defaultTemplates = {
 						{
 							componentType:"body",
 							dataPath:"children",
-							dataIndex:0
+							dataIndex:0,
+							uniqueID:"ref001",
 						}
 					],
 					position: { left:0, top:0, width:1, height:3 }

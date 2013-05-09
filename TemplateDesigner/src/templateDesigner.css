@@ -32,7 +32,8 @@
 	list-style-type: none;
     margin:5px;
     padding:5px;
-	background-color:Tan
+	background:Tan;
+    border:solid 1px black;
 }
 
 #canvas {
@@ -49,9 +50,16 @@
     margin:0px 0px 10px 0px;
     padding:0px;
     border:solid 1px black;
+    left:202px;
+    height: 600px; 
+    width: 800px;
+    position:relative;
 }
 
 .gridCell {
 	background-color:LightYellow
 }
 
+.gridCellHover {
+    background-color:Tan
+}

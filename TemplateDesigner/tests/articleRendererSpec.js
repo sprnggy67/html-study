@@ -275,7 +275,7 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
-	it("should generate an empty grid component", function() {
+	it("should generate a design time empty grid component", function() {
 		var renderer = new ds.ArticleRenderer();
 		var component = {
 			componentType:"grid",
@@ -285,10 +285,11 @@ describe("ds.ArticleRenderer", function() {
 			rows:2, 
 			columns:2,
 			designTime:true,
+			uniqueID:"grid01",
 			children: [
 			]
 		};
-		var expectedOutput = '<div><div class="gridCell" style="position:absolute; left:0px; top:0px; width:512px; height:384px;"></div><div class="gridCell" style="position:absolute; left:512px; top:0px; width:512px; height:384px;"></div><div class="gridCell" style="position:absolute; left:0px; top:384px; width:512px; height:384px;"></div><div class="gridCell" style="position:absolute; left:512px; top:384px; width:512px; height:384px;"></div></div>';
+		var expectedOutput = '<div id="grid01"><div class="gridCell" style="position:absolute; left:0px; top:0px; width:512px; height:384px;" data-row="0" data-column="0"></div><div class="gridCell" style="position:absolute; left:512px; top:0px; width:512px; height:384px;" data-row="0" data-column="1"></div><div class="gridCell" style="position:absolute; left:0px; top:384px; width:512px; height:384px;" data-row="1" data-column="0"></div><div class="gridCell" style="position:absolute; left:512px; top:384px; width:512px; height:384px;" data-row="1" data-column="1"></div></div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});

@@ -124,7 +124,11 @@ ds.ArticleRenderer._initClass = function() {
 				'{{for children tmpl="component"/}}' +
 			'</div>',
 		grid: 
-			'<div>' +
+			'<div' + 
+			'{{if uniqueID}}' +
+				' id="{{:uniqueID}}"' +
+			'{{/if}}' +
+			'>' +
 				'{{if ~root.designTime}}' +
 					'{{for ~getRowObjects(#data)}}' +
 						'{{for ~getCellObjects(#data)}}' +
@@ -132,7 +136,8 @@ ds.ArticleRenderer._initClass = function() {
 									'left:{{:~getLeftPx(position, grid)}}px; ' +
 									'top:{{:~getTopPx(position, grid)}}px; ' +
 									'width:{{:~getWidthPx(position, grid)}}px; ' +
-									'height:{{:~getHeightPx(position, grid)}}px;">' +
+									'height:{{:~getHeightPx(position, grid)}}px;" ' +
+									'data-row="{{:position.top}}" data-column="{{:position.left}}">' +
 							'</div>' +
 						'{{/for}}' +
 					'{{/for}}' +
