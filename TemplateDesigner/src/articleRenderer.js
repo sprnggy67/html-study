@@ -134,7 +134,7 @@ ds.ArticleRenderer._initClass = function() {
 			'{{:realData.body}}' +
 			'</span>',
 		image: 
-			'<img class="selectable"' +
+			'<img class="selectable" style="width:100%;"' +
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}" ' +
 				'{{/if}}' +
