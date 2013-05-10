@@ -41,7 +41,12 @@ $(function () {
 		typeLibrary = new ds.ComponentTypeLib();
     	typeLibrary.loadRegistry();
 		$("#paletteList").html($("#paletteItemTemplate").render(typeLibrary.getChildren()));
-		$(".paletteItem").draggable({ containment: "document", helper: "clone", zIndex: 100 });
+		$(".paletteItem").draggable({ 
+			containment: "document", 
+			helper: "clone", 
+			zIndex: 100,
+			cursor: "pointer", 
+		 });
 	}
 
 	/**
@@ -99,18 +104,27 @@ $(function () {
 
 	function addCanvasInteraction() {
 		$(".gridCell").droppable({
-			accept: function( event ) {
-				return canDropPaletteItemOnGrid(this);
+		    tolerance: "pointer",
+			accept: function( event) {
+				var draggable = $(event.context);
+				if (draggable.hasClass("paletteItem"))
+					return canDropPaletteItemOnGrid(this);
+				if (draggable.hasClass("selectable")) {
+					return canDropSelectableOnGrid(draggable, this);
+				}
 			},
       		hoverClass: "dropTarget",
 			drop: function( event, ui ) {
 				var draggable = ui.draggable;
-				if (ui.draggable.hasClass("paletteItem"))
+				if (draggable.hasClass("paletteItem"))
 					dropPaletteItemOnGrid(draggable, this);
-			}
+				if (draggable.hasClass("selectable"))
+					dropSelectableOnGrid(draggable, this);
+			},
 		});
 
 		$(".flow").droppable({
+		    tolerance: "pointer",
       		hoverClass: "dropTarget",
 			drop: function( event, ui ) {
 				var draggable = ui.draggable;
@@ -124,6 +138,14 @@ $(function () {
 			event.stopPropagation();
 		});
 
+		$(".selectable").draggable({ 
+			containment: "document", 
+			helper: createSelectableDragElement,
+			zIndex: 1000, 
+			appendTo: '#canvas', 
+			cursor: "pointer", 
+			cursorAt: { top: 56, left: 56 }
+		});
 	}
 
 	function selectElement(element) {
@@ -205,26 +227,57 @@ $(function () {
 		renderArticle();		
 	}
 
+	function createSelectableDragElement( event ) {
+		var $this = $(this);
+		var clone = $this.clone().removeAttr("id");
+		clone.css("maxWidth", $this.width());
+		return clone;
+	}
+
 	// TODO: Convert into OO method
 	function canDropPaletteItemOnGrid(target) {
-		// Get the drop target.
-		var left = +target.dataset.column;
-		var top = +target.dataset.row;
+		return canDropOnGrid(target, 1, 1);
+	}
 
-		// Get the target parent.
-		var parentID = target.parentElement.id;
-		var parent = findComponent(parentID);
-		if (parent == null) {
-			console.log("Unable to find parent in canDropPaletteItem: " + parentID);
+	function canDropSelectableOnGrid(draggable, target) {
+		var element = draggable[0];
+		var component = findComponent(element.id);
+		if (component == null) {
+			console.log("Unable to find component in canDropSelectableOnGrid: " + element);
+			return false;
+		}
+		if (component.position === undefined)
+			return false;
+		return canDropOnGrid(target, component.position.width, component.position.height);
+	}
+
+	// TODO: Convert into OO method
+	function canDropOnGrid(target, width, height) {
+		// Get the target grid
+		var gridID = target.parentElement.id;
+		var grid = findComponent(gridID);
+		if (grid == null) {
+			console.log("Unable to find grid in canDropOnGrid: " + gridID);
 			return false;
 		}
 
-		var childCount = parent.children.length;
+		// Calculate the target area
+		var left = +target.dataset.column;
+		var top = +target.dataset.row;
+		var right = left + width - 1;
+		var bottom = top + height - 1;
+
+		// Make sure the target area is in the grid.
+		if (left < 0 || top < 0 || right >= grid.columns || bottom >= grid.rows)
+			return false;
+
+		// Make sure the target area is unoccupied.
+		var childCount = grid.children.length;
 		for (var i = 0; i < childCount; ++i) {
-			var position = parent.children[i].position;
+			var position = grid.children[i].position;
 			// TODO: Convert into rectangle function
-			if ((position.left <= left && left < (position.left + position.width)) &&
-				(position.top <= top && top < (position.top + position.height)))
+			if ((position.left <= left && right < (position.left + position.width)) &&
+				(position.top <= top && bottom < (position.top + position.height)))
 				return false;
 		}
 
@@ -263,6 +316,28 @@ $(function () {
 
 		// Select the new component.
 		selectComponent(component);
+	}
+
+	// TODO: Convert into OO method
+	function dropSelectableOnGrid(draggable, target) {
+		// Get the component.
+		var element = draggable[0];
+		var component = findComponent(element.id);
+		if (component == null) {
+			console.log("Unable to find component in dropSelectableOnGrid: " + element);
+			return false;
+		}
+
+		// Reposition the component.
+		component.position.left = +target.dataset.column;
+		component.position.top = +target.dataset.row;
+
+		// See http://forum.jquery.com/topic/on-draggable-destroy-uncaught-typeerror-cannot-read-property-options-of-undefined
+		var draggable_data = draggable.data('ui-draggable');
+
+		// Rerender
+		renderArticle();
+		draggable.data('ui-draggable', draggable_data);
 	}
 
 	// TODO: Convert into OO method
