@@ -63,7 +63,7 @@ describe("ds.ArticleRenderer", function() {
 			dataPath:"children",
 			dataIndex:0
 		};
-		var expectedOutput = "<h1>h1</h1>";
+		var expectedOutput = '<h1 class="selectable">h1</h1>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -75,7 +75,7 @@ describe("ds.ArticleRenderer", function() {
 			dataPath:"children",
 			dataIndex:1
 		};
-		var expectedOutput = "<h1>h2</h1>";
+		var expectedOutput = '<h1 class="selectable">h2</h1>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -88,7 +88,7 @@ describe("ds.ArticleRenderer", function() {
 			dataPath:"children",
 			dataIndex:1
 		};
-		var expectedOutput = '<h1 style="font-size:20px">h2</h1>';
+		var expectedOutput = '<h1 class="selectable" style="font-size:20px">h2</h1>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -100,7 +100,7 @@ describe("ds.ArticleRenderer", function() {
 			dataPath:"children",
 			dataIndex:0
 		};
-		var expectedOutput = navigationArticle.children[0].body;
+		var expectedOutput = '<span class="selectable">body1</span>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -113,7 +113,7 @@ describe("ds.ArticleRenderer", function() {
 			dataPath:"children",
 			dataIndex:0
 		};
-		var expectedOutput = '<span style="font-size:20px">body1</span>';
+		var expectedOutput = '<span class="selectable" style="font-size:20px">body1</span>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -125,7 +125,7 @@ describe("ds.ArticleRenderer", function() {
 			dataPath:"children",
 			dataIndex:0
 		};
-		var expectedOutput = '<img src="img1.jpg">';
+		var expectedOutput = '<img class="selectable" src="img1.jpg">';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -137,7 +137,7 @@ describe("ds.ArticleRenderer", function() {
 			dataPath:"children",
 			dataIndex:0
 		};
-		var expectedOutput = "<h2>sf1</h2>";
+		var expectedOutput = '<h2 class="selectable">sf1</h2>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -150,7 +150,7 @@ describe("ds.ArticleRenderer", function() {
 			dataPath:"children",
 			dataIndex:0
 		};
-		var expectedOutput = '<h2 style="font-size:20px">sf1</h2>';
+		var expectedOutput = '<h2 class="selectable" style="font-size:20px">sf1</h2>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -172,7 +172,7 @@ describe("ds.ArticleRenderer", function() {
 				}
 			]
 		};
-		var expectedOutput = '<div class="flow"><h1>h1</h1>body1</div>';
+		var expectedOutput = '<div class="selectable flow"><h1 class="selectable">h1</h1><span class="selectable">body1</span></div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -194,7 +194,7 @@ describe("ds.ArticleRenderer", function() {
 				}
 			]
 		};
-		var expectedOutput = '<div class="flow"><h1>h2</h1>body2</div>';
+		var expectedOutput = '<div class="selectable flow"><h1 class="selectable">h2</h1><span class="selectable">body2</span></div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -229,7 +229,11 @@ describe("ds.ArticleRenderer", function() {
 				},
 			]
 		};
-		var expectedOutput = '<div><div style="position:absolute; overflow:hidden; left:0px; top:0px; width:256px; height:256px;"><h1>h1</h1></div><div style="position:absolute; overflow:hidden; left:0px; top:256px; width:256px; height:512px;">body1</div><div style="position:absolute; overflow:hidden; left:256px; top:0px; width:768px; height:768px;"><img src="img1.jpg"></div></div>';
+		var expectedOutput = '<div class="selectable">' +
+			'<div style="position:absolute; overflow:hidden; left:0px; top:0px; width:256px; height:256px;"><h1 class="selectable">h1</h1></div>' +
+			'<div style="position:absolute; overflow:hidden; left:0px; top:256px; width:256px; height:512px;"><span class="selectable">body1</span></div>' +
+			'<div style="position:absolute; overflow:hidden; left:256px; top:0px; width:768px; height:768px;"><img class="selectable" src="img1.jpg"></div>' +
+			'</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -266,10 +270,10 @@ describe("ds.ArticleRenderer", function() {
 				},
 			]
 		};
-		var expectedOutput = '<div>' +
-			'<div style="position:absolute; overflow:hidden; left:0px; top:0px; width:245px; height:245px;"><h1>h1</h1></div>' +
-			'<div style="position:absolute; overflow:hidden; left:0px; top:255px; width:245px; height:245px;">body1</div>' +
-			'<div style="position:absolute; overflow:hidden; left:255px; top:0px; width:245px; height:500px;"><img src="img1.jpg"></div>' +
+		var expectedOutput = '<div class="selectable">' +
+			'<div style="position:absolute; overflow:hidden; left:0px; top:0px; width:245px; height:245px;"><h1 class="selectable">h1</h1></div>' +
+			'<div style="position:absolute; overflow:hidden; left:0px; top:255px; width:245px; height:245px;"><span class="selectable">body1</span></div>' +
+			'<div style="position:absolute; overflow:hidden; left:255px; top:0px; width:245px; height:500px;"><img class="selectable" src="img1.jpg"></div>' +
 			'</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
@@ -289,7 +293,12 @@ describe("ds.ArticleRenderer", function() {
 			children: [
 			]
 		};
-		var expectedOutput = '<div id="grid01"><div class="gridCell" style="position:absolute; left:0px; top:0px; width:512px; height:384px;" data-row="0" data-column="0"></div><div class="gridCell" style="position:absolute; left:512px; top:0px; width:512px; height:384px;" data-row="0" data-column="1"></div><div class="gridCell" style="position:absolute; left:0px; top:384px; width:512px; height:384px;" data-row="1" data-column="0"></div><div class="gridCell" style="position:absolute; left:512px; top:384px; width:512px; height:384px;" data-row="1" data-column="1"></div></div>';
+		var expectedOutput = '<div class="selectable" id="grid01">' +
+			'<div class="gridCell" style="position:absolute; left:0px; top:0px; width:512px; height:384px;" data-row="0" data-column="0"></div>' +
+			'<div class="gridCell" style="position:absolute; left:512px; top:0px; width:512px; height:384px;" data-row="0" data-column="1"></div>' +
+			'<div class="gridCell" style="position:absolute; left:0px; top:384px; width:512px; height:384px;" data-row="1" data-column="0"></div>' +
+			'<div class="gridCell" style="position:absolute; left:512px; top:384px; width:512px; height:384px;" data-row="1" data-column="1"></div>' +
+			'</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -305,7 +314,10 @@ describe("ds.ArticleRenderer", function() {
 		};
 		var expectedOutput = '<html>' +
 			'<head><link rel="stylesheet" type="text/css" href="src/renderRuntime.css"><script type="text/javascript" src="src/renderRuntime.js"></script></head>' +
-			'<body><h1>h1</h1></body></html>';
+			'<body>' +
+				'<h1 class="selectable">h1</h1>' +
+			'</body>' + 
+			'</html>';
 		var actualOutput = renderer.renderPage(template, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -318,8 +330,8 @@ describe("ds.ArticleRenderer", function() {
 				orientation:"landscape",
 				width:1024, 
 				height:768,
-				rows:3, 
-				columns:4,
+				rows:1, 
+				columns:1,
 				children: [
 					{
 						componentType:"headline",
@@ -327,25 +339,17 @@ describe("ds.ArticleRenderer", function() {
 						dataIndex:0,
 						position: { left:0, top:0, width:1, height:1 }
 					},
-					{
-						componentType:"body",
-						dataPath:"children",
-						dataIndex:0,
-						position: { left:0, top:1, width:1, height:2 },
-					},
-					{
-						componentType:"image",
-						dataPath:"children",
-						dataIndex:0,
-						position: { left:1, top:0, width:3, height:3 },
-					},
 				]
 			}
 		};
+		var expectedOutput = '<html>' +
+			'<head><link rel="stylesheet" type="text/css" href="src/renderRuntime.css"><script type="text/javascript" src="src/renderRuntime.js"></script></head>' +
+			'<body>' +
+				'<div class="selectable"><div style="position:absolute; overflow:hidden; left:0px; top:0px; width:1024px; height:768px;"><h1 class="selectable">h1</h1></div></div>' +
+			'</body>' + 
+			'</html>';
 		var actualOutput = renderer.renderPage(template, navigationArticle);
-		expect(actualOutput).toMatch(/<html><head>/);
-		expect(actualOutput).toMatch(/<div style="position:absolute; overflow:hidden; left:0px; top:0px; width:256px; height:256px;"><h1>h1<\/h1><\/div>/);
-		expect(actualOutput).toMatch(/<\/body><\/html>/);
+		expect(actualOutput).toEqual(expectedOutput);
 	});
 
 

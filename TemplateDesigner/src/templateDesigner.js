@@ -9,7 +9,8 @@ $(function () {
 	var article,
 		publication,
 		template,
-		typeLibrary;
+		typeLibrary,
+		selection;
 
 	init();
 
@@ -25,12 +26,12 @@ $(function () {
 	}
 
 	function initModel() {
+		selection = null;
 		article = sampleArticles[0].definition;
 
 		publication = new ds.Publication();
 		publication.loadFromServer(function() {
 			template = JSON.parse(JSON.stringify(publication.getDefaultTemplate()));
-//			template = ds.Template.createTemplate(template);
 			template.designTime = true;
 			renderArticle();
 		});
@@ -67,7 +68,6 @@ $(function () {
 		reader.onload = function(e) {
 			var templateStr = e.target.result;
 			template = 	JSON.parse(templateStr);
-//			template = ds.Template.createTemplate(template);
 			template.designTime = true;
 			renderArticle();
 		};
@@ -79,14 +79,21 @@ $(function () {
 	 * Renders an article
 	 */
 	function renderArticle() {
+		// Render
 		console.time("renderArticle");
 		var renderer = new ds.ArticleRenderer();
 		var actualOutput = renderer.renderPage(template, article);
 		$("#canvas").html(actualOutput);
 		console.timeEnd("renderArticle");
 
-		addCanvasInteraction();
+		// Update the selection.
+		if (selection != null) {
+			var element = document.getElementById(selection.component.uniqueID);
+			$(element).addClass("selected");
+			selection.element = element;
+		}
 
+		addCanvasInteraction();
 		renderTemplate();
 	};
 
@@ -102,6 +109,7 @@ $(function () {
 					dropPaletteItemOnGrid(draggable, this);
 			}
 		});
+
 		$(".flow").droppable({
       		hoverClass: "dropTarget",
 			drop: function( event, ui ) {
@@ -110,6 +118,91 @@ $(function () {
 					dropPaletteItemOnFlow(draggable, this);
 			}
 		});
+
+		$(".selectable").click(function(event) {
+			selectElement(this);
+			event.stopPropagation();
+		});
+
+	}
+
+	function selectElement(element) {
+		var component = findComponent(element.id);
+		if (component == null) {
+			console.log("Unable to find component in selectElement: " + element.id);
+			return;
+		}
+		selectPair(component, element);
+	}
+
+	function selectComponent(component) {
+		var id = component.uniqueID
+		var element = document.getElementById(id);
+		if (element == null) {
+			console.log("Unable to element in updateSelectedElement: " + id);
+			return;
+		}
+		selectPair(component, element);
+	}
+
+	function selectPair(component, element) {
+		// Short circuit selection
+		if (selection != null && selection.component === component && selection.element === element)
+			return;
+
+		// Deselect the old one.
+		if (selection) {
+			$(selection.element).removeClass("selected");
+			$("#propertyList").html("");
+			selection = null;
+		}
+
+		// Select the new one.
+		if (component) {
+			selection = { "element":element, "component":component };
+			$(element).addClass("selected");
+			displayProperties(selection);
+		}
+	}
+
+	function displayProperties(selection) {
+		var component = selection.component;
+
+		// Get the component type
+		var componentType = typeLibrary.componentNamed(component.componentType);
+		if (componentType == null) {
+			console.log("Unable to find ctype in displayProperties: " + component.componentType);
+			return;
+		}
+
+		// Get the property descriptors.
+		var pdArray = componentType.getPropertyDescriptors();
+		if (pdArray == null || pdArray.length == 0)
+			return;
+
+		// Craete a copy of the property descriptors and add property values.
+		pdArray = JSON.parse(JSON.stringify(pdArray));
+		for (var i = 0; i < pdArray.length; i++) {
+			var pd = pdArray[i];
+			pd.value = component[pd.name];
+		}
+
+		// Display the properties.
+		$("#propertyList").html($("#propertyItemTemplate").render(pdArray));
+
+		// Add property change listeners.
+		$(".propertyValue").change(function() {
+			updateProperty(this);
+		});
+	}
+
+	function updateProperty(element) {
+		// Update the property
+		var component = selection.component;
+		component[element.dataset.prop_name] = element.value;
+
+		// Render
+		renderArticle();		
 	}
 
 	// TODO: Convert into OO method
@@ -122,7 +215,7 @@ $(function () {
 		var parentID = target.parentElement.id;
 		var parent = findComponent(parentID);
 		if (parent == null) {
-			console.log("Unable to find parent in dropPaletteItem");
+			console.log("Unable to find parent in canDropPaletteItem: " + parentID);
 			return false;
 		}
 
@@ -144,7 +237,7 @@ $(function () {
 		var parentID = target.parentElement.id;
 		var parent = findComponent(parentID);
 		if (parent == null) {
-			console.log("Unable to find parent in dropPaletteItem");
+			console.log("Unable to find parent in dropPaletteItem: " + parentID);
 			return;
 		}
 
@@ -153,7 +246,7 @@ $(function () {
 		var paletteItem = draggable[0];
 		var componentType = typeLibrary.componentNamed(paletteItem.dataset.ctype);
 		if (componentType == null) {
-			console.log("Unable to find ctype in dropPaletteItem");
+			console.log("Unable to find ctype in dropPaletteItem: " + paletteItem.dataset.ctype);
 			return;
 		}
 		var component = componentType.createComponent(paletteItem.dataset.ctype);
@@ -167,6 +260,9 @@ $(function () {
 
 		// Rerender
 		renderArticle();
+
+		// Select the new component.
+		selectComponent(component);
 	}
 
 	// TODO: Convert into OO method
@@ -175,7 +271,7 @@ $(function () {
 		var parentID = target.id;
 		var parent = findComponent(parentID);
 		if (parent == null) {
-			console.log("Unable to find parent in dropPaletteItem");
+			console.log("Unable to find parent in dropPaletteItem: " + parentID);
 			return;
 		}
 
@@ -184,7 +280,7 @@ $(function () {
 		var paletteItem = draggable[0];
 		var componentType = typeLibrary.componentNamed(paletteItem.dataset.ctype);
 		if (componentType == null) {
-			console.log("Unable to find ctype in dropPaletteItem");
+			console.log("Unable to find ctype in dropPaletteItem: " + paletteItem.dataset.ctype);
 			return;
 		}
 		var component = componentType.createComponent(paletteItem.dataset.ctype);
@@ -192,6 +288,9 @@ $(function () {
 
 		// Rerender
 		renderArticle();
+
+		// Select the new component.
+		selectComponent(component);
 	}
 
 	function renderTemplate() {

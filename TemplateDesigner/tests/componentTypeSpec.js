@@ -8,34 +8,50 @@ describe("ds.ComponentType", function() {
     expect(actualOutput).toBeDefined();
   });
 
-  it("implements getInfo", function() {
-    var input = new ds.ComponentType("text", "DisplayText");
+  it("should getInfo", function() {
+    var cmp = new ds.ComponentType("text", "DisplayText");
     var expectedOutput = 'ComponentType(text)';
-    var actualOutput = input.getInfo();
+    var actualOutput = cmp.getInfo();
     expect(actualOutput).toEqual(expectedOutput);
   });
 
-  it("implements getName", function() {
-    var input = new ds.ComponentType("text", "DisplayText");
+  it("should getName", function() {
+    var cmp = new ds.ComponentType("text", "DisplayText");
     var expectedOutput = "text";
-    var actualOutput = input.getName();
+    var actualOutput = cmp.getName();
     expect(actualOutput).toEqual(expectedOutput);
   });
 
-  it("implements getDisplayName", function() {
-    var input = new ds.ComponentType("text", "DisplayText");
+  it("should getDisplayName", function() {
+    var cmp = new ds.ComponentType("text", "DisplayText");
     var expectedOutput = "DisplayText";
-    var actualOutput = input.getDisplayName();
+    var actualOutput = cmp.getDisplayName();
     expect(actualOutput).toEqual(expectedOutput);
   });
 
-  it("implements constructor func", function() {
+  it("should call constructor in createComponent", function() {
     var ctorCalled = false;
-    var input = new ds.ComponentType("text", "DisplayText", function(foo, bar) {
+    var cmp = new ds.ComponentType("text", "DisplayText", function(foo, bar) {
       ctorCalled = true;
     });
-    input.createComponent();
+    cmp.createComponent();
     expect(ctorCalled).toBeTruthy();
+  });
+
+  it("should set and get property descriptors", function() {
+    var cmp = new ds.ComponentType("text", "DisplayText");
+
+    var pd1 = cmp.addPropertyDescriptor("data1", "Data 1");
+    expect(pd1).toBeDefined();
+
+    var pd2 = cmp.addPropertyDescriptor("data1", "Data 1");
+    expect(pd2).toBeDefined();
+
+    var pdArray = cmp.getPropertyDescriptors();
+    expect(pdArray).toBeDefined();
+
+    expect(pdArray.indexOf(pd1) > -1).toBeTruthy;
+    expect(pdArray.indexOf(pd2) > -1).toBeTruthy;
   });
 
 });

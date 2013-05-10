@@ -15,13 +15,40 @@ ds.ComponentTypeLib.prototype.getInfo = function() {
 };
 
 ds.ComponentTypeLib.prototype.loadRegistry = function() {
-	this.add(new ds.ComponentType('headline', 'Headline', ds.ComponentTypeLib.createSimpleComponent));
-	this.add(new ds.ComponentType('standfirst', 'Standfirst', ds.ComponentTypeLib.createSimpleComponent));
-	this.add(new ds.ComponentType('body', 'Body', ds.ComponentTypeLib.createSimpleComponent));
-	this.add(new ds.ComponentType('image', 'Main image', ds.ComponentTypeLib.createSimpleComponent));
-	this.add(new ds.ComponentType('flow', 'Flow', ds.ComponentTypeLib.createCompositeComponent));
-	this.add(new ds.ComponentType('grid', 'Grid', ds.ComponentTypeLib.createCompositeComponent));
-	this.add(new ds.ComponentType('teaser', 'Teaser', ds.ComponentTypeLib.createSimpleComponent));
+	var component;
+
+	// Headline
+	component = new ds.ComponentType('headline', 'Headline', ds.ComponentTypeLib.createSimpleComponent);
+	ds.ComponentTypeLib.addSimplePropertyDescriptors(component);
+	this.add(component);
+
+	// Standfirst
+	component = new ds.ComponentType('standfirst', 'Standfirst', ds.ComponentTypeLib.createSimpleComponent);
+	ds.ComponentTypeLib.addSimplePropertyDescriptors(component);
+	this.add(component);
+
+	// Image
+	component = new ds.ComponentType('body', 'Body', ds.ComponentTypeLib.createSimpleComponent);
+	ds.ComponentTypeLib.addSimplePropertyDescriptors(component);
+	this.add(component);
+
+	// Body
+	component = new ds.ComponentType('image', 'Main image', ds.ComponentTypeLib.createSimpleComponent);
+	ds.ComponentTypeLib.addSimplePropertyDescriptors(component);
+	component.addPropertyDescriptor("crop", "Crop");
+	this.add(component);
+
+	// Flow
+	component = new ds.ComponentType('flow', 'Flow', ds.ComponentTypeLib.createCompositeComponent);
+	this.add(component);
+
+	// Grid
+	component = new ds.ComponentType('grid', 'Grid', ds.ComponentTypeLib.createCompositeComponent);
+	component.addPropertyDescriptor("rows", "Rows");
+	component.addPropertyDescriptor("columns", "Columns");
+	component.addPropertyDescriptor("rowGutter", "Row Gutter");
+	component.addPropertyDescriptor("columnGutter", "Column Gutter");
+	this.add(component);
 };
 
 ds.ComponentTypeLib.idCount = 0;
@@ -39,6 +66,12 @@ ds.ComponentTypeLib.createCompositeComponent = function(type) {
 	var result = ds.ComponentTypeLib.createSimpleComponent(type);
 	result.children = [];
 	return result;
+};
+
+ds.ComponentTypeLib.addSimplePropertyDescriptors = function(type) {
+	type.addPropertyDescriptor("dataPath", "Data path");
+	type.addPropertyDescriptor("dataIndex", "Data index");
+	type.addPropertyDescriptor("style", "Style (;)");
 };
 
 ds.ComponentTypeLib.prototype.add = function(child) {

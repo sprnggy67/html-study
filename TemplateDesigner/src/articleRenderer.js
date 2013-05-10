@@ -100,38 +100,59 @@ ds.ArticleRenderer._initClass = function() {
 			'{{if componentType==="image" tmpl="image"/}}' +
 			'{{if componentType==="flow" tmpl="flow"/}}' +
 			'{{if componentType==="grid" tmpl="grid"/}}',
-		headline: '<h1' +
-			'{{if style}}' +
-			' style="{{:style}}"' +
-			'{{/if}}' +
-			'>{{:realData.headline}}</h1>',
-		standfirst: '<h2' +
-			'{{if style}}' +
-			' style="{{:style}}"' +
-			'{{/if}}' +
-			'>{{:realData.standFirst}}</h2>',
+		headline: 
+			'<h1 class="selectable"' +
+				'{{if uniqueID}}' +
+					' id="{{:uniqueID}}"' +
+				'{{/if}}' +
+				'{{if style}}' +
+					' style="{{:style}}"' +
+				'{{/if}}' +
+			'>' +
+				'{{:realData.headline}}' +
+			'</h1>',
+		standfirst: 
+			'<h2 class="selectable"' +
+				'{{if uniqueID}}' +
+					' id="{{:uniqueID}}"' +
+				'{{/if}}' +
+				'{{if style}}' +
+					' style="{{:style}}"' +
+				'{{/if}}' +
+			'>' +
+				'{{:realData.standFirst}}' +
+			'</h2>',
 		body: 
-			'{{if style}}' +
-			'<span style="{{:style}}">' +
-			'{{/if}}' +
+			'<span class="selectable"' +
+				'{{if uniqueID}}' +
+					' id="{{:uniqueID}}"' +
+				'{{/if}}' +
+				'{{if style}}' +
+					' style="{{:style}}"' +
+				'{{/if}}' +
+			'>' +
 			'{{:realData.body}}' +
-			'{{if style}}' +
-			'</span>' +
-			'{{/if}}',
-		image: '<img src="{{:realData.image}}">',
+			'</span>',
+		image: 
+			'<img class="selectable"' +
+				'{{if uniqueID}}' +
+					' id="{{:uniqueID}}" ' +
+				'{{/if}}' +
+			' src="{{:realData.image}}"' +
+			'>',
 		flow: 
-			'<div class="flow"' +
-			'{{if uniqueID}}' +
-				' id="{{:uniqueID}}"' +
-			'{{/if}}' +
+			'<div class="selectable flow"' +
+				'{{if uniqueID}}' +
+					' id="{{:uniqueID}}"' +
+				'{{/if}}' +
 			'>' +
 				'{{for children tmpl="component"/}}' +
 			'</div>',
 		grid: 
-			'<div' + 
-			'{{if uniqueID}}' +
-				' id="{{:uniqueID}}"' +
-			'{{/if}}' +
+			'<div class="selectable"' + 
+				'{{if uniqueID}}' +
+					' id="{{:uniqueID}}"' +
+				'{{/if}}' +
 			'>' +
 				'{{if ~root.designTime}}' +
 					'{{for ~getRowObjects(#data)}}' +

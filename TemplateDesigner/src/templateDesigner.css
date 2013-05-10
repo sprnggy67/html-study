@@ -6,11 +6,8 @@
     margin:0px 0px 10px 0px;
 }
 
-#palette {
-	width: 190px;
-    border:solid 1px black;
-    margin:0px 0px 10px 0px;
-	overflow: auto;
+#leftPanel {
+    width: 190px;
     float:left; 
 }
 
@@ -19,7 +16,6 @@
     border:solid 1px black;
     margin:0px 0px 10px 0px;
 	overflow: auto;
-    float:left; 
 }
 
 #paletteList {
@@ -34,6 +30,31 @@
     padding:5px;
 	background:Tan;
     border:solid 1px black;
+}
+
+#properties {
+    width: 190px;
+    height: 300px;
+    border:solid 1px black;
+    margin:0px 0px 10px 0px;
+    overflow: auto;
+}
+
+#propertyList {
+    width: 100%;
+    margin:0px;
+    padding:0px;
+}
+
+.propertyName {
+    margin:5px 0px 5px 0px;
+    padding:0px 5px 0px 5px;
+}
+
+.propertyValue {
+    width:80px;
+    margin:5px 0px 0px 0px;
+    padding:5px;
 }
 
 #canvas {
@@ -68,5 +89,9 @@
 }
 
 .dropTarget {
-    background-color:Tan
+    background-color:Tan;
+}
+
+.selected {
+    background-color:Orange;
 }
