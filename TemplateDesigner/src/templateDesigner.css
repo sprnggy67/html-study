@@ -95,3 +95,6 @@
 .selected {
     background-color:Orange;
 }
+
+.resizable-helper { border: 2px dotted Orange; }
+

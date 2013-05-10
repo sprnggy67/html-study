@@ -84,18 +84,21 @@ $(function () {
 	 * Renders an article
 	 */
 	function renderArticle() {
-		// Render
-		console.time("renderArticle");
+		// Generate content
+		console.time("generateArticle");
 		var renderer = new ds.ArticleRenderer();
 		var actualOutput = renderer.renderPage(template, article);
+		console.timeEnd("generateArticle");
+
+		// Replace
+		console.time("displayArticle");
 		$("#canvas").html(actualOutput);
-		console.timeEnd("renderArticle");
+		console.timeEnd("displayArticle");
 
 		// Update the selection.
 		if (selection != null) {
 			var element = document.getElementById(selection.component.uniqueID);
-			$(element).addClass("selected");
-			selection.element = element;
+			activateSelection(element);
 		}
 
 		addCanvasInteraction();
@@ -119,7 +122,7 @@ $(function () {
 				if (draggable.hasClass("paletteItem"))
 					dropPaletteItemOnGrid(draggable, this);
 				if (draggable.hasClass("selectable"))
-					dropSelectableOnGrid(draggable, this);
+					moveSelectableInGrid(draggable, this);
 			},
 		});
 
@@ -174,7 +177,7 @@ $(function () {
 
 		// Deselect the old one.
 		if (selection) {
-			$(selection.element).removeClass("selected");
+			deactivateSelection(selection.element);
 			$("#propertyList").html("");
 			selection = null;
 		}
@@ -182,9 +185,25 @@ $(function () {
 		// Select the new one.
 		if (component) {
 			selection = { "element":element, "component":component };
-			$(element).addClass("selected");
+			activateSelection(element);
 			displayProperties(selection);
 		}
+	}
+
+	function activateSelection(element) {
+		$(element).addClass("selected");
+		$(element.parentElement).resizable({ 
+     		helper: "resizable-helper",
+			stop: function( event, ui ) {
+				resizeSelectableInGrid(this, ui.size);
+			},
+		});
+		selection.element = element;
+	}
+
+	function deactivateSelection(element) {
+		$(element).removeClass("selected");
+		$(element.parentElement).resizable("destroy");
 	}
 
 	function displayProperties(selection) {
@@ -287,10 +306,10 @@ $(function () {
 	// TODO: Convert into OO method
 	function dropPaletteItemOnGrid(draggable, target) {
 		// Get the target parent.
-		var parentID = target.parentElement.id;
-		var parent = findComponent(parentID);
-		if (parent == null) {
-			console.log("Unable to find parent in dropPaletteItem: " + parentID);
+		var gridID = target.parentElement.id;
+		var grid = findComponent(gridID);
+		if (grid == null) {
+			console.log("Unable to find parent in dropPaletteItem: " + gridID);
 			return;
 		}
 
@@ -309,7 +328,7 @@ $(function () {
 				width:1,
 				height:1
 		};
-		parent.children.push(component);
+		grid.children.push(component);
 
 		// Rerender
 		renderArticle();
@@ -319,7 +338,7 @@ $(function () {
 	}
 
 	// TODO: Convert into OO method
-	function dropSelectableOnGrid(draggable, target) {
+	function moveSelectableInGrid(draggable, target) {
 		// Get the component.
 		var element = draggable[0];
 		var component = findComponent(element.id);
@@ -366,6 +385,33 @@ $(function () {
 
 		// Select the new component.
 		selectComponent(component);
+	}
+
+	function resizeSelectableInGrid(draggable, size) {
+		// Get the target parent.
+		var gridID = draggable.parentElement.id;
+		var grid = findComponent(gridID);
+		if (grid == null) {
+			console.log("Unable to find grid in resizeSelectableInGrid: " + gridID);
+			return;
+		}
+
+		// Get the component.
+		var element = draggable.childNodes[0];
+		var component = findComponent(element.id);
+		if (component == null) {
+			console.log("Unable to find component in resizeSelectableInGrid: " + element);
+			return false;
+		}
+
+		// Resize the component.
+		var width = Math.round(size.width / (grid.width / grid.columns));
+		var height = Math.round(size.height / (grid.height / grid.rows));
+		component.position.width = width;
+		component.position.height = height;
+
+		// Rerender
+		renderArticle();
 	}
 
 	function renderTemplate() {

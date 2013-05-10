@@ -71,7 +71,7 @@ ds.ComponentTypeLib.createCompositeComponent = function(type) {
 ds.ComponentTypeLib.addSimplePropertyDescriptors = function(type) {
 	type.addPropertyDescriptor("dataPath", "Data path");
 	type.addPropertyDescriptor("dataIndex", "Data index");
-	type.addPropertyDescriptor("style", "Style (;)");
+	type.addPropertyDescriptor("style", "Style (font-size:20px;)");
 };
 
 ds.ComponentTypeLib.prototype.add = function(child) {

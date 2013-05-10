@@ -168,7 +168,7 @@ ds.ArticleRenderer._initClass = function() {
 					'{{/for}}' +
 				'{{/if}}' +
 				'{{for children}}' +
-					'<div style="position:absolute; overflow:hidden; ' +
+					'<div class="gridData" style="position:absolute; overflow:hidden; ' +
 							'left:{{:~getLeftPx(position, #parent.parent.data)}}px; ' +
 							'top:{{:~getTopPx(position, #parent.parent.data)}}px; ' +
 							'width:{{:~getWidthPx(position, #parent.parent.data)}}px; ' +
