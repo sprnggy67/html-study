@@ -20,6 +20,7 @@ $(function () {
 	function init() {
 		initPalette();
 		initModel();
+		initKeyHandlers();
 
 		$("#savePage").click(function() { saveFile(); });
 		$("#openPage").click(function() { openFile(); });
@@ -47,6 +48,31 @@ $(function () {
 			zIndex: 100,
 			cursor: "pointer", 
 		 });
+	}
+
+	var DOM_VK_DELETE = 46;
+
+	function initKeyHandlers() {
+		$(document).keyup(function(event) {
+			if (event.keyCode == DOM_VK_DELETE) {
+				var focus = document.activeElement;
+				var properties = document.getElementById("properties");
+				if (focus == null || !isDescendant(properties, focus)) {
+	 				deleteSelection();
+	 			}
+	 		}
+		});
+	}
+
+	function isDescendant(parent, child) {
+	     var node = child.parentNode;
+	     while (node != null) {
+	         if (node == parent) {
+	             return true;
+	         }
+	         node = node.parentNode;
+	     }
+	     return false;
 	}
 
 	/**
@@ -414,6 +440,28 @@ $(function () {
 		renderArticle();
 	}
 
+	function deleteSelection() {
+		if (selection == null)
+			return;
+		if (selection.component === template.root)
+			return;
+
+		// Get the target parent.
+		var parent = findParent(selection.component);
+		if (parent == null) {
+			console.log("Unable to find parent in deleteSelection: " + selection.component);
+			return;
+		}
+
+		// Remove the component.
+		var index = parent.children.indexOf(selection.component);
+		parent.children.splice(index, 1);
+		selectPair(null, null);
+
+		// Rerender
+		renderArticle();
+	}
+
 	function renderTemplate() {
 		var templateStr = JSON.stringify(template, null, " ");
 		$("#templateModel").val(templateStr);
@@ -432,6 +480,27 @@ $(function () {
 			var length = component.children.length;
 			for (var i = 0; i < length; ++i) {
 				var result = findComponentIn(id, component.children[i]);
+				if (result != null)
+					return result;
+			}
+		}
+		return null;
+	}
+
+	// TODO: Convert into OO method
+	function findParent(child) {
+		return findParentIn(child, template.root);
+	}
+
+	// TODO: Convert into OO method
+	function findParentIn(child, component) {
+		var children = component.children;
+		if (children) {
+			if (children.indexOf(child) >= 0)
+				return component;
+			var length = children.length;
+			for (var i = 0; i < length; ++i) {
+				var result = findParentIn(child, children[i]);
 				if (result != null)
 					return result;
 			}
