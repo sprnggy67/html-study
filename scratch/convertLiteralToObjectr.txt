@@ -1,0 +1,54 @@
+// Convert object literals into typed objects.
+
+var cats = [
+    {id: 15, name: 'Tables', count:45 },
+    {id: 23, name: 'Chairs', count:34 }
+];
+var catsObjects = [];
+cats.each(function(item){
+    var newObject = new Cat();
+    Object.extend(newObject, item);
+    catsObjects.push(newObject);
+});
+
+// Another way to do it
+
+Object.extend = function ( take, give ) {
+  for (var k in give) {
+    if (give.hasOwnProperty(k)) {
+      take[k] = give[k];
+    }
+  }
+  return take;
+}
+This has the plus that you can use nice readable literal notation when writing your code:
+
+function Cat (c) {
+  Object.extend( this, ( c || this.defaults )  );
+}
+
+Object.extend(Cat.prototype, {
+
+  meow : function() {
+    alert( 'Meow, my name is ' + this.name );
+  },
+
+  defaults : {
+    name : 'I have no name', 
+    id   : null
+  }
+
+});
+You can then create your army of cats quite simply:
+
+var cats = [
+  { 'id': 0, 'name': 'Persian' },
+  { 'id': 1, 'name': 'Calico' },
+  { 'id': 2, 'name': 'Tabby' }
+];
+
+for (i=0,len=cats.length; i<len; i++) {
+  cats[i] = new Cat( cats[i] );
+}
+
+cats[0].meow();  // displays "meow, my name is Persian"

@@ -1,46 +1,48 @@
 /**
- A template is used to model the layout of a page.
-
- It can be represented using a JS object literal, or the object below.
+ A set of functions to manipulate tempaltes.
  */
 
 'use strict';
 
 var ds = ds || {};
 
-ds.Template = function() {
-}
+ds.template = ds.template || {};
 
 /**
- * Creates a new template object with the object literal data. 
+ * Returns the active layout for a given context, where context has the following form:
+ * { orientation: "portrait or landscape "}
  */
-ds.Template.createTemplate = function(objectLiteral) {
-	var result = new ds.Template();
-	result = $.extend(result, objectLiteral);
-	return result;
+ds.template.getActiveLayout = function(template, context) {
+	if (template.targets == undefined)
+		return null;
+	var target = template.targets[0];
+	if (context == null)
+		return target.layout;
+	if (context.orientation == "portrait") {
+		if (target.portraitLayout)
+			return target.portraitLayout;
+	} else if (context.orientation == "landscape") {
+		if (target.landscapeLayout)
+			return target.landscapeLayout;
+	}
+	return target.layout;
 }
 
 /**
  * Returns a component with a given ID, or null if not found.
  */
-ds.Template.prototype.findComponent = function(id) {
-	return this._findComponent(id, this.root);
-}
-
-/**
- * Returns a component with a given ID, or null if not found.
- */
-ds.Template.prototype._findComponent = function(id, component) {
+ds.template.findComponentInLayout = function(component, id) {
 	if (id == component.uniqueID) 
 		return component;
 	if (component.children) {
 		var length = component.children.length;
 		for (var i = 0; i < length; ++i) {
-			var result = this._findComponent(id, component.children[i]);
+			var result = this.findComponentInLayout(component.children[i], id);
 			if (result != null)
 				return result;
 		}
 	}
 	return null;
 }
+
 

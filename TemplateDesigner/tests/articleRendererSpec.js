@@ -44,7 +44,7 @@ describe("ds.ArticleRenderer", function() {
 		var renderer = new ds.ArticleRenderer();
 
 		var expectedOutput = "001";
-		var actualOutput = renderer.findData(navigationArticle, "id");
+		var actualOutput = renderer._findData(navigationArticle, "id");
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
@@ -52,7 +52,7 @@ describe("ds.ArticleRenderer", function() {
 		var renderer = new ds.ArticleRenderer();
 
 		var expectedOutput = "red";
-		var actualOutput = renderer.findData(navigationArticle, "style.textColor");
+		var actualOutput = renderer._findData(navigationArticle, "style.textColor");
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
@@ -306,11 +306,16 @@ describe("ds.ArticleRenderer", function() {
 	it("should generate a simple HTML page with a headline component", function() {
 		var renderer = new ds.ArticleRenderer();
 		var template = {
-			root: {
-				componentType:"headline",
-				dataPath:"children",
-				dataIndex:0
-			}
+			targets: [
+				{
+					name:"default",
+					layout: {
+						componentType:"headline",
+						dataPath:"children",
+						dataIndex:0
+					}
+				}
+			]
 		};
 		var expectedOutput = '<html>' +
 			'<head><link rel="stylesheet" type="text/css" href="src/renderRuntime.css"><script type="text/javascript" src="src/renderRuntime.js"></script></head>' +
@@ -322,25 +327,59 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
+	it("should generate a simple HTML page with a landscape body component", function() {
+		var renderer = new ds.ArticleRenderer();
+		var template = {
+			targets: [
+				{
+					name:"default",
+					portraitLayout: {
+						componentType:"headline",
+						dataPath:"children",
+						dataIndex:0
+					},
+					landscapeLayout: {
+						componentType:"body",
+						dataPath:"children",
+						dataIndex:0
+					}
+				}
+			]
+		};
+		var expectedOutput = '<html>' +
+			'<head><link rel="stylesheet" type="text/css" href="src/renderRuntime.css"><script type="text/javascript" src="src/renderRuntime.js"></script></head>' +
+			'<body>' +
+				'<span class="selectable">body1</span>' +
+			'</body>' + 
+			'</html>';
+		var actualOutput = renderer.renderPage(template, navigationArticle, { orientation:"landscape"} );
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
 	it("should generate a complex HTML page with a grid component", function() {
 		var renderer = new ds.ArticleRenderer();
 		var template = {
-			root: {
-				componentType:"grid",
-				orientation:"landscape",
-				width:1024, 
-				height:768,
-				rows:1, 
-				columns:1,
-				children: [
-					{
-						componentType:"headline",
-						dataPath:"children",
-						dataIndex:0,
-						position: { left:0, top:0, width:1, height:1 }
-					},
-				]
-			}
+			targets: [
+				{
+					name:"default",
+					layout: {
+						componentType:"grid",
+						orientation:"landscape",
+						width:1024, 
+						height:768,
+						rows:1, 
+						columns:1,
+						children: [
+							{
+								componentType:"headline",
+								dataPath:"children",
+								dataIndex:0,
+								position: { left:0, top:0, width:1, height:1 }
+							},
+						]
+					}
+				}
+			]
 		};
 		var expectedOutput = '<html>' +
 			'<head><link rel="stylesheet" type="text/css" href="src/renderRuntime.css"><script type="text/javascript" src="src/renderRuntime.js"></script></head>' +

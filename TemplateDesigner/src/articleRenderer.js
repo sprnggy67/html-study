@@ -45,11 +45,14 @@ ds.ArticleRenderer.initialised = false;
  This method clones the template and then injects the article data into the template.
  This combined set of data is then used to render the HTML.
  */
-ds.ArticleRenderer.prototype.renderPage = function(template, article) {
+ds.ArticleRenderer.prototype.renderPage = function(template, article, context) {
+	// Get the active layout.
+	var layout = ds.template.getActiveLayout(template, context);
+
 	// Clone the template and add article data to it.
 	// This gives us a single model which can be passed to the jsRender renderer.
-	var inputData = JSON.parse(JSON.stringify(template));
-	this._linkRealData(inputData.root, article);
+	var inputData = JSON.parse(JSON.stringify(layout));
+	this._linkRealData(inputData, article);
 
 	// Render the HTML.
 	var html = $views.render.root(inputData);
@@ -91,7 +94,7 @@ ds.ArticleRenderer._initClass = function() {
 			'<script type="text/javascript" src="src/renderRuntime.js"></script>' +
 			'</head>' +
 			'<body>' +
-				'{{for root tmpl="component"/}}' +
+				'{{if true tmpl="component"/}}' +
 			'</body></html>',
 		component: 
 			'{{if componentType==="headline" tmpl="headline"/}}' +
@@ -260,7 +263,7 @@ ds.ArticleRenderer._calcWidthPx = function(start, width, gridWidth, gridColumns,
  */
 ds.ArticleRenderer.prototype._linkRealData = function(component, article) {
 	if (component.dataPath) {
-		var realData = this.findData(article, component.dataPath);
+		var realData = this._findData(article, component.dataPath);
 		if (component.dataIndex != undefined) 
 			realData = realData[component.dataIndex];
 		component.realData = realData;
@@ -277,7 +280,7 @@ ds.ArticleRenderer.prototype._linkRealData = function(component, article) {
 	return component;
 };
 
-ds.ArticleRenderer.prototype.findData = function(obj, path) {
+ds.ArticleRenderer.prototype._findData = function(obj, path) {
 	var paths = path.split('.');
 	var current = obj;
 	var i;

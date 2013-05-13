@@ -41,6 +41,7 @@
 	<script type="text/javascript" src="lib/jq.mobi.js"></script>
 	<script type="text/javascript" src="lib/jsrender-1.0.js"></script>
 	<script type="text/javascript" src="src/articleRenderer.js"></script>
+	<script type="text/javascript" src="src/template.js"></script>
 	<script type="text/javascript" src="tests/sampleArticles.js"></script>
 	<script type="text/javascript" src="tests/sampleTemplates.js"></script>
 
@@ -78,15 +79,21 @@
 		}
 
 		// Get the current template.
-		var templateName =  $("#templateList").val();
+		var templateName = $("#templateList").val();
 		var template = findItemNamed(templateName, sampleTemplates);
 		if (template == null) {
 			alert("Invalid template");
 			return;
 		}
 
+		// Get the orientation.
+		var orientationName = $("#orientationList").val();
+		var orientation = null;
+		if (orientationName == "portrait" || orientationName == "landscape")
+			orientation = { "orientation":orientationName };
+
 		// Run the template
-		var result = renderPage(template.definition, article.definition);
+		var result = renderPage(template.definition, article.definition, orientation);
 
 		// Format the output.
 		var format = $("#format").is(':checked');
@@ -107,10 +114,10 @@
 		return null;
 	};
 
-	function renderPage(template, article) {
+	function renderPage(template, article, orientation) {
 		console.time("renderPage");
 		var renderer = new ds.ArticleRenderer();
-		var actualOutput = renderer.renderPage(template, article);
+		var actualOutput = renderer.renderPage(template, article, orientation);
 		console.timeEnd("renderPage");
 		return actualOutput;
 	};
@@ -140,6 +147,12 @@
    		<label>Template Type</label>
 		<select id="templateList" name="template">
 			<!-- <option value="volvo">Volvo</option> -->
+		</select>
+   		<label>Orientation</label>
+		<select id="orientationList" name="orientation">
+			<option value="portrait">Portrait</option>
+			<option value="landscape">Landscape</option>
+			<option value="undefined">Undefined</option>
 		</select>
    		<label>Format the output </label>
 		<input id="format" type="checkbox" checked="checked" name="format">

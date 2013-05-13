@@ -3,25 +3,41 @@ describe("ds.Template", function() {
 	beforeEach(function() {
 	});
 
-	it("should be defined", function() {
-		var template = new ds.Template();
-		expect(template).toBeDefined();
+	it("should return default active layout", function() {
+		var template = defaultTemplates.empty;
+		var layout = ds.template.getActiveLayout(template);
+		expect(layout.uniqueID).toEqual("defaultRoot");
 	});
 
-	it("should createTemplate", function() {
-		var template = ds.Template.createTemplate(defaultTemplates.empty);
-		expect(template).toBeDefined();
+	it("should return default active layout if nothing else is available", function() {
+		var template = defaultTemplates.empty;
+		var layout = ds.template.getActiveLayout(template, { orientation:"landscape"});
+		expect(layout.uniqueID).toEqual("defaultRoot");
+	});
+
+	it("should return portrait layout in portrait orientation", function() {
+		var template = defaultTemplates.emptyResponsive;
+		var layout = ds.template.getActiveLayout(template, { orientation:"portrait"});
+		expect(layout.uniqueID).toEqual("portraitRoot");
+	});
+
+	it("should return landscape layout in landscape orientation", function() {
+		var template = defaultTemplates.emptyResponsive;
+		var layout = ds.template.getActiveLayout(template, { orientation:"landscape"});
+		expect(layout.uniqueID).toEqual("landscapeRoot");
 	});
 
 	it("should findComponent in shallow objects", function() {
-		var template = ds.Template.createTemplate(defaultTemplates.empty);
-		var child = template.findComponent("grid001")
-		expect(child.uniqueID).toEqual("grid001");
+		var template = defaultTemplates.empty;
+		var layout = ds.template.getActiveLayout(template);
+		var child = ds.template.findComponentInLayout(layout, "defaultRoot");
+		expect(child.uniqueID).toEqual("defaultRoot");
 	});
 
 	it("should findComponent in deep objects", function() {
-		var template = ds.Template.createTemplate(defaultTemplates.front3);
-		var child = template.findComponent("ref001")
+		var template = defaultTemplates.front3;
+		var layout = ds.template.getActiveLayout(template);
+		var child = ds.template.findComponentInLayout(layout, "ref001")
 		expect(child.uniqueID).toEqual("ref001");
 	});
 
