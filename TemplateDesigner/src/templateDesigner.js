@@ -9,6 +9,7 @@ $(function () {
 	var article,
 		publication,
 		template,
+		activeLayout,
 		typeLibrary,
 		selection;
 
@@ -33,7 +34,8 @@ $(function () {
 		publication = new ds.Publication();
 		publication.loadFromServer(function() {
 			template = JSON.parse(JSON.stringify(publication.getDefaultTemplate()));
-			template.designTime = true;
+			activeLayout = ds.template.getActiveLayout(template);
+			activeLayout.designTime = true;
 			renderArticle();
 		});
 	}
@@ -99,7 +101,8 @@ $(function () {
 		reader.onload = function(e) {
 			var templateStr = e.target.result;
 			template = 	JSON.parse(templateStr);
-			template.designTime = true;
+			activeLayout = ds.template.getActiveLayout(template);
+			activeLayout.designTime = true;
 			renderArticle();
 		};
 
@@ -178,7 +181,7 @@ $(function () {
 	}
 
 	function selectElement(element) {
-		var component = findComponent(element.id);
+		var component = ds.template.findComponentInLayout(activeLayout, element.id);
 		if (component == null) {
 			console.log("Unable to find component in selectElement: " + element.id);
 			return;
@@ -286,7 +289,7 @@ $(function () {
 
 	function canDropSelectableOnGrid(draggable, target) {
 		var element = draggable[0];
-		var component = findComponent(element.id);
+		var component = ds.template.findComponentInLayout(activeLayout, element.id);
 		if (component == null) {
 			console.log("Unable to find component in canDropSelectableOnGrid: " + element);
 			return false;
@@ -300,7 +303,7 @@ $(function () {
 	function canDropOnGrid(target, width, height) {
 		// Get the target grid
 		var gridID = target.parentElement.id;
-		var grid = findComponent(gridID);
+		var grid = ds.template.findComponentInLayout(activeLayout, gridID);
 		if (grid == null) {
 			console.log("Unable to find grid in canDropOnGrid: " + gridID);
 			return false;
@@ -333,7 +336,7 @@ $(function () {
 	function dropPaletteItemOnGrid(draggable, target) {
 		// Get the target parent.
 		var gridID = target.parentElement.id;
-		var grid = findComponent(gridID);
+		var grid = ds.template.findComponentInLayout(activeLayout, gridID);
 		if (grid == null) {
 			console.log("Unable to find parent in dropPaletteItem: " + gridID);
 			return;
@@ -367,7 +370,7 @@ $(function () {
 	function moveSelectableInGrid(draggable, target) {
 		// Get the component.
 		var element = draggable[0];
-		var component = findComponent(element.id);
+		var component = ds.template.findComponentInLayout(activeLayout, element.id);
 		if (component == null) {
 			console.log("Unable to find component in dropSelectableOnGrid: " + element);
 			return false;
@@ -389,7 +392,7 @@ $(function () {
 	function dropPaletteItemOnFlow(draggable, target) {
 		// Get the target parent.
 		var parentID = target.id;
-		var parent = findComponent(parentID);
+		var parent = ds.template.findComponentInLayout(activeLayout, parentID);
 		if (parent == null) {
 			console.log("Unable to find parent in dropPaletteItem: " + parentID);
 			return;
@@ -416,7 +419,7 @@ $(function () {
 	function resizeSelectableInGrid(draggable, size) {
 		// Get the target parent.
 		var gridID = draggable.parentElement.id;
-		var grid = findComponent(gridID);
+		var grid = ds.template.findComponentInLayout(activeLayout, gridID);
 		if (grid == null) {
 			console.log("Unable to find grid in resizeSelectableInGrid: " + gridID);
 			return;
@@ -424,7 +427,7 @@ $(function () {
 
 		// Get the component.
 		var element = draggable.childNodes[0];
-		var component = findComponent(element.id);
+		var component = ds.template.findComponentInLayout(activeLayout, element.id);
 		if (component == null) {
 			console.log("Unable to find component in resizeSelectableInGrid: " + element);
 			return false;
@@ -443,11 +446,11 @@ $(function () {
 	function deleteSelection() {
 		if (selection == null)
 			return;
-		if (selection.component === template.root)
+		if (selection.component === activeLayout)
 			return;
 
 		// Get the target parent.
-		var parent = findParent(selection.component);
+		var parent = ds.template.findParentInLayout(activeLayout, selection.component);
 		if (parent == null) {
 			console.log("Unable to find parent in deleteSelection: " + selection.component);
 			return;
@@ -465,47 +468,6 @@ $(function () {
 	function renderTemplate() {
 		var templateStr = JSON.stringify(template, null, " ");
 		$("#templateModel").val(templateStr);
-	}
-
-	// TODO: Convert into OO method
-	function findComponent(id) {
-		return findComponentIn(id, template.root);
-	}
-
-	// TODO: Convert into OO method
-	function findComponentIn(id, component) {
-		if (id == component.uniqueID) 
-			return component;
-		if (component.children) {
-			var length = component.children.length;
-			for (var i = 0; i < length; ++i) {
-				var result = findComponentIn(id, component.children[i]);
-				if (result != null)
-					return result;
-			}
-		}
-		return null;
-	}
-
-	// TODO: Convert into OO method
-	function findParent(child) {
-		return findParentIn(child, template.root);
-	}
-
-	// TODO: Convert into OO method
-	function findParentIn(child, component) {
-		var children = component.children;
-		if (children) {
-			if (children.indexOf(child) >= 0)
-				return component;
-			var length = children.length;
-			for (var i = 0; i < length; ++i) {
-				var result = findParentIn(child, children[i]);
-				if (result != null)
-					return result;
-			}
-		}
-		return null;
 	}
 
 });

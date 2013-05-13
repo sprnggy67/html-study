@@ -59,8 +59,8 @@
 
 #canvas {
 	float:left;
-	height: 600px; 
-	width: 800px;
+    width: 600px;
+	height: 800px; 
     border:solid 1px black;
     margin:0px 0px 10px 10px;
 	position:relative; // The child div's need to sit inside the canvas
@@ -72,8 +72,8 @@
     padding:0px;
     border:solid 1px black;
     left:202px;
+    width: 600px;
     height: 600px; 
-    width: 800px;
     position:relative;
 }
 

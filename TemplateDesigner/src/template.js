@@ -31,18 +31,38 @@ ds.template.getActiveLayout = function(template, context) {
 /**
  * Returns a component with a given ID, or null if not found.
  */
-ds.template.findComponentInLayout = function(component, id) {
-	if (id == component.uniqueID) 
-		return component;
-	if (component.children) {
-		var length = component.children.length;
+ds.template.findComponentInLayout = function(root, id) {
+	if (id == root.uniqueID) 
+		return root;
+	if (root.children) {
+		var length = root.children.length;
 		for (var i = 0; i < length; ++i) {
-			var result = this.findComponentInLayout(component.children[i], id);
+			var result = this.findComponentInLayout(root.children[i], id);
 			if (result != null)
 				return result;
 		}
 	}
 	return null;
 }
+
+/**
+ * Returns the parent for a given component, or null if not found.
+ */
+ds.template.findParentInLayout = function(root, child) {
+	var children = root.children;
+	if (children) {
+		if (children.indexOf(child) >= 0)
+			return root;
+		var length = children.length;
+		for (var i = 0; i < length; ++i) {
+			var result = this.findParentInLayout(children[i], child);
+			if (result != null)
+				return result;
+		}
+	}
+	return null;
+}
+
+
 
 

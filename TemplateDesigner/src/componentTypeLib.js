@@ -51,7 +51,7 @@ ds.ComponentTypeLib.prototype.loadRegistry = function() {
 	this.add(component);
 };
 
-ds.ComponentTypeLib.idCount = 0;
+ds.ComponentTypeLib.idCount = new Date().getTime();
 
 ds.ComponentTypeLib.createSimpleComponent = function(type) {
 	return {

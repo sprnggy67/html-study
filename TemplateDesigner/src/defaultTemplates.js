@@ -68,6 +68,7 @@ var defaultTemplates = {
 					children: [
 						{
 							componentType:"flow",
+							uniqueID:"flow001",
 							children: [
 								{
 									componentType:"headline",
