@@ -25,6 +25,7 @@ $(function () {
 
 		$("#savePage").click(function() { saveFile(); });
 		$("#openPage").click(function() { openFile(); });
+		$("#saveHTML").click(function() { saveHTML(); });
 	}
 
 	function initModel() {
@@ -110,6 +111,24 @@ $(function () {
 	}
 
 	/**
+	 * Saves the contents as an HTML file.
+	 */
+	function saveHTML() {
+		// Run the template.
+		var renderer = new ds.ArticleRenderer();
+		var result = renderer.renderPage(template, article);
+
+		// Format the output.
+		result = result.replace(/<(\/?)[a-zA-Z]+(?:[^>"']+|"[^"]*"|'[^']*')*>/g, function($0, $1) {
+		    return $1 === "/" ? $0+"\n" : "\n"+$0;
+		});
+
+		// Save the content to a file.
+		var uriContent = "data:application/octet-stream," + encodeURIComponent(result);
+		window.open(uriContent, 'Save');		
+	}
+
+	/**
 	 * Renders an article
 	 */
 	function renderArticle() {
@@ -122,7 +141,6 @@ $(function () {
 		// Replace
 		console.time("displayArticle");
 		$("#canvas").html(actualOutput);
-		document.dispatchEvent(new CustomEvent("refreshTemplate"));
 		console.timeEnd("displayArticle");
 
 		// Update the selection.

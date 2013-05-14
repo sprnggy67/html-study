@@ -331,7 +331,9 @@ describe("ds.ArticleRenderer", function() {
 			]
 		};
 		var expectedOutput = '<html>' +
-			'<head><link rel="stylesheet" type="text/css" href="src/renderRuntime.css"><script type="text/javascript" src="src/renderRuntime.js"></script></head>' +
+			'<head>' +
+				ds.ArticleRenderer.BOILER_PLATE +
+			'</head>' +
 			'<body>' +
 				'<h1 class="selectable">h1</h1>' +
 			'</body>' + 
@@ -360,7 +362,9 @@ describe("ds.ArticleRenderer", function() {
 			]
 		};
 		var expectedOutput = '<html>' +
-			'<head><link rel="stylesheet" type="text/css" href="src/renderRuntime.css"><script type="text/javascript" src="src/renderRuntime.js"></script></head>' +
+			'<head>' +
+				ds.ArticleRenderer.BOILER_PLATE +
+			'</head>' +
 			'<body>' +
 				'<span class="selectable">body1</span>' +
 			'</body>' + 
@@ -395,7 +399,9 @@ describe("ds.ArticleRenderer", function() {
 			]
 		};
 		var expectedOutput = '<html>' +
-			'<head><link rel="stylesheet" type="text/css" href="src/renderRuntime.css"><script type="text/javascript" src="src/renderRuntime.js"></script></head>' +
+			'<head>' +
+				ds.ArticleRenderer.BOILER_PLATE +
+			'</head>' +
 			'<body>' +
 				'<div class="selectable"><div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:0px; width:1024px; height:768px;"><h1 class="selectable">h1</h1></div></div>' +
 			'</body>' + 

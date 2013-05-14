@@ -84,14 +84,19 @@ ds.ArticleRenderer.prototype.renderComponent = function(component, article) {
 	return html;
 };
 
+ds.ArticleRenderer.BOILER_PLATE = 
+	'<script type="text/javascript" src="lib/jq.mobi.js"></script>' +
+	'<script type="text/javascript" src="lib/iscroll.js"></script>' +
+	'<link rel="stylesheet" type="text/css" href="src/renderRuntime.css">' +
+	'<script type="text/javascript" src="src/renderRuntime.js"></script>';
+
 ds.ArticleRenderer._initClass = function() {
 	ds.ArticleRenderer.initialised = true;
 	$views.templates({
 		root: 
 			'<html>' +
 			'<head>' +
-			'<link rel="stylesheet" type="text/css" href="src/renderRuntime.css">' +
-			'<script type="text/javascript" src="src/renderRuntime.js"></script>' +
+			ds.ArticleRenderer.BOILER_PLATE +
 			'</head>' +
 			'<body>' +
 				'{{if true tmpl="component"/}}' +
@@ -186,7 +191,7 @@ ds.ArticleRenderer._initClass = function() {
 					'{{/for}}' +
 				'{{/if}}' +
 				'{{for children}}' +
-					'<div class="gridData" style="position:absolute; overflow:hidden; ' +
+					'<div class="{{:~getGridDataClass(#data)}}" style="position:absolute; overflow:hidden; ' +
 							'left:{{:~getLeftPx(position, #parent.parent.data)}}px; ' +
 							'top:{{:~getTopPx(position, #parent.parent.data)}}px; ' +
 							'width:{{:~getWidthPx(position, #parent.parent.data)}}px; ' +
@@ -232,10 +237,18 @@ ds.ArticleRenderer._initClass = function() {
 		},
 		getClass:function(component) {
 			var classes = "selectable";
-			if (component.componentType == "flow")
+			if (component.componentType == "flow") {
 				classes = classes + " flow";
-			if (component.link)
+			} if (component.link) {
 				classes = classes + " link";
+			}
+			return classes;
+		},
+		getGridDataClass:function(component) {
+			var classes = "gridData";
+			if (component.scroll) {
+				classes = classes + " scroll";
+			}
 			return classes;
 		}
 	});

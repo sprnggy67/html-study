@@ -40,6 +40,7 @@ ds.ComponentTypeLib.prototype.loadRegistry = function() {
 
 	// Flow
 	component = new ds.ComponentType('flow', 'Flow', ds.ComponentTypeLib.createCompositeComponent);
+	component.addPropertyDescriptor("scroll", "Scroll", ds.ComponentType.PROPERTY_BOOLEAN);
 	this.add(component);
 
 	// Grid
