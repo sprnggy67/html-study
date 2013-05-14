@@ -33,7 +33,12 @@
 	<script id="propertyItemTemplate" type="text/x-jsrender ">
 		<tr>
 		<td class="propertyName">{{:displayName}}</td>
-		<td><input class="propertyValue" type="text" name="{{:name}}" value="{{:value}}" data-prop_name="{{:name}}"></td>
+		{{if type == "text"}}
+			<td><input class="propertyValue" type="text" name="{{:name}}" value="{{:value}}" data-prop_name="{{:name}}"></td>
+		{{/if}}
+		{{if type == "boolean"}}
+			<td><input class="propertyValue" type="checkbox" name="{{:name}}" {{:checked}} data-prop_name="{{:name}}"></td>
+		{{/if}}
 		</tr>
 	</script>
 

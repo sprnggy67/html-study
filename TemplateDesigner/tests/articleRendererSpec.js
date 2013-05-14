@@ -93,6 +93,19 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
+	it("should link in a headline component", function() {
+		var renderer = new ds.ArticleRenderer();
+		var component = {
+			componentType:"headline",
+			dataPath:"children",
+			dataIndex:1,
+			link:true
+		};
+		var expectedOutput = '<h1 class="selectable link" data-article_id="001.2">h2</h1>';
+		var actualOutput = renderer.renderComponent(component, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
 	it("should generate the first body component", function() {
 		var renderer = new ds.ArticleRenderer();
 		var component = {

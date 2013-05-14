@@ -72,6 +72,7 @@ ds.ComponentTypeLib.addSimplePropertyDescriptors = function(type) {
 	type.addPropertyDescriptor("dataPath", "Data path");
 	type.addPropertyDescriptor("dataIndex", "Data index");
 	type.addPropertyDescriptor("style", "Style (font-size:20px;)");
+	type.addPropertyDescriptor("link", "Link", ds.ComponentType.PROPERTY_BOOLEAN);
 };
 
 ds.ComponentTypeLib.prototype.add = function(child) {

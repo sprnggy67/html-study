@@ -104,55 +104,70 @@ ds.ArticleRenderer._initClass = function() {
 			'{{if componentType==="flow" tmpl="flow"/}}' +
 			'{{if componentType==="grid" tmpl="grid"/}}',
 		headline: 
-			'<h1 class="selectable"' +
+			'<h1 class="{{:~getClass(#data)}}"' +
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}"' +
 				'{{/if}}' +
 				'{{if style}}' +
 					' style="{{:style}}"' +
+				'{{/if}}' +
+				'{{if link}}' +
+					' data-article_id="{{:realData.id}}"' +
 				'{{/if}}' +
 			'>' +
 				'{{:realData.headline}}' +
 			'</h1>',
 		standfirst: 
-			'<h2 class="selectable"' +
+			'<h2 class="{{:~getClass(#data)}}"' +
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}"' +
 				'{{/if}}' +
 				'{{if style}}' +
 					' style="{{:style}}"' +
+				'{{/if}}' +
+				'{{if link}}' +
+					' data-article_id="{{:realData.id}}"' +
 				'{{/if}}' +
 			'>' +
 				'{{:realData.standFirst}}' +
 			'</h2>',
 		body: 
-			'<span class="selectable"' +
+			'<span class="{{:~getClass(#data)}}"' +
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}"' +
 				'{{/if}}' +
 				'{{if style}}' +
 					' style="{{:style}}"' +
 				'{{/if}}' +
+				'{{if link}}' +
+					' data-article_id="{{:realData.id}}"' +
+				'{{/if}}' +
 			'>' +
 			'{{:realData.body}}' +
 			'</span>',
 		image: 
-			'<img class="selectable" style="width:100%;"' +
+			'<img class="{{:~getClass(#data)}}" style="width:100%;"' +
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}" ' +
 				'{{/if}}' +
-			' src="{{:realData.image}}"' +
+				' src="{{:realData.image}}"' +
+				'{{if link}}' +
+					' data-article_id="{{:realData.id}}"' +
+				'{{/if}}' +
 			'>',
 		flow: 
-			'<div class="selectable flow"' +
+			'<div class="{{:~getClass(#data)}}"' +
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}"' +
 				'{{/if}}' +
+				'{{if link}}' +
+					' data-article_id="{{:realData.id}}"' +
+				'{{/if}}' +
 			'>' +
-				'{{for children tmpl="component"/}}' +
+			'{{for children tmpl="component"/}}' +
 			'</div>',
 		grid: 
-			'<div class="selectable"' + 
+			'<div class="{{:~getClass(#data)}}"' + 
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}"' +
 				'{{/if}}' +
@@ -215,6 +230,14 @@ ds.ArticleRenderer._initClass = function() {
 			}
 			return result;
 		},
+		getClass:function(component) {
+			var classes = "selectable";
+			if (component.componentType == "flow")
+				classes = classes + " flow";
+			if (component.link)
+				classes = classes + " link";
+			return classes;
+		}
 	});
 
 };

@@ -116,12 +116,13 @@ $(function () {
 		// Generate content
 		console.time("generateArticle");
 		var renderer = new ds.ArticleRenderer();
-		var actualOutput = renderer.renderPage(template, article);
+		var actualOutput = renderer.renderComponent(activeLayout, article);
 		console.timeEnd("generateArticle");
 
 		// Replace
 		console.time("displayArticle");
 		$("#canvas").html(actualOutput);
+		document.dispatchEvent(new CustomEvent("refreshTemplate"));
 		console.timeEnd("displayArticle");
 
 		// Update the selection.
@@ -254,7 +255,14 @@ $(function () {
 		pdArray = JSON.parse(JSON.stringify(pdArray));
 		for (var i = 0; i < pdArray.length; i++) {
 			var pd = pdArray[i];
-			pd.value = component[pd.name];
+			if (pd.type == ds.ComponentType.PROPERTY_BOOLEAN) {
+				if (component[pd.name])
+					pd.checked = "checked";
+				else
+					pd.checked = "";
+			} else {
+				pd.value = component[pd.name];
+			}
 		}
 
 		// Display the properties.
@@ -267,9 +275,15 @@ $(function () {
 	}
 
 	function updateProperty(element) {
-		// Update the property
+		// Get the property value
+		var value = element.value;
+		if (element.type == "checkbox") {
+			value = $(element).is(':checked') ? true : false;
+		}
+
+		// Store it on the component
 		var component = selection.component;
-		component[element.dataset.prop_name] = element.value;
+		component[element.dataset.prop_name] = value;
 
 		// Render
 		renderArticle();		
