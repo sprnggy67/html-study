@@ -63,6 +63,18 @@ ds.ArticleRenderer.prototype.renderPage = function(template, article, context) {
 };
 
 /**
+ Render the body for a given template and article.
+ Return the HTML.
+
+ This method clones the template and then injects the article data into the template.
+ This combined set of data is then used to render the HTML.
+ */
+ds.ArticleRenderer.prototype.renderBody = function(template, article, context) {
+	var layout = ds.template.getActiveLayout(template, context);
+	return this.renderComponent(layout, article);
+};
+
+/**
  Render the HTML for a given component and article. 
  The component may contain sub components.
  Return the HTML.
