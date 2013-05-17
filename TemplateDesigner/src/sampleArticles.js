@@ -3,6 +3,8 @@ var sampleArticles = [
 	{ name:"Realistic Navigation Data", definition : {
 		"id":"001",
 		"headline":"Best of Times",
+		"standFirst":"Start here for the best of the times",
+		"body":"This morning the editorial team of the Times identified the best stories of the Times.  Those stories have been collected here for you reading pleasure.",
 		"style": {
 			"textColor":"red",
 			"backgroundColor":"blue"

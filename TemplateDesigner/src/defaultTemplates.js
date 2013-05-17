@@ -216,6 +216,30 @@ var defaultTemplates = {
 				]
 			}
 		}]
+	},
+	
+	"singleRootArticle" : {
+		targets: [{
+			name:"default",
+			layout: {
+				componentType:"flow",
+				children: [
+					{
+						componentType:"headline",
+						dataPath:"#root",
+					},
+					{
+						componentType:"standfirst",
+						dataPath:"#root",
+					},
+					{
+						componentType:"body",
+						dataPath:"#root",
+					}
+				]
+			}
+		}]
 	}
+
 };
 	
