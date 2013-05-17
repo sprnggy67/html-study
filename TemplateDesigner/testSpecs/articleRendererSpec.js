@@ -56,6 +56,17 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
+	it("should generate a root headline component", function() {
+		var renderer = new ds.ArticleRenderer();
+		var component = {
+			componentType:"headline",
+			dataPath:"#root",
+		};
+		var expectedOutput = '<h1 class="selectable">Best of Times</h1>';
+		var actualOutput = renderer.renderComponent(component, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
 	it("should generate the first headline component", function() {
 		var renderer = new ds.ArticleRenderer();
 		var component = {
