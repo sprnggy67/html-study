@@ -212,42 +212,56 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
+	var gridComponent = {
+		componentType:"grid",
+		orientation:"landscape",
+		width:1024, 
+		height:768,
+		rows:3, 
+		columns:4,
+		children: [
+			{
+				componentType:"headline",
+				dataPath:"children",
+				dataIndex:0,
+				position: { left:0, top:0, width:1, height:1 }
+			},
+			{
+				componentType:"body",
+				dataPath:"children",
+				dataIndex:0,
+				position: { left:0, top:1, width:1, height:2 },
+			},
+			{
+				componentType:"image",
+				dataPath:"children",
+				dataIndex:0,
+				position: { left:1, top:0, width:3, height:3 },
+			},
+		]
+	};
+
 	it("should generate a grid component for the first article", function() {
 		var renderer = new ds.ArticleRenderer();
-		var component = {
-			componentType:"grid",
-			orientation:"landscape",
-			width:1024, 
-			height:768,
-			rows:3, 
-			columns:4,
-			children: [
-				{
-					componentType:"headline",
-					dataPath:"children",
-					dataIndex:0,
-					position: { left:0, top:0, width:1, height:1 }
-				},
-				{
-					componentType:"body",
-					dataPath:"children",
-					dataIndex:0,
-					position: { left:0, top:1, width:1, height:2 },
-				},
-				{
-					componentType:"image",
-					dataPath:"children",
-					dataIndex:0,
-					position: { left:1, top:0, width:3, height:3 },
-				},
-			]
-		};
+		var component = gridComponent;
 		var expectedOutput = '<div class="selectable">' +
 			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:0px; width:256px; height:256px;"><h1 class="selectable">h1</h1></div>' +
 			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:256px; width:256px; height:512px;"><span class="selectable">body1</span></div>' +
 			'<div class="gridData" style="position:absolute; overflow:hidden; left:256px; top:0px; width:768px; height:768px;"><img class="selectable" style="width:100%;" src="img1.jpg"></div>' +
 			'</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
+	it("should generate a grid component with options", function() {
+		var renderer = new ds.ArticleRenderer();
+		var component = gridComponent;
+		var expectedOutput = '<div class="selectable">' +
+			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:0px; width:200px; height:200px;"><h1 class="selectable">h1</h1></div>' +
+			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:200px; width:200px; height:400px;"><span class="selectable">body1</span></div>' +
+			'<div class="gridData" style="position:absolute; overflow:hidden; left:200px; top:0px; width:600px; height:600px;"><img class="selectable" style="width:100%;" src="img1.jpg"></div>' +
+			'</div>';
+		var actualOutput = renderer.renderComponent(component, navigationArticle, { width:800, height:600 });
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
@@ -316,6 +330,25 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
+	it("should generate the body for a headline component", function() {
+		var renderer = new ds.ArticleRenderer();
+		var template = {
+			targets: [
+				{
+					name:"default",
+					layout: {
+						componentType:"headline",
+						dataPath:"children",
+						dataIndex:0
+					}
+				}
+			]
+		};
+		var expectedOutput = '<h1 class="selectable">h1</h1>';
+		var actualOutput = renderer.renderBody(template, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
 	it("should generate a simple HTML page with a headline component", function() {
 		var renderer = new ds.ArticleRenderer();
 		var template = {
@@ -373,31 +406,33 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
+	var gridTemplate = {
+		targets: [
+			{
+				name:"default",
+				layout: {
+					componentType:"grid",
+					orientation:"landscape",
+					width:1024, 
+					height:768,
+					rows:1, 
+					columns:1,
+					children: [
+						{
+							componentType:"headline",
+							dataPath:"children",
+							dataIndex:0,
+							position: { left:0, top:0, width:1, height:1 }
+						},
+					]
+				}
+			}
+		]
+	};
+
 	it("should generate a complex HTML page with a grid component", function() {
 		var renderer = new ds.ArticleRenderer();
-		var template = {
-			targets: [
-				{
-					name:"default",
-					layout: {
-						componentType:"grid",
-						orientation:"landscape",
-						width:1024, 
-						height:768,
-						rows:1, 
-						columns:1,
-						children: [
-							{
-								componentType:"headline",
-								dataPath:"children",
-								dataIndex:0,
-								position: { left:0, top:0, width:1, height:1 }
-							},
-						]
-					}
-				}
-			]
-		};
+		var template = gridTemplate;
 		var expectedOutput = '<html>' +
 			'<head>' +
 				ds.ArticleRenderer.BOILER_PLATE +
@@ -407,6 +442,21 @@ describe("ds.ArticleRenderer", function() {
 			'</body>' + 
 			'</html>';
 		var actualOutput = renderer.renderPage(template, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
+	it("should generate a complex HTML page with a grid component and options", function() {
+		var renderer = new ds.ArticleRenderer();
+		var template = gridTemplate;
+		var expectedOutput = '<html>' +
+			'<head>' +
+				ds.ArticleRenderer.BOILER_PLATE +
+			'</head>' +
+			'<body>' +
+				'<div class="selectable"><div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:0px; width:500px; height:600px;"><h1 class="selectable">h1</h1></div></div>' +
+			'</body>' + 
+			'</html>';
+		var actualOutput = renderer.renderPage(template, navigationArticle, { width:500, height:600 });
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 

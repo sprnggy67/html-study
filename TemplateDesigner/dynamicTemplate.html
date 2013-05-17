@@ -63,7 +63,11 @@ function require(file, callback) {
 function renderArticle() {
 	console.time("renderPage");
 	var renderer = new ds.ArticleRenderer();
-	var rendererOutput = renderer.renderBody(templateData, articleData, { "orientation":"portrait" });
+	var rendererOutput = renderer.renderBody(templateData, articleData, { 
+		"orientation":"portrait",
+		"width":$(window).width(),
+		"height":$(window).height()
+	});
 	console.timeEnd("renderPage");
 
 	console.time("displayPage");
