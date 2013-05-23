@@ -64,7 +64,10 @@ ds.ComponentTypeLib.createSimpleComponent = function(type) {
 };
 
 ds.ComponentTypeLib.createCompositeComponent = function(type) {
-	var result = ds.ComponentTypeLib.createSimpleComponent(type);
+	var result = {
+		componentType: type,
+		uniqueID: "cmp" + (++ds.ComponentTypeLib.idCount)
+	};
 	result.children = [];
 	return result;
 };

@@ -239,6 +239,71 @@ var defaultTemplates = {
 				]
 			}
 		}]
+	},
+
+	"featureArticle": {
+		targets: [
+		{
+			"name": "default",
+			"layout": {
+				"uniqueID": "defaultRoot",
+				"componentType": "grid",
+				"width": 600,
+				"height": 800,
+				"rows": 4,
+				"columns": 3,
+				"rowGutter": 10,
+				"columnGutter": 10,
+				"children": [
+				{
+					"componentType": "flow",
+					"uniqueID": "cmp1369306220346",
+					"children": [
+					{
+						"componentType": "headline",
+						"dataPath": "#root",
+						"uniqueID": "cmp1369306220347"
+					},
+					{
+						"componentType": "standfirst",
+						"dataPath": "#root",
+						"uniqueID": "cmp1369306220348"
+					}
+					],
+					"position": {
+						"left": 0,
+						"top": 0,
+						"width": 1,
+						"height": 3
+					}
+				},
+				{
+					"componentType": "flow",
+					"uniqueID": "cmp1369306220349",
+					"children": [
+					{
+						"componentType": "image",
+						"dataPath": "#root",
+						"uniqueID": "cmp1369306220350"
+					},
+					{
+						"componentType": "body",
+						"dataPath": "#root",
+						"uniqueID": "cmp1369306220351"
+					}
+					],
+					"position": {
+						"left": 1,
+						"top": 0,
+						"width": 2,
+						"height": 4
+					},
+					"scroll": true
+				}
+				],
+			}
+		}
+		]
 	}
 
 };

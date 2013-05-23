@@ -11,6 +11,27 @@
     float:left; 
 }
 
+#data {
+    width: 190px;
+    border:solid 1px black;
+    margin:0px 0px 10px 0px;
+    overflow: auto;
+}
+
+#dataList {
+    width: 100%;
+    margin:0px;
+    padding:0px;
+}
+
+.dataItem {
+    list-style-type: none;
+    margin:5px;
+    padding:5px;
+    background:LightGreen;
+    border:solid 1px black;
+}
+
 #palette {
 	width: 190px;
     border:solid 1px black;

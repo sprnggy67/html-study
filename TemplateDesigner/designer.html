@@ -25,6 +25,10 @@
 	<script type="text/javascript" src="src/template.js"></script>
 	<script type="text/javascript" src="src/templateDesigner.js"></script>
 
+	<script id="dataItemTemplate" type="text/x-jsrender ">
+		<li class="dataItem" data-index="{{:#index}}">{{:displayName}}</li>
+	</script>
+
 	<script id="paletteItemTemplate" type="text/x-jsrender ">
 		<li class="paletteItem" data-ctype="{{:name}}">{{:displayName}}</li>
 	</script>
@@ -51,6 +55,10 @@
 	</form>
 
 	<div id="leftPanel">
+		<div id="data">
+			<ul id="dataList"> 
+			</ul>
+		</div>
 		<div id="palette">
 			<ul id="paletteList"> 
 			</ul>

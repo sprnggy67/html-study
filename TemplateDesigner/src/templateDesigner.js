@@ -6,9 +6,10 @@
 
 $(function () {
 
-	var article,
+	var sampleArticle,
 		publication,
 		template,
+		activeArticle,
 		activeLayout,
 		typeLibrary,
 		selection;
@@ -22,6 +23,7 @@ $(function () {
 		initPalette();
 		initModel();
 		initKeyHandlers();
+		displaySampleData();
 
 		$("#savePage").click(function() { saveFile(); });
 		$("#openPage").click(function() { openFile(); });
@@ -30,14 +32,14 @@ $(function () {
 
 	function initModel() {
 		selection = null;
-		article = sampleArticles[0].definition;
+		sampleArticle = sampleArticles[0].definition;
 
 		publication = new ds.Publication();
 		publication.loadFromServer(function() {
 			template = JSON.parse(JSON.stringify(publication.getDefaultTemplate()));
 			activeLayout = ds.template.getActiveLayout(template);
 			activeLayout.designTime = true;
-			renderArticle();
+			renderSampleArticle();
 		});
 	}
 
@@ -104,7 +106,7 @@ $(function () {
 			template = 	JSON.parse(templateStr);
 			activeLayout = ds.template.getActiveLayout(template);
 			activeLayout.designTime = true;
-			renderArticle();
+			renderSampleArticle();
 		};
 
 	  	reader.readAsText(file);
@@ -116,7 +118,7 @@ $(function () {
 	function saveHTML() {
 		// Run the template.
 		var renderer = new ds.ArticleRenderer();
-		var result = renderer.renderPage(template, article);
+		var result = renderer.renderPage(template, sampleArticle);
 
 		// Format the output.
 		result = result.replace(/<(\/?)[a-zA-Z]+(?:[^>"']+|"[^"]*"|'[^']*')*>/g, function($0, $1) {
@@ -129,13 +131,13 @@ $(function () {
 	}
 
 	/**
-	 * Renders an article
+	 * Renders the sample article
 	 */
-	function renderArticle() {
+	function renderSampleArticle() {
 		// Generate content
 		console.time("generateArticle");
 		var renderer = new ds.ArticleRenderer();
-		var actualOutput = renderer.renderComponent(activeLayout, article);
+		var actualOutput = renderer.renderComponent(activeLayout, sampleArticle);
 		console.timeEnd("generateArticle");
 
 		// Replace
@@ -254,6 +256,29 @@ $(function () {
 		$(element.parentElement).resizable("destroy");
 	}
 
+	function displaySampleData(selection) {
+		// Create the list of items
+		var dataArray = [ { displayName:"Root Article"} ];
+
+		for (var x = 0; x < sampleArticle.children.length; x ++) {
+			dataArray.push( { displayName:"Sub Article " + (x+1) });
+		};
+
+		// Display the properties.
+		$("#dataList").html($("#dataItemTemplate").render(dataArray));
+
+		// Select the first one.
+		activeArticle = 0;
+		$(".dataItem").first().addClass("selected");
+
+		// Handle selection.
+		$(".dataItem").click(function() {
+			$(".dataItem").eq(activeArticle).removeClass("selected");
+			activeArticle = this.dataset.index;
+			$(".dataItem").eq(activeArticle).addClass("selected");
+		});
+	}
+
 	function displayProperties(selection) {
 		var component = selection.component;
 
@@ -297,14 +322,20 @@ $(function () {
 		var value = element.value;
 		if (element.type == "checkbox") {
 			value = $(element).is(':checked') ? true : false;
+		} else if (value == "") {
+			value = null;
 		}
 
 		// Store it on the component
 		var component = selection.component;
-		component[element.dataset.prop_name] = value;
+		if (value == null) {
+			delete component[element.dataset.prop_name];
+		} else {
+			component[element.dataset.prop_name] = value;
+		}
 
 		// Render
-		renderArticle();		
+		renderSampleArticle();		
 	}
 
 	function createSelectableDragElement( event ) {
@@ -375,7 +406,6 @@ $(function () {
 		}
 
 		// Create the child component.
-		// TODO: Convert into factory method.
 		var paletteItem = draggable[0];
 		var componentType = typeLibrary.componentNamed(paletteItem.dataset.ctype);
 		if (componentType == null) {
@@ -391,11 +421,26 @@ $(function () {
 		};
 		grid.children.push(component);
 
+		// Set the data path.
+		if (component.dataPath) {
+			setComponentDataPath(component);
+		}
+
 		// Rerender
-		renderArticle();
+		renderSampleArticle();
 
 		// Select the new component.
 		selectComponent(component);
+	}
+
+	function setComponentDataPath(component) {
+		if (activeArticle == 0) {
+			component.dataPath = '#root';
+			component.dataIndex = null;
+		} else {
+			component.dataPath = 'children';
+			component.dataIndex = activeArticle - 1;
+		}
 	}
 
 	// TODO: Convert into OO method
@@ -416,7 +461,7 @@ $(function () {
 		var draggable_data = draggable.data('ui-draggable');
 
 		// Rerender
-		renderArticle();
+		renderSampleArticle();
 		draggable.data('ui-draggable', draggable_data);
 	}
 
@@ -441,8 +486,13 @@ $(function () {
 		var component = componentType.createComponent(paletteItem.dataset.ctype);
 		parent.children.push(component);
 
+		// Set the data path.
+		if (component.dataPath) {
+			setComponentDataPath(component);
+		}
+
 		// Rerender
-		renderArticle();
+		renderSampleArticle();
 
 		// Select the new component.
 		selectComponent(component);
@@ -472,7 +522,7 @@ $(function () {
 		component.position.height = height;
 
 		// Rerender
-		renderArticle();
+		renderSampleArticle();
 	}
 
 	function deleteSelection() {
@@ -494,7 +544,7 @@ $(function () {
 		selectPair(null, null);
 
 		// Rerender
-		renderArticle();
+		renderSampleArticle();
 	}
 
 	function renderTemplate() {
