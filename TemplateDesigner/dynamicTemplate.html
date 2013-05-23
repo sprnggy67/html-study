@@ -26,7 +26,7 @@ var TEMPLATE_DATA_VARIABLE = null; // This line can be removed in production.
 var templateData = TEMPLATE_DATA_VARIABLE;
 if (templateData == null) {
 	require("src/defaultTemplates.js", function() { 
-		templateData = defaultTemplates.singleRootArticle; // singleRootArticle or front3;
+		templateData = defaultTemplates.front3; // singleRootArticle or front3;
 		init();
 	});
 }
@@ -60,22 +60,23 @@ function require(file, callback) {
 	script.parentNode.insertBefore(newjs, script);
 }
 
-var MARGIN = 10;
-
 function renderArticle() {
+	var body = document.getElementsByTagName("body")[0];
+	var padding = window.getComputedStyle(body, null).getPropertyValue('padding-top');
+	padding = parseInt(padding);
+
 	console.time("renderPage");
 	var renderer = new ds.ArticleRenderer();
 	var rendererOutput = renderer.renderBody(templateData, articleData, { 
 		"orientation":"portrait",
-		"width":$(window).width() - MARGIN * 2,
-		"height":$(window).height() - MARGIN * 2
+		"width":$(window).width() - padding * 2,
+		"height":$(window).height() - padding * 2
 	});
 	console.timeEnd("renderPage");
 
 	console.time("displayPage");
 	$("#contents").html(rendererOutput);
 	console.timeEnd("displayPage");
-
 }
 
 </script>
@@ -84,7 +85,7 @@ function renderArticle() {
 <script type="text/javascript" src="src/renderRuntime.js"></script>
 
 </head>
-<body style="margin:0px; padding:10px;">
+<body style="margin:0px; padding:9pt;">
 <div id="contents" style="position:relative;">
 
 Loading ...
