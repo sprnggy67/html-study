@@ -1,9 +1,35 @@
+
 .button {
-    clear: both;
-    font-size:12px;
-    border:solid 1px black;
-    width:100px;
+    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+    background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+    background-color:#ededed;
+    -moz-border-radius:6px;
+    -webkit-border-radius:6px;
+    border-radius:6px;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    color:#777777;
+    font-family:Arial;
+    font-size:15px;
+    font-weight:bold;
+    padding:4px 20px;
     margin:0px 0px 10px 0px;
+}
+
+.button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+    background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+    background-color:#dfdfdf;
+}
+
+.button:active {
+    position:relative;
+    top:1px;
 }
 
 #leftPanel {
@@ -30,6 +56,9 @@
     padding:5px;
     background:LightGreen;
     border:solid 1px black;
+    font-family:Arial;
+    font-size:13px;
+    border-radius:6px;
 }
 
 #palette {
@@ -51,6 +80,9 @@
     padding:5px;
 	background:Tan;
     border:solid 1px black;
+    border:solid 1px black;
+    font-family:Arial;
+    font-size:13px;
 }
 
 #properties {
@@ -70,15 +102,19 @@
 .propertyName {
     margin:5px 0px 5px 0px;
     padding:0px 5px 0px 5px;
+    font-family:Arial;
+    font-size:13px;
 }
 
 .propertyValue {
     width:80px;
-    margin:5px 0px 0px 0px;
+    margin:5px 3px 0px 0px;
     padding:5px;
+    font-family:Arial;
+    font-size:13px;
 }
 
-#canvas {
+#canvasFrame {
 	float:left;
     width: 600px;
 	height: 800px; 
@@ -88,11 +124,16 @@
 	overflow: auto;
 }
 
+#canvas {
+    margin:9pt;
+    position:relative;
+}
+
 #templateModel {
     margin:0px 0px 10px 0px;
     padding:0px;
     border:solid 1px black;
-    left:202px;
+    left:200px;
     width: 600px;
     height: 600px; 
     position:relative;

@@ -134,15 +134,25 @@ $(function () {
 	 * Renders the sample article
 	 */
 	function renderSampleArticle() {
-		// Generate content
+		// Get the frame attributes.
+		var $frame = $("#canvasFrame");
+		var $contents = $("#canvas")
+		var margin = $contents.css("marginTop");
+		margin = parseInt(margin);
+
+		// Generate the content
 		console.time("generateArticle");
 		var renderer = new ds.ArticleRenderer();
-		var actualOutput = renderer.renderComponent(activeLayout, sampleArticle);
+		var rendererOutput = renderer.renderBody(template, sampleArticle, { 
+			"orientation":"portrait",
+			"width":$frame.innerWidth() - margin * 2,
+			"height":$frame.innerHeight() - margin * 2
+		});
 		console.timeEnd("generateArticle");
 
-		// Replace
+		// Fill the frame.
 		console.time("displayArticle");
-		$("#canvas").html(actualOutput);
+		$contents.html(rendererOutput);
 		console.timeEnd("displayArticle");
 
 		// Update the selection.
