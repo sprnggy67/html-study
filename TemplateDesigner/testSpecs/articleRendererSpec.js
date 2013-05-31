@@ -223,6 +223,31 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
+	it("should generate a flow component with tap navigation", function() {
+		var renderer = new ds.ArticleRenderer();
+		var component = {
+			dataPath:"children",
+			dataIndex:0,
+			componentType:"flow",
+			children: [
+				{
+					componentType:"headline",
+					dataPath:"children",
+					dataIndex:0
+				},
+				{
+					componentType:"body",
+					dataPath:"children",
+					dataIndex:0
+				}
+			],
+			link:true
+		};
+		var expectedOutput = '<div class="selectable flow link" data-article_id="001.1"><h1 class="selectable">h1</h1><span class="selectable">body1</span></div>';
+		var actualOutput = renderer.renderComponent(component, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
 	var gridComponent = {
 		componentType:"grid",
 		orientation:"landscape",
@@ -264,7 +289,7 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
-	it("should generate a grid component with options", function() {
+	it("should generate a grid component with width and height", function() {
 		var renderer = new ds.ArticleRenderer();
 		var component = gridComponent;
 		var expectedOutput = '<div class="selectable">' +
