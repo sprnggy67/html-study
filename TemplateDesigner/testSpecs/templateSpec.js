@@ -4,45 +4,45 @@ describe("ds.Template", function() {
 	});
 
 	it("should return default active layout", function() {
-		var template = defaultTemplates.empty;
+		var template = sampleTemplates.empty;
 		var layout = ds.template.getActiveLayout(template);
 		expect(layout.uniqueID).toEqual("defaultRoot");
 	});
 
 	it("should return default active layout if nothing else is available", function() {
-		var template = defaultTemplates.empty;
+		var template = sampleTemplates.empty;
 		var layout = ds.template.getActiveLayout(template, { orientation:"landscape"});
 		expect(layout.uniqueID).toEqual("defaultRoot");
 	});
 
 	it("should return portrait layout in portrait orientation", function() {
-		var template = defaultTemplates.emptyResponsive;
+		var template = sampleTemplates.emptyResponsive;
 		var layout = ds.template.getActiveLayout(template, { orientation:"portrait"});
 		expect(layout.uniqueID).toEqual("portraitRoot");
 	});
 
 	it("should return landscape layout in landscape orientation", function() {
-		var template = defaultTemplates.emptyResponsive;
+		var template = sampleTemplates.emptyResponsive;
 		var layout = ds.template.getActiveLayout(template, { orientation:"landscape"});
 		expect(layout.uniqueID).toEqual("landscapeRoot");
 	});
 
 	it("should findComponent in shallow objects", function() {
-		var template = defaultTemplates.empty;
+		var template = sampleTemplates.empty;
 		var layout = ds.template.getActiveLayout(template, { orientation:"portrait" });
 		var child = ds.template.findComponentInLayout(layout, "defaultRoot");
 		expect(child.uniqueID).toEqual("defaultRoot");
 	});
 
 	it("should findComponent in deep objects", function() {
-		var template = defaultTemplates.front3;
+		var template = sampleTemplates.front3;
 		var layout = ds.template.getActiveLayout(template, { orientation:"portrait" });
 		var child = ds.template.findComponentInLayout(layout, "ref001")
 		expect(child.uniqueID).toEqual("ref001");
 	});
 
 	it("should findParent", function() {
-		var template = defaultTemplates.front3;
+		var template = sampleTemplates.front3;
 		var layout = ds.template.getActiveLayout(template, { orientation:"portrait" });
 		var child = ds.template.findComponentInLayout(layout, "ref001");
 		var actualParent = ds.template.findParentInLayout(layout, child);

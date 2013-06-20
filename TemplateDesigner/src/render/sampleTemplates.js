@@ -1,4 +1,4 @@
-var defaultTemplates = {
+var sampleTemplates = {
 
 	"empty" : {
 		targets: [

@@ -10,20 +10,20 @@
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 	<script type="text/javascript" src="lib/jsrender-1.0.js"></script>
 
-	<!-- The core article renderer -->
-	<script type="text/javascript" src="src/articleRenderer.js"></script>
-	<link rel="stylesheet" type="text/css" href="src/renderRuntime.css">
+	<!-- The core renderer -->
+	<link rel="stylesheet" type="text/css" href="src/render/renderRuntime.css">
+	<script type="text/javascript" src="src/render/articleRenderer.js"></script>
+	<script type="text/javascript" src="src/render/publication.js"></script>
+	<script type="text/javascript" src="src/render/sampleTemplates.js"></script>
+	<script type="text/javascript" src="src/render/componentType.js"></script>
+	<script type="text/javascript" src="src/render/componentTypeLib.js"></script>
+	<script type="text/javascript" src="src/render/template.js"></script>
 
 	<!-- The designer itself -->
-	<link rel="stylesheet" type="text/css" href="src/templateDesigner.css">
-	<script type="text/javascript" src="src/publication.js"></script>
-	<script type="text/javascript" src="src/sampleArticles.js"></script>
-	<script type="text/javascript" src="src/defaultTemplates.js"></script>
-	<script type="text/javascript" src="src/openFileDialog.js"></script>
-	<script type="text/javascript" src="src/componentType.js"></script>
-	<script type="text/javascript" src="src/componentTypeLib.js"></script>
-	<script type="text/javascript" src="src/template.js"></script>
-	<script type="text/javascript" src="src/templateDesigner.js"></script>
+	<link rel="stylesheet" type="text/css" href="src/design/templateDesigner.css">
+	<script type="text/javascript" src="src/design/templateDesigner.js"></script>
+	<script type="text/javascript" src="src/design/openFileDialog.js"></script>
+	<script type="text/javascript" src="src/design/sampleArticles.js"></script>
 
 	<script id="dataItemTemplate" type="text/x-jsrender ">
 		<li class="dataItem" data-index="{{:#index}}">{{:displayName}}</li>
