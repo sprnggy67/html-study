@@ -78,18 +78,6 @@ $(function () {
 	     return false;
 	}
 
-	function onArticleSelected(source, index) {
-		canvas.setActiveArticleIndex(index);
-	}
-
-	function onPropertyChanged(source, component) {
-		canvas.repaint();
-	}
-
-	function onComponentSelected(source, component) {
-		propertyList.displayProperties(component);
-	}
-
 	/**
 	 * Creates a new template
 	 */
@@ -162,6 +150,18 @@ $(function () {
 		if (canvas)
 			canvas.repaint();
 	};
+
+	function onArticleSelected(source, index) {
+		canvas.setActiveArticleIndex(index);
+	}
+
+	function onPropertyChanged(source, component) {
+		canvas.repaint();
+	}
+
+	function onComponentSelected(source, component) {
+		propertyList.displayProperties(component);
+	}
 
 });
 
