@@ -9,10 +9,11 @@ $(function () {
 	var sampleArticle,
 		publication,
 		template,
-		activeArticle,
 		activeLayout,
 		typeLibrary,
 		selection;
+
+	var articleList, componentPalette, propertyList;
 
 	init();
 
@@ -21,10 +22,7 @@ $(function () {
 	 */
 	function init() {
 		initModel();
-		initArticleList();
-		initComponentPalette();
-		initMenu();
-		initKeyHandlers();
+		initUserInterface();
 	}
 
 	function initModel() {
@@ -37,52 +35,26 @@ $(function () {
 			activeLayout.designTime = true;
 			renderTemplate();
 		});
-	}
-
-	function initArticleList() {
-		// Create and display the list of articles
-		var dataArray = [ { displayName:"Root Article"} ];
-		for (var x = 0; x < sampleArticle.children.length; x ++) {
-			dataArray.push( { displayName:"Sub Article " + (x+1) });
-		};
-		$("#dataList").html($("#dataItemTemplate").render(dataArray));
-
-		// Select the first article.
-		activeArticle = 0;
-		$(".dataItem").first().addClass("selected");
-
-		// Add click interaction.
-		$(".dataItem").click(function() {
-			$(".dataItem").eq(activeArticle).removeClass("selected");
-			activeArticle = this.dataset.index;
-			$(".dataItem").eq(activeArticle).addClass("selected");
-		});
-	}
-
-	function initComponentPalette() {
-		// Create and display the component library
 		typeLibrary = new ds.ComponentTypeLib();
     	typeLibrary.loadRegistry();
-		$("#paletteList").html($("#paletteItemTemplate").render(typeLibrary.getChildren()));
-
-		// Add drag interaction
-		$(".paletteItem").draggable({ 
-			containment: "document", 
-			helper: "clone", 
-			zIndex: 100,
-			cursor: "pointer", 
-		 });
-	}
-
-	function initMenu() {
-		$("#savePage").click(function() { saveFile(); });
-		$("#openPage").click(function() { openFile(); });
-		$("#saveHTML").click(function() { saveHTML(); });
 	}
 
 	var DOM_VK_DELETE = 46;
 
-	function initKeyHandlers() {
+	function initUserInterface() {
+		// Initialize the major views.
+		articleList = new ds.ArticleList("#dataList", sampleArticle);
+		componentPalette = new ds.ComponentPalette("#paletteList", typeLibrary);
+		propertyList = new ds.PropertyList("#propertyList", typeLibrary, function(component) {
+			renderTemplate();
+		})
+
+		// Initialize the menus
+		$("#savePage").click(function() { saveFile(); });
+		$("#openPage").click(function() { openFile(); });
+		$("#saveHTML").click(function() { saveHTML(); });
+
+		// Hook the delete key.
 		$(document).keyup(function(event) {
 			if (event.keyCode == DOM_VK_DELETE) {
 				var focus = document.activeElement;
@@ -109,7 +81,9 @@ $(function () {
 	 * Saves the current template to a file.
 	 */
 	function saveFile() {
+		activeLayout.designTime = false;
 		var templateStr = JSON.stringify(template, null, " ");
+		activeLayout.designTime = true;
 		var uriContent = "data:application/octet-stream," + encodeURIComponent(templateStr);
 		window.location.href = uriContent;		
 	}
@@ -157,7 +131,7 @@ $(function () {
 	}
 
 	/**
-	 * Renders the sample article
+	 * Renders the template and displays the result in the canvas
 	 */
 	function renderTemplate() {
 		// Get the frame attributes.
@@ -188,16 +162,7 @@ $(function () {
 		}
 
 		addCanvasInteraction();
-		displayTemplateModel();
 	};
-
-	/**
-	 * Displays the template model as a JSON string
-	 */
-	function displayTemplateModel() {
-		var templateStr = JSON.stringify(template, null, " ");
-		$("#templateModel").val(templateStr);
-	}
 
 	/**
 	 * Adds interaction to all droppable and clickable items in the template canvas
@@ -302,7 +267,7 @@ $(function () {
 		if (component) {
 			selection = { "element":element, "component":component };
 			activateSelection(element);
-			displayProperties(selection);
+			propertyList.displayProperties(component);
 		}
 	}
 
@@ -320,71 +285,6 @@ $(function () {
 	function deactivateSelection(element) {
 		$(element).removeClass("selected");
 		$(element.parentElement).resizable("destroy");
-	}
-
-	/**
-	 * Displays the properties for an element component pair
-	 */
-	function displayProperties(selection) {
-		var component = selection.component;
-
-		// Get the component type
-		var componentType = typeLibrary.componentNamed(component.componentType);
-		if (componentType == null) {
-			console.log("Unable to find ctype in displayProperties: " + component.componentType);
-			return;
-		}
-
-		// Get the property descriptors.
-		var pdArray = componentType.getPropertyDescriptors();
-		if (pdArray == null || pdArray.length == 0)
-			return;
-
-		// Craete a copy of the property descriptors and add property values.
-		pdArray = JSON.parse(JSON.stringify(pdArray));
-		for (var i = 0; i < pdArray.length; i++) {
-			var pd = pdArray[i];
-			if (pd.type == ds.ComponentType.PROPERTY_BOOLEAN) {
-				if (component[pd.name])
-					pd.checked = "checked";
-				else
-					pd.checked = "";
-			} else {
-				pd.value = component[pd.name];
-			}
-		}
-
-		// Display the properties.
-		$("#propertyList").html($("#propertyItemTemplate").render(pdArray));
-
-		// Listen for property changes.
-		$(".propertyValue").change(function() {
-			updateProperty(this);
-		});
-	}
-
-	/**
-	 * Updates the property value for an element when it changes.
-	 */
-	function updateProperty(element) {
-		// Get the property value
-		var value = element.value;
-		if (element.type == "checkbox") {
-			value = $(element).is(':checked') ? true : false;
-		} else if (value == "") {
-			value = null;
-		}
-
-		// Store it on the component
-		var component = selection.component;
-		if (value == null) {
-			delete component[element.dataset.prop_name];
-		} else {
-			component[element.dataset.prop_name] = value;
-		}
-
-		// Render
-		renderTemplate();		
 	}
 
 	// TODO: Convert into OO method
@@ -476,6 +376,7 @@ $(function () {
 	}
 
 	function setComponentDataPath(component) {
+		var activeArticle = articleList.getActiveArticleIndex();
 		if (activeArticle == 0) {
 			component.dataPath = '#root';
 			component.dataIndex = null;
@@ -574,15 +475,15 @@ $(function () {
 			return;
 
 		// Get the selection parent.
-		var parent = ds.template.findParentInLayout(activeLayout, selection.component);
-		if (parent == null) {
+		var parentComponent = ds.template.findParentInLayout(activeLayout, selection.component);
+		if (parentComponent == null) {
 			console.log("Unable to find parent in deleteSelection: " + selection.component);
 			return;
 		}
 
 		// Remove the component.
-		var index = parent.children.indexOf(selection.component);
-		parent.children.splice(index, 1);
+		var index = parentComponent.children.indexOf(selection.component);
+		parentComponent.children.splice(index, 1);
 		selectPair(null, null);
 
 		// Rerender

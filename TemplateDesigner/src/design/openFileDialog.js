@@ -31,7 +31,7 @@ $(function() {
 
 	/**
 	 * Opens a file dialog.  
-	 * If a file is selected and the user the file is passed to the callback function.
+	 * If a file is selected and the user clicks "Open" the file is passed to the callback function.
 	 */
 	ds.openFileDialog = function(callback) {
 		openFileCallback = callback;
