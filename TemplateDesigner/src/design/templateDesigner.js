@@ -20,39 +20,64 @@ $(function () {
 	 * Initializes the template designer data
 	 */
 	function init() {
-		initPalette();
 		initModel();
+		initArticleList();
+		initComponentPalette();
+		initMenu();
 		initKeyHandlers();
-		displaySampleData();
-
-		$("#savePage").click(function() { saveFile(); });
-		$("#openPage").click(function() { openFile(); });
-		$("#saveHTML").click(function() { saveHTML(); });
 	}
 
 	function initModel() {
 		selection = null;
 		sampleArticle = sampleArticles[0].definition;
-
 		publication = new ds.Publication();
 		publication.loadFromServer(function() {
 			template = JSON.parse(JSON.stringify(publication.getDefaultTemplate()));
 			activeLayout = ds.template.getActiveLayout(template);
 			activeLayout.designTime = true;
-			renderSampleArticle();
+			renderTemplate();
 		});
 	}
 
-	function initPalette() {
+	function initArticleList() {
+		// Create and display the list of articles
+		var dataArray = [ { displayName:"Root Article"} ];
+		for (var x = 0; x < sampleArticle.children.length; x ++) {
+			dataArray.push( { displayName:"Sub Article " + (x+1) });
+		};
+		$("#dataList").html($("#dataItemTemplate").render(dataArray));
+
+		// Select the first article.
+		activeArticle = 0;
+		$(".dataItem").first().addClass("selected");
+
+		// Add click interaction.
+		$(".dataItem").click(function() {
+			$(".dataItem").eq(activeArticle).removeClass("selected");
+			activeArticle = this.dataset.index;
+			$(".dataItem").eq(activeArticle).addClass("selected");
+		});
+	}
+
+	function initComponentPalette() {
+		// Create and display the component library
 		typeLibrary = new ds.ComponentTypeLib();
     	typeLibrary.loadRegistry();
 		$("#paletteList").html($("#paletteItemTemplate").render(typeLibrary.getChildren()));
+
+		// Add drag interaction
 		$(".paletteItem").draggable({ 
 			containment: "document", 
 			helper: "clone", 
 			zIndex: 100,
 			cursor: "pointer", 
 		 });
+	}
+
+	function initMenu() {
+		$("#savePage").click(function() { saveFile(); });
+		$("#openPage").click(function() { openFile(); });
+		$("#saveHTML").click(function() { saveHTML(); });
 	}
 
 	var DOM_VK_DELETE = 46;
@@ -69,10 +94,10 @@ $(function () {
 		});
 	}
 
-	function isDescendant(parent, child) {
-	     var node = child.parentNode;
+	function isDescendant(parentElement, childElement) {
+	     var node = childElement.parentNode;
 	     while (node != null) {
-	         if (node == parent) {
+	         if (node == parentElement) {
 	             return true;
 	         }
 	         node = node.parentNode;
@@ -84,7 +109,8 @@ $(function () {
 	 * Saves the current template to a file.
 	 */
 	function saveFile() {
-		var uriContent = "data:application/octet-stream," + encodeURIComponent($("#templateModel").val());
+		var templateStr = JSON.stringify(template, null, " ");
+		var uriContent = "data:application/octet-stream," + encodeURIComponent(templateStr);
 		window.location.href = uriContent;		
 	}
 
@@ -106,7 +132,7 @@ $(function () {
 			template = 	JSON.parse(templateStr);
 			activeLayout = ds.template.getActiveLayout(template);
 			activeLayout.designTime = true;
-			renderSampleArticle();
+			renderTemplate();
 		};
 
 	  	reader.readAsText(file);
@@ -133,7 +159,7 @@ $(function () {
 	/**
 	 * Renders the sample article
 	 */
-	function renderSampleArticle() {
+	function renderTemplate() {
 		// Get the frame attributes.
 		var $frame = $("#canvasFrame");
 		var $contents = $("#canvas")
@@ -162,9 +188,20 @@ $(function () {
 		}
 
 		addCanvasInteraction();
-		renderTemplate();
+		displayTemplateModel();
 	};
 
+	/**
+	 * Displays the template model as a JSON string
+	 */
+	function displayTemplateModel() {
+		var templateStr = JSON.stringify(template, null, " ");
+		$("#templateModel").val(templateStr);
+	}
+
+	/**
+	 * Adds interaction to all droppable and clickable items in the template canvas
+	 */
 	function addCanvasInteraction() {
 		$(".gridCell").droppable({
 		    tolerance: "pointer",
@@ -203,7 +240,7 @@ $(function () {
 
 		$(".selectable").draggable({ 
 			containment: "document", 
-			helper: createSelectableDragElement,
+			helper: createDragElement,
 			zIndex: 1000, 
 			appendTo: '#canvas', 
 			cursor: "pointer", 
@@ -211,6 +248,19 @@ $(function () {
 		});
 	}
 
+	/**
+	 * Creates the visual element which appears when you drag an object from one cell to another.
+	 */
+	function createDragElement( event ) {
+		var $this = $(this);
+		var clone = $this.clone().removeAttr("id");
+		clone.css("maxWidth", $this.width());
+		return clone;
+	}
+
+	/**
+	 * Select an element. This creates an element component pair and calls selectPair
+	 */
 	function selectElement(element) {
 		var component = ds.template.findComponentInLayout(activeLayout, element.id);
 		if (component == null) {
@@ -220,6 +270,9 @@ $(function () {
 		selectPair(component, element);
 	}
 
+	/**
+	 * Select an component. This creates an element component pair and calls selectPair
+	 */
 	function selectComponent(component) {
 		var id = component.uniqueID
 		var element = document.getElementById(id);
@@ -230,6 +283,9 @@ $(function () {
 		selectPair(component, element);
 	}
 
+	/**
+	 * Select a component element pair
+	 */
 	function selectPair(component, element) {
 		// Short circuit selection
 		if (selection != null && selection.component === component && selection.element === element)
@@ -266,29 +322,9 @@ $(function () {
 		$(element.parentElement).resizable("destroy");
 	}
 
-	function displaySampleData(selection) {
-		// Create the list of items
-		var dataArray = [ { displayName:"Root Article"} ];
-
-		for (var x = 0; x < sampleArticle.children.length; x ++) {
-			dataArray.push( { displayName:"Sub Article " + (x+1) });
-		};
-
-		// Display the properties.
-		$("#dataList").html($("#dataItemTemplate").render(dataArray));
-
-		// Select the first one.
-		activeArticle = 0;
-		$(".dataItem").first().addClass("selected");
-
-		// Handle selection.
-		$(".dataItem").click(function() {
-			$(".dataItem").eq(activeArticle).removeClass("selected");
-			activeArticle = this.dataset.index;
-			$(".dataItem").eq(activeArticle).addClass("selected");
-		});
-	}
-
+	/**
+	 * Displays the properties for an element component pair
+	 */
 	function displayProperties(selection) {
 		var component = selection.component;
 
@@ -321,12 +357,15 @@ $(function () {
 		// Display the properties.
 		$("#propertyList").html($("#propertyItemTemplate").render(pdArray));
 
-		// Add property change listeners.
+		// Listen for property changes.
 		$(".propertyValue").change(function() {
 			updateProperty(this);
 		});
 	}
 
+	/**
+	 * Updates the property value for an element when it changes.
+	 */
 	function updateProperty(element) {
 		// Get the property value
 		var value = element.value;
@@ -345,37 +384,30 @@ $(function () {
 		}
 
 		// Render
-		renderSampleArticle();		
-	}
-
-	function createSelectableDragElement( event ) {
-		var $this = $(this);
-		var clone = $this.clone().removeAttr("id");
-		clone.css("maxWidth", $this.width());
-		return clone;
+		renderTemplate();		
 	}
 
 	// TODO: Convert into OO method
-	function canDropPaletteItemOnGrid(target) {
-		return canDropOnGrid(target, 1, 1);
+	function canDropPaletteItemOnGrid(targetElement) {
+		return canDropOnGrid(targetElement, 1, 1);
 	}
 
-	function canDropSelectableOnGrid(draggable, target) {
-		var element = draggable[0];
-		var component = ds.template.findComponentInLayout(activeLayout, element.id);
+	function canDropSelectableOnGrid(draggable, targetElement) {
+		var sourceElement = draggable[0];
+		var component = ds.template.findComponentInLayout(activeLayout, sourceElement.id);
 		if (component == null) {
-			console.log("Unable to find component in canDropSelectableOnGrid: " + element);
+			console.log("Unable to find component in canDropSelectableOnGrid: " + sourceElement);
 			return false;
 		}
 		if (component.position === undefined)
 			return false;
-		return canDropOnGrid(target, component.position.width, component.position.height);
+		return canDropOnGrid(targetElement, component.position.width, component.position.height);
 	}
 
 	// TODO: Convert into OO method
-	function canDropOnGrid(target, width, height) {
+	function canDropOnGrid(targetElement, width, height) {
 		// Get the target grid
-		var gridID = target.parentElement.id;
+		var gridID = targetElement.parentElement.id;
 		var grid = ds.template.findComponentInLayout(activeLayout, gridID);
 		if (grid == null) {
 			console.log("Unable to find grid in canDropOnGrid: " + gridID);
@@ -383,8 +415,8 @@ $(function () {
 		}
 
 		// Calculate the target area
-		var left = +target.dataset.column;
-		var top = +target.dataset.row;
+		var left = +targetElement.dataset.column;
+		var top = +targetElement.dataset.row;
 		var right = left + width - 1;
 		var bottom = top + height - 1;
 
@@ -406,9 +438,9 @@ $(function () {
 	}
 
 	// TODO: Convert into OO method
-	function dropPaletteItemOnGrid(draggable, target) {
+	function dropPaletteItemOnGrid(draggable, targetElement) {
 		// Get the target parent.
-		var gridID = target.parentElement.id;
+		var gridID = targetElement.parentElement.id;
 		var grid = ds.template.findComponentInLayout(activeLayout, gridID);
 		if (grid == null) {
 			console.log("Unable to find parent in dropPaletteItem: " + gridID);
@@ -424,8 +456,8 @@ $(function () {
 		}
 		var component = componentType.createComponent(paletteItem.dataset.ctype);
 		component.position = {
-				left: +target.dataset.column,
-				top: +target.dataset.row,
+				left: +targetElement.dataset.column,
+				top: +targetElement.dataset.row,
 				width:1,
 				height:1
 		};
@@ -437,7 +469,7 @@ $(function () {
 		}
 
 		// Rerender
-		renderSampleArticle();
+		renderTemplate();
 
 		// Select the new component.
 		selectComponent(component);
@@ -454,7 +486,7 @@ $(function () {
 	}
 
 	// TODO: Convert into OO method
-	function moveSelectableInGrid(draggable, target) {
+	function moveSelectableInGrid(draggable, targetElement) {
 		// Get the component.
 		var element = draggable[0];
 		var component = ds.template.findComponentInLayout(activeLayout, element.id);
@@ -464,21 +496,21 @@ $(function () {
 		}
 
 		// Reposition the component.
-		component.position.left = +target.dataset.column;
-		component.position.top = +target.dataset.row;
+		component.position.left = +targetElement.dataset.column;
+		component.position.top = +targetElement.dataset.row;
 
 		// See http://forum.jquery.com/topic/on-draggable-destroy-uncaught-typeerror-cannot-read-property-options-of-undefined
 		var draggable_data = draggable.data('ui-draggable');
 
 		// Rerender
-		renderSampleArticle();
+		renderTemplate();
 		draggable.data('ui-draggable', draggable_data);
 	}
 
 	// TODO: Convert into OO method
-	function dropPaletteItemOnFlow(draggable, target) {
+	function dropPaletteItemOnFlow(draggable, targetElement) {
 		// Get the target parent.
-		var parentID = target.id;
+		var parentID = targetElement.id;
 		var parent = ds.template.findComponentInLayout(activeLayout, parentID);
 		if (parent == null) {
 			console.log("Unable to find parent in dropPaletteItem: " + parentID);
@@ -502,14 +534,14 @@ $(function () {
 		}
 
 		// Rerender
-		renderSampleArticle();
+		renderTemplate();
 
 		// Select the new component.
 		selectComponent(component);
 	}
 
 	function resizeSelectableInGrid(draggable, size) {
-		// Get the target parent.
+		// Get the draggable parent.
 		var gridID = draggable.parentElement.id;
 		var grid = ds.template.findComponentInLayout(activeLayout, gridID);
 		if (grid == null) {
@@ -532,7 +564,7 @@ $(function () {
 		component.position.height = height;
 
 		// Rerender
-		renderSampleArticle();
+		renderTemplate();
 	}
 
 	function deleteSelection() {
@@ -541,7 +573,7 @@ $(function () {
 		if (selection.component === activeLayout)
 			return;
 
-		// Get the target parent.
+		// Get the selection parent.
 		var parent = ds.template.findParentInLayout(activeLayout, selection.component);
 		if (parent == null) {
 			console.log("Unable to find parent in deleteSelection: " + selection.component);
@@ -554,12 +586,7 @@ $(function () {
 		selectPair(null, null);
 
 		// Rerender
-		renderSampleArticle();
-	}
-
-	function renderTemplate() {
-		var templateStr = JSON.stringify(template, null, " ");
-		$("#templateModel").val(templateStr);
+		renderTemplate();
 	}
 
 });
