@@ -10,7 +10,8 @@ var ds = ds || {};
  * Constructs a new ArticleList with a root element ID and a sample article.
  * The sample article and its children will be displayed within the root element.
  */
-ds.ArticleList = function(rootElementID, sampleArticle) {
+ds.ArticleList = function(rootElementID, sampleArticle, onArticleSelected) {
+	this.onArticleSelected = onArticleSelected;
 	this.init(rootElementID, sampleArticle);
 }
 
@@ -29,7 +30,7 @@ ds.ArticleList.prototype.init = function(rootElementID, sampleArticle) {
 	// Add click interaction.
 	var that = this;
 	$(".dataItem").click(function() {
-		that.setActiveArticleIndex(this.dataset.index);
+		that.setActiveArticleIndex(+this.dataset.index);
 	});
 }
 
@@ -41,5 +42,7 @@ ds.ArticleList.prototype.setActiveArticleIndex = function(index) {
 	$(".dataItem").eq(this.activeArticleIndex).removeClass("selected");
 	this.activeArticleIndex = index;
 	$(".dataItem").eq(this.activeArticleIndex).addClass("selected");
+	if (this.onArticleSelected) 
+		this.onArticleSelected(this, index);
 }
 
