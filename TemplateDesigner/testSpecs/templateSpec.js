@@ -50,5 +50,51 @@ describe("ds.Template", function() {
 		expect(actualParent).toEqual(expectedParent);
 	});
 
+	it("should copy object literal in constructor", function() {
+		var template = new ds.Template(sampleTemplates.empty);
+
+		// test the root object
+		expect(template.targets.length).toEqual(1);
+
+		// test the target
+		var target = template.targets[0];
+		expect(target.name).toEqual("default");
+		expect(target.layout).toBeDefined();
+		expect(target.portraitLayout).toBeUndefined();
+		expect(target.landscapeLayout).toBeUndefined();
+
+		// test the layout. It should be a component.
+		var layout = target.layout;
+		expect(layout.uniqueID).toEqual("defaultRoot");
+		expect(layout instanceof ds.Component).toBeTruthy();
+		expect(layout.componentType).toEqual("grid");
+		expect(layout.children.length).toEqual(0);
+	});
+
+	it("should return default active layout", function() {
+		var template = new ds.Template(sampleTemplates.empty);
+		var layout = template.getActiveLayout();
+		expect(layout.uniqueID).toEqual("defaultRoot");
+	});
+
+	it("should return default active layout if nothing else is available", function() {
+		var template = new ds.Template(sampleTemplates.empty);
+		var layout = template.getActiveLayout({ orientation:"landscape"});
+		expect(layout.uniqueID).toEqual("defaultRoot");
+	});
+
+	it("should return portrait layout in portrait orientation", function() {
+		var template = new ds.Template(sampleTemplates.emptyResponsive);
+		var layout = template.getActiveLayout({ orientation:"portrait"});
+		expect(layout.uniqueID).toEqual("portraitRoot");
+	});
+
+	it("should return landscape layout in landscape orientation", function() {
+		var template = new ds.Template(sampleTemplates.emptyResponsive);
+		var layout = template.getActiveLayout({ orientation:"landscape"});
+		expect(layout.uniqueID).toEqual("landscapeRoot");
+	});
+
+
 
 });

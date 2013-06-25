@@ -1,5 +1,5 @@
 /**
- A canvas where you can display and edit a template.
+ * A canvas where you can display and edit a template.
  */
 
 'use strict';
@@ -249,6 +249,7 @@ ds.Canvas.prototype.canDropOnGrid = function(targetElement, width, height) {
 		return false;
 
 	// Make sure the target area is unoccupied.
+	// This should be a method in Component.
 	var childCount = grid.children.length;
 	for (var i = 0; i < childCount; ++i) {
 		var position = grid.children[i].position;
@@ -284,6 +285,9 @@ ds.Canvas.prototype.dropPaletteItemOnGrid = function(draggable, targetElement) {
 			width:1,
 			height:1
 	};
+
+	// Add the child to the grid.
+	// This should be a method in Component.
 	grid.children.push(component);
 
 	// Set the data path.
@@ -347,6 +351,9 @@ ds.Canvas.prototype.dropPaletteItemOnFlow = function(draggable, targetElement) {
 		return;
 	}
 	var component = componentType.createComponent(paletteItem.dataset.ctype);
+
+	// Add the child to the flow.
+	// This should be a method in Component.
 	parent.children.push(component);
 
 	// Set the data path.
@@ -379,6 +386,7 @@ ds.Canvas.prototype.resizeSelectableInGrid = function(draggable, size) {
 	}
 
 	// Resize the component.
+	// This should be a method in Component.
 	var width = Math.round(size.width / (grid.width / grid.columns));
 	var height = Math.round(size.height / (grid.height / grid.rows));
 	component.position.width = width;
