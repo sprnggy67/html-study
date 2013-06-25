@@ -16,7 +16,7 @@ console.time("init");
 var JSON_DATA_VARIABLE = null; // This line can be removed in production.
 var articleData = JSON_DATA_VARIABLE;
 if (articleData == null) {
-	require("src/design/sampleArticles.js", function() {
+	require("src/model/sampleArticles.js", function() {
 		articleData = sampleArticles[0].definition;
 		init();
 	});
@@ -25,7 +25,7 @@ if (articleData == null) {
 var TEMPLATE_DATA_VARIABLE = null; // This line can be removed in production.
 var templateData = TEMPLATE_DATA_VARIABLE;
 if (templateData == null) {
-	require("src/design/sampleTemplates.js", function() { 
+	require("src/model/sampleTemplates.js", function() { 
 		templateData = sampleTemplates.featureArticle; // singleRootArticle or front3;
 		init();
 	});
