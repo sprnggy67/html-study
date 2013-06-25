@@ -22,6 +22,24 @@ ds.Canvas = function(rootElementID, template, activeLayout, sampleArticle, typeL
 }
 
 /**
+ * Sets the template. This is used when a new template is created, or an old template is reopened.
+ */
+ds.Canvas.prototype.setTemplate = function(template, activeLayout) {
+	this.template = template;
+	this.activeLayout = activeLayout;
+	this.selection = null;
+	this.repaint();
+	this.fireSelection();
+}
+
+/**
+ * Sets the active article index. This is used to seed the data path when a new component is created
+ */
+ds.Canvas.prototype.setActiveArticleIndex = function(index) {
+	this.activeArticleIndex = index;
+}
+
+/**
  * Renders the template and displays the result in the canvas
  */
 ds.Canvas.prototype.repaint = function() {
@@ -56,28 +74,28 @@ ds.Canvas.prototype.repaint = function() {
 };
 
 /**
- * Sets the active article index. This is used to seed the data path when a new component is created
- */
-ds.Canvas.prototype.setActiveArticleIndex = function(index) {
-	this.activeArticleIndex = index;
-}
-
-/**
- * Sets the active article index. This is used to seed the data path when a new component is created
- */
-ds.Canvas.prototype.setTemplate = function(template, activeLayout) {
-	this.template = template;
-	this.activeLayout = activeLayout;
-	this.selection = null;
-	this.repaint();
-	this.fireSelection();
-}
-
-/**
  * Adds interaction to all droppable and clickable items in the template canvas
  */
 ds.Canvas.prototype.addCanvasInteraction = function() {
 	var that = this;
+
+	// Click to select an object
+	$(".selectable").click(function(event) {
+		that.selectElement(this);
+		event.stopPropagation();
+	});
+
+	// Click and drag to move an object
+	$(".selectable").draggable({ 
+		containment: "document", 
+		helper: ds.Canvas.createDragElement,
+		zIndex: 1000, 
+		appendTo: '#canvas', 
+		cursor: "pointer", 
+		cursorAt: { top: 56, left: 56 }
+	});
+
+	// Drop an object on a grid
 	$(".gridCell").droppable({
 	    tolerance: "pointer",
 		accept: function( event) {
@@ -94,10 +112,11 @@ ds.Canvas.prototype.addCanvasInteraction = function() {
 			if (draggable.hasClass("paletteItem"))
 				that.dropPaletteItemOnGrid(draggable, this);
 			if (draggable.hasClass("selectable"))
-				that.moveSelectableInGrid(draggable, this);
+				that.dropSelectableOnGrid(draggable, this);
 		},
 	});
 
+	// Drop an object on a flow
 	$(".flow").droppable({
 	    tolerance: "pointer",
   		hoverClass: "dropTarget",
@@ -107,30 +126,6 @@ ds.Canvas.prototype.addCanvasInteraction = function() {
 				that.dropPaletteItemOnFlow(draggable, this);
 		}
 	});
-
-	$(".selectable").click(function(event) {
-		that.selectElement(this);
-		event.stopPropagation();
-	});
-
-	$(".selectable").draggable({ 
-		containment: "document", 
-		helper: ds.Canvas.createDragElement,
-		zIndex: 1000, 
-		appendTo: '#canvas', 
-		cursor: "pointer", 
-		cursorAt: { top: 56, left: 56 }
-	});
-}
-
-/**
- * Creates the visual element which appears when you drag an object from one cell to another.
- */
-ds.Canvas.createDragElement = function( event ) {
-	var $this = $(this);
-	var clone = $this.clone().removeAttr("id");
-	clone.css("maxWidth", $this.width());
-	return clone;
 }
 
 /**
@@ -211,6 +206,37 @@ ds.Canvas.prototype.fireSelection = function() {
 	}
 }
 
+ds.Canvas.prototype.deleteSelection = function() {
+	if (this.selection == null)
+		return;
+	if (this.selection.component === this.activeLayout)
+		return;
+
+	// Get the selection parent.
+	var parentComponent = this.activeLayout.findParent(this.selection.component);
+	if (parentComponent == null) {
+		console.log("Unable to find parent in deleteSelection: " + this.selection.component);
+		return;
+	}
+
+	// Remove the component.
+	parentComponent.removeChild(this.selection.component);
+	this.selectPair(null, null);
+
+	// Rerender
+	this.repaint();
+}
+
+/**
+ * Creates the element which appears when you drag an object from one cell to another.
+ */
+ds.Canvas.createDragElement = function( event ) {
+	var $this = $(this);
+	var clone = $this.clone().removeAttr("id");
+	clone.css("maxWidth", $this.width());
+	return clone;
+}
+
 ds.Canvas.prototype.canDropPaletteItemOnGrid = function(targetElement) {
 	return this.canDropOnGrid(targetElement, 1, 1);
 }
@@ -287,38 +313,6 @@ ds.Canvas.prototype.dropPaletteItemOnGrid = function(draggable, targetElement) {
 	this.selectComponent(component);
 }
 
-ds.Canvas.prototype.setComponentDataPath = function(component) {
-	if (this.activeArticleIndex == 0) {
-		component.dataPath = '#root';
-		component.dataIndex = null;
-	} else {
-		component.dataPath = 'children';
-		component.dataIndex = this.activeArticleIndex - 1;
-	}
-}
-
-ds.Canvas.prototype.moveSelectableInGrid = function(draggable, targetElement) {
-	// Get the component.
-	var element = draggable[0];
-	var component = this.activeLayout.findComponent(element.id);
-	if (component == null) {
-		console.log("Unable to find component in dropSelectableOnGrid: " + element);
-		return false;
-	}
-
-	// Reposition the component.
-	component.position.left = +targetElement.dataset.column;
-	component.position.top = +targetElement.dataset.row;
-
-	// See http://forum.jquery.com/topic/on-draggable-destroy-uncaught-typeerror-cannot-read-property-options-of-undefined
-	var draggable_data = draggable.data('ui-draggable');
-
-	// Rerender
-	this.repaint();
-
-	draggable.data('ui-draggable', draggable_data);
-}
-
 ds.Canvas.prototype.dropPaletteItemOnFlow = function(draggable, targetElement) {
 	// Get the target parent.
 	var flowID = targetElement.id;
@@ -352,6 +346,39 @@ ds.Canvas.prototype.dropPaletteItemOnFlow = function(draggable, targetElement) {
 	this.selectComponent(component);
 }
 
+ds.Canvas.prototype.dropSelectableOnGrid = function(draggable, targetElement) {
+	// Get the component.
+	var element = draggable[0];
+	var component = this.activeLayout.findComponent(element.id);
+	if (component == null) {
+		console.log("Unable to find component in dropSelectableOnGrid: " + element);
+		return false;
+	}
+
+	// Reposition the component.
+	component.position.left = +targetElement.dataset.column;
+	component.position.top = +targetElement.dataset.row;
+
+	// Fix "Uncaught TypeError: Cannot read property 'options' of undefined"
+	// See http://forum.jquery.com/topic/on-draggable-destroy-uncaught-typeerror-cannot-read-property-options-of-undefined
+	var draggable_data = draggable.data('ui-draggable');
+
+	// Rerender
+	this.repaint();
+
+	draggable.data('ui-draggable', draggable_data);
+}
+
+ds.Canvas.prototype.setComponentDataPath = function(component) {
+	if (this.activeArticleIndex == 0) {
+		component.dataPath = '#root';
+		component.dataIndex = null;
+	} else {
+		component.dataPath = 'children';
+		component.dataIndex = this.activeArticleIndex - 1;
+	}
+}
+
 ds.Canvas.prototype.resizeSelectableInGrid = function(draggable, size) {
 	// Get the draggable parent.
 	var gridID = draggable.parentElement.id;
@@ -371,28 +398,6 @@ ds.Canvas.prototype.resizeSelectableInGrid = function(draggable, size) {
 
 	// Resize the component.
 	grid.resizeChild(component, size);
-
-	// Rerender
-	this.repaint();
-}
-
-ds.Canvas.prototype.deleteSelection = function() {
-	if (this.selection == null)
-		return;
-	if (this.selection.component === this.activeLayout)
-		return;
-
-	// Get the selection parent.
-	var parentComponent = this.activeLayout.findParent(this.selection.component);
-	if (parentComponent == null) {
-		console.log("Unable to find parent in deleteSelection: " + this.selection.component);
-		return;
-	}
-
-	// Remove the component.
-	var index = parentComponent.children.indexOf(this.selection.component);
-	parentComponent.children.splice(index, 1);
-	this.selectPair(null, null);
 
 	// Rerender
 	this.repaint();

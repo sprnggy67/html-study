@@ -136,8 +136,8 @@ ds.ArticleRenderer.prototype.renderComponent = function(component, article, opti
 ds.ArticleRenderer.BOILER_PLATE = 
 	'<script type="text/javascript" src="lib/jq.mobi.js"></script>' +
 	'<script type="text/javascript" src="lib/iscroll.js"></script>' +
-	'<link rel="stylesheet" type="text/css" href="src/renderRuntime.css">' +
-	'<script type="text/javascript" src="src/renderRuntime.js"></script>';
+	'<link rel="stylesheet" type="text/css" href="src/render/renderRuntime.css">' +
+	'<script type="text/javascript" src="src/render/renderRuntime.js"></script>';
 
 ds.ArticleRenderer._initClass = function() {
 	ds.ArticleRenderer.initialised = true;
