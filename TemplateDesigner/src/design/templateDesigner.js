@@ -24,8 +24,8 @@ $(function () {
 		sampleArticle = sampleArticles[0].definition;
 		publication = new ds.Publication();
 		publication.loadFromServer(function() {
-			template = JSON.parse(JSON.stringify(publication.getDefaultTemplate()));
-			activeLayout = ds.template.getActiveLayout(template);
+			template = publication.createDefaultTemplate();
+			activeLayout = template.getActiveLayout();
 			activeLayout.designTime = true;
 			renderTemplate();
 		});
@@ -82,7 +82,7 @@ $(function () {
 	 * Creates a new template
 	 */
 	function newTemplate() {
-		template = JSON.parse(JSON.stringify(publication.getDefaultTemplate()));
+		template = publication.createDefaultTemplate();
 		loadTemplateIntoCanvas(template);
 	}
 
@@ -101,7 +101,8 @@ $(function () {
 
 		reader.onload = function(e) {
 			var templateStr = e.target.result;
-			template = 	JSON.parse(templateStr);
+			var seed = 	JSON.parse(templateStr);
+			template = new ds.Template(seed);
 			loadTemplateIntoCanvas(template);
 		};
 
@@ -109,7 +110,7 @@ $(function () {
 	}
 
 	function loadTemplateIntoCanvas(template) {
-		activeLayout = ds.template.getActiveLayout(template);
+		activeLayout = template.getActiveLayout();
 		activeLayout.designTime = true;
 		canvas.setTemplate(template, activeLayout);
 	}

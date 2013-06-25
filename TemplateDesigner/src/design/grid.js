@@ -40,14 +40,20 @@ ds.Grid.prototype.resizeChild = function(child, size) {
  * The width and height of the child is taken from the size parameter
  * and rounded to the closest cell boundary.
  */
-ds.Grid.prototype.isRectFree = function(rect) {
+ds.Grid.prototype.isRectFree = function(left, top, right, bottom) {
+	// If the target area extends beyond the grid, return false
+	if (left < 0 || top < 0 || right >= this.columns || bottom >= this.rows)
+		return false;
+
+	// If the target area is occupied, return false.
 	var childCount = this.children.length;
 	for (var i = 0; i < childCount; ++i) {
 		var position = this.children[i].position;
-		if ((position.left <= rect.left && rect.right < (position.left + position.width)) &&
-			(position.top <= rect.top && rect.bottom < (position.top + position.height)))
+		if ((position.left <= left && right < (position.left + position.width)) &&
+			(position.top <= top && bottom < (position.top + position.height)))
 			return false;
 	}
+
 	return true;
 }
 

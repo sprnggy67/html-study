@@ -20,7 +20,13 @@ describe("ds.Publication", function() {
     }, "loadFromServer never completed", 10000);
 
     expect(publication.getName()).toBeDefined();
-    expect(publication.getDefaultTemplate()).toBeDefined();
+  });
+
+  it("should createDefaultTemplate", function() {
+    var publication = new ds.Publication();
+    var template = publication.createDefaultTemplate();
+    expect(template).toBeDefined();
+    expect(template instanceof ds.Template).toBeTruthy();
   });
 
 });

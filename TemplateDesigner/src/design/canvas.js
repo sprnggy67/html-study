@@ -137,7 +137,7 @@ ds.Canvas.createDragElement = function( event ) {
  * Select an element. This creates an element component pair and calls selectPair
  */
 ds.Canvas.prototype.selectElement = function(element) {
-	var component = ds.template.findComponentInLayout(this.activeLayout, element.id);
+	var component = this.activeLayout.findComponent(element.id);
 	if (component == null) {
 		console.log("Unable to find component in selectElement: " + element.id);
 		return;
@@ -217,14 +217,14 @@ ds.Canvas.prototype.canDropPaletteItemOnGrid = function(targetElement) {
 
 ds.Canvas.prototype.canDropSelectableOnGrid = function(draggable, targetElement) {
 	var sourceElement = draggable[0];
-	var component = ds.template.findComponentInLayout(this.activeLayout, sourceElement.id);
-	if (component == null) {
+	var grid = this.activeLayout.findComponent(sourceElement.id);
+	if (grid == null) {
 		console.log("Unable to find component in canDropSelectableOnGrid: " + sourceElement);
 		return false;
 	}
-	if (component.position === undefined)
+	if (grid.position === undefined)
 		return false;
-	return this.canDropOnGrid(targetElement, component.position.width, component.position.height);
+	return this.canDropOnGrid(targetElement, grid.position.width, grid.position.height);
 }
 
 ds.Canvas.prototype.canDropOnGrid = function(targetElement, width, height) {
@@ -232,7 +232,7 @@ ds.Canvas.prototype.canDropOnGrid = function(targetElement, width, height) {
 	var gridID = targetElement.parentElement.id;
 
 	// Get the target grid
-	var grid = ds.template.findComponentInLayout(this.activeLayout, gridID);
+	var grid = this.activeLayout.findComponent(gridID);
 	if (grid == null) {
 		console.log("Unable to find grid in canDropOnGrid: " + gridID);
 		return false;
@@ -244,28 +244,14 @@ ds.Canvas.prototype.canDropOnGrid = function(targetElement, width, height) {
 	var right = left + width - 1;
 	var bottom = top + height - 1;
 
-	// Make sure the target area is in the grid.
-	if (left < 0 || top < 0 || right >= grid.columns || bottom >= grid.rows)
-		return false;
-
-	// Make sure the target area is unoccupied.
-	// This should be a method in Component.
-	var childCount = grid.children.length;
-	for (var i = 0; i < childCount; ++i) {
-		var position = grid.children[i].position;
-		// TODO: Convert into rectangle function
-		if ((position.left <= left && right < (position.left + position.width)) &&
-			(position.top <= top && bottom < (position.top + position.height)))
-			return false;
-	}
-
-	return true;
+	// Determine if the target area is free
+	return grid.isRectFree(left, top, right, bottom);
 }
 
 ds.Canvas.prototype.dropPaletteItemOnGrid = function(draggable, targetElement) {
 	// Get the target parent.
 	var gridID = targetElement.parentElement.id;
-	var grid = ds.template.findComponentInLayout(this.activeLayout, gridID);
+	var grid = this.activeLayout.findComponent(gridID);
 	if (grid == null) {
 		console.log("Unable to find parent in dropPaletteItem: " + gridID);
 		return;
@@ -287,8 +273,7 @@ ds.Canvas.prototype.dropPaletteItemOnGrid = function(draggable, targetElement) {
 	};
 
 	// Add the child to the grid.
-	// This should be a method in Component.
-	grid.children.push(component);
+	grid.addChild(component);
 
 	// Set the data path.
 	if (component.dataPath) {
@@ -315,7 +300,7 @@ ds.Canvas.prototype.setComponentDataPath = function(component) {
 ds.Canvas.prototype.moveSelectableInGrid = function(draggable, targetElement) {
 	// Get the component.
 	var element = draggable[0];
-	var component = ds.template.findComponentInLayout(this.activeLayout, element.id);
+	var component = this.activeLayout.findComponent(element.id);
 	if (component == null) {
 		console.log("Unable to find component in dropSelectableOnGrid: " + element);
 		return false;
@@ -336,10 +321,10 @@ ds.Canvas.prototype.moveSelectableInGrid = function(draggable, targetElement) {
 
 ds.Canvas.prototype.dropPaletteItemOnFlow = function(draggable, targetElement) {
 	// Get the target parent.
-	var parentID = targetElement.id;
-	var parent = ds.template.findComponentInLayout(this.activeLayout, parentID);
-	if (parent == null) {
-		console.log("Unable to find parent in dropPaletteItem: " + parentID);
+	var flowID = targetElement.id;
+	var flow = this.activeLayout.findComponent(flowID);
+	if (flow == null) {
+		console.log("Unable to find parent in dropPaletteItem: " + flowID);
 		return;
 	}
 
@@ -353,8 +338,7 @@ ds.Canvas.prototype.dropPaletteItemOnFlow = function(draggable, targetElement) {
 	var component = componentType.createComponent(paletteItem.dataset.ctype);
 
 	// Add the child to the flow.
-	// This should be a method in Component.
-	parent.children.push(component);
+	flow.addChild(component);
 
 	// Set the data path.
 	if (component.dataPath) {
@@ -371,7 +355,7 @@ ds.Canvas.prototype.dropPaletteItemOnFlow = function(draggable, targetElement) {
 ds.Canvas.prototype.resizeSelectableInGrid = function(draggable, size) {
 	// Get the draggable parent.
 	var gridID = draggable.parentElement.id;
-	var grid = ds.template.findComponentInLayout(this.activeLayout, gridID);
+	var grid = this.activeLayout.findComponent(gridID);
 	if (grid == null) {
 		console.log("Unable to find grid in resizeSelectableInGrid: " + gridID);
 		return;
@@ -379,18 +363,14 @@ ds.Canvas.prototype.resizeSelectableInGrid = function(draggable, size) {
 
 	// Get the component.
 	var element = draggable.childNodes[0];
-	var component = ds.template.findComponentInLayout(this.activeLayout, element.id);
+	var component = this.activeLayout.findComponent(element.id);
 	if (component == null) {
 		console.log("Unable to find component in resizeSelectableInGrid: " + element);
 		return false;
 	}
 
 	// Resize the component.
-	// This should be a method in Component.
-	var width = Math.round(size.width / (grid.width / grid.columns));
-	var height = Math.round(size.height / (grid.height / grid.rows));
-	component.position.width = width;
-	component.position.height = height;
+	grid.resizeChild(component, size);
 
 	// Rerender
 	this.repaint();
@@ -403,7 +383,7 @@ ds.Canvas.prototype.deleteSelection = function() {
 		return;
 
 	// Get the selection parent.
-	var parentComponent = ds.template.findParentInLayout(this.activeLayout, this.selection.component);
+	var parentComponent = this.activeLayout.findParent(this.selection.component);
 	if (parentComponent == null) {
 		console.log("Unable to find parent in deleteSelection: " + this.selection.component);
 		return;

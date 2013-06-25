@@ -39,12 +39,12 @@ ds.ComponentTypeLib.prototype.loadRegistry = function() {
 	this.add(component);
 
 	// Flow
-	component = new ds.ComponentType('flow', 'Flow', ds.ComponentTypeLib.createCompositeComponent);
+	component = new ds.ComponentType('flow', 'Flow', ds.ComponentTypeLib.createFlow);
 	component.addPropertyDescriptor("scroll", "Scroll", ds.ComponentType.PROPERTY_BOOLEAN);
 	this.add(component);
 
 	// Grid
-	component = new ds.ComponentType('grid', 'Grid', ds.ComponentTypeLib.createCompositeComponent);
+	component = new ds.ComponentType('grid', 'Grid', ds.ComponentTypeLib.createGrid);
 	component.addPropertyDescriptor("rows", "Rows");
 	component.addPropertyDescriptor("columns", "Columns");
 	component.addPropertyDescriptor("rowGutter", "Row Gutter");
@@ -55,21 +55,26 @@ ds.ComponentTypeLib.prototype.loadRegistry = function() {
 ds.ComponentTypeLib.idCount = new Date().getTime();
 
 ds.ComponentTypeLib.createSimpleComponent = function(type) {
-	return {
+	return new ds.Component({
 		componentType: type,
 		dataPath: "children",
 		dataIndex: 0,
 		uniqueID: "cmp" + (++ds.ComponentTypeLib.idCount)
-	};
+	});
 };
 
-ds.ComponentTypeLib.createCompositeComponent = function(type) {
-	var result = {
+ds.ComponentTypeLib.createFlow = function(type) {
+	return new ds.Composite({
 		componentType: type,
 		uniqueID: "cmp" + (++ds.ComponentTypeLib.idCount)
-	};
-	result.children = [];
-	return result;
+	});
+};
+
+ds.ComponentTypeLib.createGrid = function(type) {
+	return new ds.Grid({
+		componentType: type,
+		uniqueID: "cmp" + (++ds.ComponentTypeLib.idCount)
+	});
 };
 
 ds.ComponentTypeLib.addSimplePropertyDescriptors = function(type) {

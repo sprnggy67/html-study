@@ -16,7 +16,6 @@ ds.Publication = function() {
 ds.Publication.prototype.loadFromServer = function(callback) {
 	// Load the data.
 	this.name = "The National";
-	this.defaultTemplate = sampleTemplates.empty; // Use empty, emptyResponsive or front3
 
 	// Invoke the callback.
 	callback();
@@ -32,6 +31,8 @@ ds.Publication.prototype.getName = function() {
 /**
  Returns the default template.
  */
-ds.Publication.prototype.getDefaultTemplate = function() {
-	return this.defaultTemplate;
+ds.Publication.prototype.createDefaultTemplate = function() {
+	var seed = sampleTemplates.empty; // Use empty, emptyResponsive or front3
+	var copy = JSON.parse(JSON.stringify(seed));
+	return new ds.Template(copy);
 };
