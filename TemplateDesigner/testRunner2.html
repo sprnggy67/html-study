@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Article Rendering Tests</title>
+
+  <!-- Third party libraries -->
+  <link rel="shortcut icon" type="image/png" href="lib/jasmine-1.3.1/jasmine_favicon.png">
+  <link rel="stylesheet" type="text/css" href="lib/jasmine-1.3.1/jasmine.css">
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <script type="text/javascript" src="lib/jasmine-1.3.1/jasmine.js"></script>
+  <script type="text/javascript" src="lib/jasmine-1.3.1/jasmine-html.js"></script>
+  <script type="text/javascript" src="lib/jasmine-jquery.js"></script>
+  <script type="text/javascript" src="lib/jsrender-1.0.js"></script>
+
+  <!-- ArticleList code -->
+  <script id="articleListItemTemplate" type="text/x-jsrender">
+    <li class="articleListItem" data-index="{{:#index}}">{{:displayName}}</li>
+  </script>
+  <script type="text/javascript" src="src/ui/articleList.js"></script>
+
+  <!-- ComponentPalette code -->
+  <script type="text/javascript" src="src/model/componentType.js"></script>
+  <script type="text/javascript" src="src/model/componentTypeLib.js"></script>
+  <script id="componentListItemTemplate" type="text/x-jsrender ">
+    <li class="componentListItem" data-ctype="{{:name}}">{{:displayName}}</li>
+  </script>
+  <script type="text/javascript" src="src/ui/componentPalette.js"></script>
+ 
+  <!-- UI tests -->
+  <script type="text/javascript" src="src/model/sampleArticles.js"></script>
+  <script type="text/javascript" src="testSpecs/articleListSpec.js"></script>
+  <script type="text/javascript" src="testSpecs/componentPaletteSpec.js"></script>
+  
+  <script type="text/javascript">
+    (function() {
+      var jasmineEnv = jasmine.getEnv();
+      jasmineEnv.updateInterval = 1000;
+      jasmine.getFixtures().fixturesPath = 'testSpecs';
+
+      var htmlReporter = new jasmine.HtmlReporter();
+
+      jasmineEnv.addReporter(htmlReporter);
+
+      jasmineEnv.specFilter = function(spec) {
+        return htmlReporter.specFilter(spec);
+      };
+
+      var currentWindowOnload = window.onload;
+
+      window.onload = function() {
+        if (currentWindowOnload) {
+          currentWindowOnload();
+        }
+        execJasmine();
+      };
+
+      function execJasmine() {
+        jasmineEnv.execute();
+      }
+
+    })();
+  </script>
+
+</head>
+
+<body>
+</body>
+</html>

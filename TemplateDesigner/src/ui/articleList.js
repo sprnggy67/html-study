@@ -21,15 +21,15 @@ ds.ArticleList.prototype.init = function(rootElementID, sampleArticle) {
 	for (var x = 0; x < sampleArticle.children.length; x ++) {
 		dataArray.push( { displayName:"Sub Article " + (x+1) });
 	};
-	$(rootElementID).html($("#dataItemTemplate").render(dataArray));
+	$(rootElementID).html($("#articleListItemTemplate").render(dataArray));
 
 	// Select the first article.
 	this.activeArticleIndex = 0;
-	$(".dataItem").first().addClass("selected");
+	$(".articleListItem").first().addClass("selected");
 
 	// Add click interaction.
 	var that = this;
-	$(".dataItem").click(function() {
+	$(".articleListItem").click(function() {
 		that.setActiveArticleIndex(+this.dataset.index);
 	});
 }
@@ -39,9 +39,9 @@ ds.ArticleList.prototype.getActiveArticleIndex = function() {
 }
 
 ds.ArticleList.prototype.setActiveArticleIndex = function(index) {
-	$(".dataItem").eq(this.activeArticleIndex).removeClass("selected");
+	$(".articleListItem").eq(this.activeArticleIndex).removeClass("selected");
 	this.activeArticleIndex = index;
-	$(".dataItem").eq(this.activeArticleIndex).addClass("selected");
+	$(".articleListItem").eq(this.activeArticleIndex).addClass("selected");
 	if (this.onArticleSelected) 
 		this.onArticleSelected(this, index);
 }

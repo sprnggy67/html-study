@@ -37,20 +37,20 @@
     float:left; 
 }
 
-#data {
+#articles {
     width: 190px;
     border:solid 1px black;
     margin:0px 0px 10px 0px;
     overflow: auto;
 }
 
-#dataList {
+#articleList {
     width: 100%;
     margin:0px;
     padding:0px;
 }
 
-.dataItem {
+.articleListItem {
     list-style-type: none;
     margin:5px;
     padding:5px;
@@ -61,20 +61,20 @@
     border-radius:6px;
 }
 
-#palette {
+#components {
 	width: 190px;
     border:solid 1px black;
     margin:0px 0px 10px 0px;
 	overflow: auto;
 }
 
-#paletteList {
+#componentList {
 	width: 100%;
     margin:0px;
     padding:0px;
 }
 
-.paletteItem {
+.componentListItem {
 	list-style-type: none;
     margin:5px;
     padding:5px;

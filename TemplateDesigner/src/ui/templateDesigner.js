@@ -37,10 +37,10 @@ $(function () {
 
 	function initUserInterface() {
 		// Init the article list.
-		articleList = new ds.ArticleList("#dataList", sampleArticle, onArticleSelected);
+		articleList = new ds.ArticleList("#articleList", sampleArticle, onArticleSelected);
 
 		// Init the component palette
-		componentPalette = new ds.ComponentPalette("#paletteList", typeLibrary);
+		componentPalette = new ds.ComponentPalette("#componentList", typeLibrary);
 
 		// Init the property list.
 		propertyList = new ds.PropertyList("#propertyList", typeLibrary, onPropertyChanged)

@@ -100,7 +100,7 @@ ds.Canvas.prototype.addCanvasInteraction = function() {
 	    tolerance: "pointer",
 		accept: function( event) {
 			var draggable = $(event.context);
-			if (draggable.hasClass("paletteItem"))
+			if (draggable.hasClass("componentListItem"))
 				return that.canDropPaletteItemOnGrid(this);
 			if (draggable.hasClass("selectable")) {
 				return that.canDropSelectableOnGrid(draggable, this);
@@ -109,7 +109,7 @@ ds.Canvas.prototype.addCanvasInteraction = function() {
   		hoverClass: "dropTarget",
 		drop: function( event, ui ) {
 			var draggable = ui.draggable;
-			if (draggable.hasClass("paletteItem"))
+			if (draggable.hasClass("componentListItem"))
 				that.dropPaletteItemOnGrid(draggable, this);
 			if (draggable.hasClass("selectable"))
 				that.dropSelectableOnGrid(draggable, this);
@@ -122,7 +122,7 @@ ds.Canvas.prototype.addCanvasInteraction = function() {
   		hoverClass: "dropTarget",
 		drop: function( event, ui ) {
 			var draggable = ui.draggable;
-			if (ui.draggable.hasClass("paletteItem"))
+			if (ui.draggable.hasClass("componentListItem"))
 				that.dropPaletteItemOnFlow(draggable, this);
 		}
 	});

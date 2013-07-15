@@ -16,10 +16,10 @@ ds.ComponentPalette = function(rootElementID, typeLibrary) {
 
 ds.ComponentPalette.prototype.init = function(rootElementID, typeLibrary) {
 	// Create and display the component library
-	$(rootElementID).html($("#paletteItemTemplate").render(typeLibrary.getChildren()));
+	$(rootElementID).html($("#componentListItemTemplate").render(typeLibrary.getChildren()));
 
 	// Add drag interaction
-	$(".paletteItem").draggable({ 
+	$(".componentListItem").draggable({ 
 		containment: "document", 
 		helper: "clone", 
 		zIndex: 100,

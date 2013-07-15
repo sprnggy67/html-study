@@ -23,28 +23,28 @@
 	<script type="text/javascript" src="src/model/sampleArticles.js"></script>
 
 	<!-- The renderer -->
-	<link rel="stylesheet" type="text/css" href="src/render/renderRuntime.css">
-	<script type="text/javascript" src="src/render/articleRenderer.js"></script>
-	<script type="text/javascript" src="src/render/template.js"></script>
+	<link rel="stylesheet" type="text/css" href="src/engine/renderRuntime.css">
+	<script type="text/javascript" src="src/engine/articleRenderer.js"></script>
+	<script type="text/javascript" src="src/engine/template.js"></script>
 
 	<!-- The designer -->
-	<link rel="stylesheet" type="text/css" href="src/design/templateDesigner.css">
-	<script type="text/javascript" src="src/design/templateDesigner.js"></script>
-	<script type="text/javascript" src="src/design/openFileDialog.js"></script>
-	<script type="text/javascript" src="src/design/articleList.js"></script>
-	<script type="text/javascript" src="src/design/componentPalette.js"></script>
-	<script type="text/javascript" src="src/design/propertyList.js"></script>
-	<script type="text/javascript" src="src/design/canvas.js"></script>
+	<link rel="stylesheet" type="text/css" href="src/ui/templateDesigner.css">
+	<script type="text/javascript" src="src/ui/templateDesigner.js"></script>
+	<script type="text/javascript" src="src/ui/openFileDialog.js"></script>
+	<script type="text/javascript" src="src/ui/articleList.js"></script>
+	<script type="text/javascript" src="src/ui/componentPalette.js"></script>
+	<script type="text/javascript" src="src/ui/propertyList.js"></script>
+	<script type="text/javascript" src="src/ui/canvas.js"></script>
 
-	<script id="dataItemTemplate" type="text/x-jsrender ">
-		<li class="dataItem" data-index="{{:#index}}">{{:displayName}}</li>
+	<script id="articleListItemTemplate" type="text/x-jsrender ">
+		<li class="articleListItem" data-index="{{:#index}}">{{:displayName}}</li>
 	</script>
 
-	<script id="paletteItemTemplate" type="text/x-jsrender ">
-		<li class="paletteItem" data-ctype="{{:name}}">{{:displayName}}</li>
+	<script id="componentListItemTemplate" type="text/x-jsrender ">
+		<li class="componentListItem" data-ctype="{{:name}}">{{:displayName}}</li>
 	</script>
 
-	<script id="propertyItemTemplate" type="text/x-jsrender ">
+	<script id="propertyListItemTemplate" type="text/x-jsrender ">
 		<tr>
 		<td class="propertyName">{{:displayName}}</td>
 		{{if type == "text"}}
@@ -67,12 +67,12 @@
 	</form>
 
 	<div id="leftPanel">
-		<div id="data">
-			<ul id="dataList"> 
+		<div id="articles">
+			<ul id="articleList"> 
 			</ul>
 		</div>
-		<div id="palette">
-			<ul id="paletteList"> 
+		<div id="components">
+			<ul id="componentList"> 
 			</ul>
 		</div>
 		<div id="properties">

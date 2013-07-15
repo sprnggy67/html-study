@@ -52,7 +52,7 @@ ds.PropertyList.prototype.displayProperties = function(component) {
 	}
 
 	// Display the properties.
-	$(this.rootElementID).html($("#propertyItemTemplate").render(pdArray));
+	$(this.rootElementID).html($("#propertyListItemTemplate").render(pdArray));
 
 	// Listen for property changes.
 	var that = this;
