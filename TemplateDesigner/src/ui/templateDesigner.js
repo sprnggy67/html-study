@@ -8,6 +8,7 @@ $(function () {
 
 	var sampleArticle, publication, template, activeLayout, typeLibrary;
 	var articleList, componentPalette, propertyList, canvas;
+	var commandStack;
 	var listener;
 
 	init();
@@ -17,20 +18,19 @@ $(function () {
 	 */
 	function init() {
 		initModel();
-		initUserInterface();
 	}
 
 	function initModel() {
 		sampleArticle = sampleArticles[0].definition;
+		typeLibrary = new ds.ComponentTypeLib();
+    	typeLibrary.loadRegistry();
 		publication = new ds.Publication();
 		publication.loadFromServer(function() {
 			template = publication.createDefaultTemplate();
 			activeLayout = template.getActiveLayout();
 			activeLayout.designTime = true;
-			renderTemplate();
+			initUserInterface();
 		});
-		typeLibrary = new ds.ComponentTypeLib();
-    	typeLibrary.loadRegistry();
 	}
 
 	var DOM_VK_DELETE = 46;
@@ -65,6 +65,9 @@ $(function () {
 	 			}
 	 		}
 		});
+
+		// Init the command stack
+		commandStack = new ds.CommandStack();
 	}
 
 	function isDescendant(parentElement, childElement) {
@@ -78,12 +81,27 @@ $(function () {
 	     return false;
 	}
 
+	function setTemplate(t) {
+		template = t;
+		activeLayout = template.getActiveLayout();
+		activeLayout.designTime = true;
+		commandStack.clear();
+		canvas.setTemplate(template, activeLayout);
+	}
+
+	function getTemplate() {
+		return template;
+	}
+
+	function getActiveLayout() {
+		return activeLayout;
+	}
+
 	/**
 	 * Creates a new template
 	 */
 	function newTemplate() {
-		template = publication.createDefaultTemplate();
-		loadTemplateIntoCanvas(template);
+		setTemplate(publication.createDefaultTemplate());
 	}
 
 	/**
@@ -102,28 +120,23 @@ $(function () {
 		reader.onload = function(e) {
 			var templateStr = e.target.result;
 			var seed = 	JSON.parse(templateStr);
-			template = new ds.Template(seed);
-			loadTemplateIntoCanvas(template);
+			setTemplate(new ds.Template(seed));
 		};
 
 	  	reader.readAsText(file);
-	}
-
-	function loadTemplateIntoCanvas(template) {
-		activeLayout = template.getActiveLayout();
-		activeLayout.designTime = true;
-		canvas.setTemplate(template, activeLayout);
 	}
 
 	/**
 	 * Saves the current template to a file.
 	 */
 	function saveTemplate() {
+		var activeLayout = getActiveLayout();
 		activeLayout.designTime = false;
-		var templateStr = JSON.stringify(template, null, " ");
+		var templateStr = JSON.stringify(getTemplate(), null, " ");
 		activeLayout.designTime = true;
 		var uriContent = "data:application/octet-stream," + encodeURIComponent(templateStr);
-		window.location.href = uriContent;		
+		window.location.href = uriContent;
+		commandStack.clear();		
 	}
 
 	/**
