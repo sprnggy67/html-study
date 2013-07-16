@@ -19,6 +19,7 @@ ds.Canvas = function(rootElementID, template, activeLayout, sampleArticle, typeL
 	this.selection = null;
 	this.onComponentSelected = onComponentSelected;
 	this.activeArticleIndex = 0;
+	this.debug = true;
 }
 
 /**
@@ -97,7 +98,7 @@ ds.Canvas.prototype.addCanvasInteraction = function() {
 
 	// Drop an object on a grid
 	$(".gridCell").droppable({
-	    tolerance: "pointer",
+	    tolerance: "intersect",
 		accept: function( event) {
 			var draggable = $(event.context);
 			if (draggable.hasClass("componentListItem"))
@@ -108,6 +109,7 @@ ds.Canvas.prototype.addCanvasInteraction = function() {
 		},
   		hoverClass: "dropTarget",
 		drop: function( event, ui ) {
+			console.log("drop on gridCell");
 			var draggable = ui.draggable;
 			if (draggable.hasClass("componentListItem"))
 				that.dropPaletteItemOnGrid(draggable, this);
@@ -118,9 +120,10 @@ ds.Canvas.prototype.addCanvasInteraction = function() {
 
 	// Drop an object on a flow
 	$(".flow").droppable({
-	    tolerance: "pointer",
+	    tolerance: "intersect",
   		hoverClass: "dropTarget",
 		drop: function( event, ui ) {
+			console.log("drop on flow");
 			var draggable = ui.draggable;
 			if (ui.draggable.hasClass("componentListItem"))
 				that.dropPaletteItemOnFlow(draggable, this);
@@ -238,7 +241,11 @@ ds.Canvas.createDragElement = function( event ) {
 }
 
 ds.Canvas.prototype.canDropPaletteItemOnGrid = function(targetElement) {
-	return this.canDropOnGrid(targetElement, 1, 1);
+	var result = this.canDropOnGrid(targetElement, 1, 1);
+	if (this.debug) {
+		console.log("canDropPaletteItemOnGrid returns " + result);
+	}
+	return result;
 }
 
 ds.Canvas.prototype.canDropSelectableOnGrid = function(draggable, targetElement) {
@@ -275,6 +282,10 @@ ds.Canvas.prototype.canDropOnGrid = function(targetElement, width, height) {
 }
 
 ds.Canvas.prototype.dropPaletteItemOnGrid = function(draggable, targetElement) {
+	if (this.debug) {
+		console.log("dropPaletteItemOnGrid");
+	}
+
 	// Get the target parent.
 	var gridID = targetElement.parentElement.id;
 	var grid = this.activeLayout.findComponent(gridID);
