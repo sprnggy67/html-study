@@ -29,41 +29,21 @@ public class FileMenuTests {
 	}
 
 	@After
-	public void saveScreenshotAndCloseBrowser() throws IOException {
+	public void closeBrowser() {
 		driver.quit();
 	}
 
 	@Test
-	public void testPageOpensCorrectly() throws IOException {
+	public void testPageOpensCorrectly() {
 		assertEquals(
 				"The page title should equal to Template Designer",
 				"Template Designer", driver.getTitle());
 	}
 
 	@Test
-	public void testDragHeadline() throws IOException {
-		// Given 
-		WebElement element = driver.findElement(By.cssSelector("#components > ul > li"));
-		WebElement target = driver.findElement(By.className("gridCell"));
-
-		// When we drag the headline component onto the canvas.
-		Actions builder = new Actions(driver);
-		builder.clickAndHold(element).moveToElement(target).release(target);
-		builder.build().perform();
-		
-		// Wait while the javascript renders the page.
-		WebDriverWait wait = new WebDriverWait(driver, 10);
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h1[contains(.,'Best of Times')]")));
-
-		// Then
-		WebElement result = driver.findElement(By.xpath("//h1[contains(.,'Best of Times')]"));
-		assertNotNull(result);
-	}
-
-	@Test
-	public void testFileNewCreatesEmptyDocument() throws IOException {
+	public void testFileNewCreatesEmptyDocument() {
 		// Given a canvas with one element.
-		testDragHeadline();
+		testDrag("Headline", "h1", "Best of Times");
 		
 		// When we press the New button.
 		WebElement element = driver.findElement(By.id("newTemplate"));
@@ -74,4 +54,27 @@ public class FileMenuTests {
 		assertTrue(results.size() == 0);
 	}
 
+	private void testDrag(String componentName, String resultTag, String resultText) {
+		// Given 
+		WebElement element = driver.findElement(byText("li", componentName));
+		WebElement target = driver.findElement(By.className("gridCell"));
+
+		// When we drag the headline component onto the canvas.
+		Actions builder = new Actions(driver);
+		builder.clickAndHold(element).moveToElement(target).release(target);
+		builder.build().perform();
+		
+		// Wait while the javascript renders the page.
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.presenceOfElementLocated(byText(resultTag, resultText)));
+
+		// Then
+		WebElement result = driver.findElement(byText(resultTag, resultText));
+		assertNotNull(result);
+	}
+
+	private By byText(String tag, String name) {
+		return By.xpath("//" + tag + "[contains(.,'" + name + "')]");
+	}
+	
 }
