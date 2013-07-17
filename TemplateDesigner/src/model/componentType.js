@@ -33,6 +33,7 @@ ds.ComponentType.prototype.createComponent = function(param1, param2, param3) {
 
 ds.ComponentType.PROPERTY_TEXT = "text";
 ds.ComponentType.PROPERTY_BOOLEAN = "boolean";
+ds.ComponentType.PROPERTY_COLOR = "color";
 
 /**
  * Adds a new property descriptor to the cType and returns the result

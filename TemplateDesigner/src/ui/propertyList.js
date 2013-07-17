@@ -54,6 +54,11 @@ ds.PropertyList.prototype.displayProperties = function(component) {
 	// Display the properties.
 	$(this.rootElementID).html($("#propertyListItemTemplate").render(pdArray));
 
+	// Hook up the color pickers
+	$('.colorPicker').each(function(index) {
+   		$(this).colorPicker();
+   	});
+
 	// Listen for property changes.
 	var that = this;
 	$(".propertyValue").change(function() {

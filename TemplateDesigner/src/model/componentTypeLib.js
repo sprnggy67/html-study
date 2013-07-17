@@ -19,32 +19,37 @@ ds.ComponentTypeLib.prototype.loadRegistry = function() {
 
 	// Headline
 	component = new ds.ComponentType('headline', 'Headline', ds.ComponentTypeLib.createSimpleComponent);
-	ds.ComponentTypeLib.addSimplePropertyDescriptors(component);
+	this.addColorPropertyDescriptors(component);
+	this.addSimplePropertyDescriptors(component);
 	this.add(component);
 
 	// Standfirst
 	component = new ds.ComponentType('standfirst', 'Standfirst', ds.ComponentTypeLib.createSimpleComponent);
-	ds.ComponentTypeLib.addSimplePropertyDescriptors(component);
+	this.addColorPropertyDescriptors(component);
+	this.addSimplePropertyDescriptors(component);
 	this.add(component);
 
 	// Image
 	component = new ds.ComponentType('body', 'Body', ds.ComponentTypeLib.createSimpleComponent);
-	ds.ComponentTypeLib.addSimplePropertyDescriptors(component);
+	this.addColorPropertyDescriptors(component);
+	this.addSimplePropertyDescriptors(component);
 	this.add(component);
 
 	// Body
 	component = new ds.ComponentType('image', 'Main image', ds.ComponentTypeLib.createSimpleComponent);
-	ds.ComponentTypeLib.addSimplePropertyDescriptors(component);
+	this.addSimplePropertyDescriptors(component);
 	component.addPropertyDescriptor("crop", "Crop");
 	this.add(component);
 
 	// Flow
 	component = new ds.ComponentType('flow', 'Flow', ds.ComponentTypeLib.createFlow);
+	component.addPropertyDescriptor("backgroundColor", "Background color", ds.ComponentType.PROPERTY_COLOR);
 	component.addPropertyDescriptor("scroll", "Scroll", ds.ComponentType.PROPERTY_BOOLEAN);
 	this.add(component);
 
 	// Grid
 	component = new ds.ComponentType('grid', 'Grid', ds.ComponentTypeLib.createGrid);
+	component.addPropertyDescriptor("backgroundColor", "Background color", ds.ComponentType.PROPERTY_COLOR);
 	component.addPropertyDescriptor("rows", "Rows");
 	component.addPropertyDescriptor("columns", "Columns");
 	component.addPropertyDescriptor("rowGutter", "Row Gutter");
@@ -77,11 +82,16 @@ ds.ComponentTypeLib.createGrid = function(type) {
 	});
 };
 
-ds.ComponentTypeLib.addSimplePropertyDescriptors = function(type) {
+ds.ComponentTypeLib.prototype.addSimplePropertyDescriptors = function(type) {
+	type.addPropertyDescriptor("style", "Style (font-size:20px;)");
 	type.addPropertyDescriptor("dataPath", "Data path");
 	type.addPropertyDescriptor("dataIndex", "Data index");
-	type.addPropertyDescriptor("style", "Style (font-size:20px;)");
 	type.addPropertyDescriptor("link", "Link", ds.ComponentType.PROPERTY_BOOLEAN);
+};
+
+ds.ComponentTypeLib.prototype.addColorPropertyDescriptors = function(type) {
+	type.addPropertyDescriptor("color", "Color", ds.ComponentType.PROPERTY_COLOR);
+	type.addPropertyDescriptor("backgroundColor", "Background color", ds.ComponentType.PROPERTY_COLOR);
 };
 
 ds.ComponentTypeLib.prototype.add = function(child) {

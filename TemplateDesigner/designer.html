@@ -9,6 +9,8 @@
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 	<script type="text/javascript" src="lib/jsrender-1.0.js"></script>
+	<script type="text/javascript" src="lib/colorPicker/jquery.colorPicker.js"/></script>
+	<link rel="stylesheet" href="lib/ColorPicker/colorPicker.css" type="text/css" />
 
 	<!-- The model -->
 	<script type="text/javascript" src="src/model/template.js"></script>
@@ -55,6 +57,9 @@
 		{{/if}}
 		{{if type == "boolean"}}
 			<td><input class="propertyValue" type="checkbox" name="{{:name}}" {{:checked}} data-prop_name="{{:name}}"></td>
+		{{/if}}
+		{{if type == "color"}}
+			<td><input class="propertyValue colorPicker" type="text" name="{{:name}}" value="{{:value}}" data-prop_name="{{:name}}"></td>
 		{{/if}}
 		</tr>
 	</script>

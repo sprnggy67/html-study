@@ -165,9 +165,7 @@ ds.ArticleRenderer._initClass = function() {
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}"' +
 				'{{/if}}' +
-				'{{if style}}' +
-					' style="{{:style}}"' +
-				'{{/if}}' +
+				'{{:~getStyle(#data)}}' +
 				'{{if link}}' +
 					' data-article_id="{{:realData.id}}"' +
 				'{{/if}}' +
@@ -179,9 +177,7 @@ ds.ArticleRenderer._initClass = function() {
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}"' +
 				'{{/if}}' +
-				'{{if style}}' +
-					' style="{{:style}}"' +
-				'{{/if}}' +
+				'{{:~getStyle(#data)}}' +
 				'{{if link}}' +
 					' data-article_id="{{:realData.id}}"' +
 				'{{/if}}' +
@@ -193,9 +189,7 @@ ds.ArticleRenderer._initClass = function() {
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}"' +
 				'{{/if}}' +
-				'{{if style}}' +
-					' style="{{:style}}"' +
-				'{{/if}}' +
+				'{{:~getStyle(#data)}}' +
 				'{{if link}}' +
 					' data-article_id="{{:realData.id}}"' +
 				'{{/if}}' +
@@ -217,6 +211,7 @@ ds.ArticleRenderer._initClass = function() {
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}"' +
 				'{{/if}}' +
+				'{{:~getStyle(#data)}}' +
 				'{{if link}}' +
 					' data-article_id="{{:realData.id}}"' +
 				'{{/if}}' +
@@ -228,6 +223,7 @@ ds.ArticleRenderer._initClass = function() {
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}"' +
 				'{{/if}}' +
+				'{{:~getStyle(#data)}}' +
 			'>' +
 				'{{if ~root.designTime}}' +
 					'{{for ~getRowObjects(#data)}}' +
@@ -295,6 +291,25 @@ ds.ArticleRenderer._initClass = function() {
 				classes = classes + " link";
 			}
 			return classes;
+		},
+		getStyle:function(component) {
+			var style = "";
+			if (component.color || component.backgroundColor || component.style) {
+				style = ' style="';
+			}
+			if (component.color) {
+				style += 'color:' + component.color + ';';
+			}
+			if (component.backgroundColor) {
+				style += 'background-color:' + component.backgroundColor + ';';
+			}
+			if (component.style) {
+				style += component.style;
+			}
+			if (style) {
+				style += '"';
+			}
+			return style;
 		},
 		getGridDataClass:function(component) {
 			var classes = "gridData";

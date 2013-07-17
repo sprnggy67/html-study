@@ -56,17 +56,6 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
-	it("should generate a root headline component", function() {
-		var renderer = new ds.ArticleRenderer();
-		var component = {
-			componentType:"headline",
-			dataPath:"#root",
-		};
-		var expectedOutput = '<h1 class="selectable">Best of Times</h1>';
-		var actualOutput = renderer.renderComponent(component, navigationArticle);
-		expect(actualOutput).toEqual(expectedOutput);
-	});
-
 	it("should generate a test component", function() {
 		var renderer = new ds.ArticleRenderer();
 		var component = {
@@ -77,6 +66,16 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
+	it("should generate a root headline component", function() {
+		var renderer = new ds.ArticleRenderer();
+		var component = {
+			componentType:"headline",
+			dataPath:"#root",
+		};
+		var expectedOutput = '<h1 class="selectable">Best of Times</h1>';
+		var actualOutput = renderer.renderComponent(component, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
 
 	it("should generate the first headline component", function() {
 		var renderer = new ds.ArticleRenderer();
@@ -98,6 +97,19 @@ describe("ds.ArticleRenderer", function() {
 			dataIndex:1
 		};
 		var expectedOutput = '<h1 class="selectable">h2</h1>';
+		var actualOutput = renderer.renderComponent(component, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
+	it("should generate a colored headline component", function() {
+		var renderer = new ds.ArticleRenderer();
+		var component = {
+			componentType:"headline",
+			"color": "#000080",
+      		"backgroundColor": "#99cc00",
+			dataPath:"#root",
+		};
+		var expectedOutput = '<h1 class="selectable" style="color:#000080;background-color:#99cc00;">Best of Times</h1>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
