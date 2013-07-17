@@ -23,6 +23,13 @@ ds.Canvas = function(rootElementID, template, activeLayout, sampleArticle, typeL
 }
 
 /**
+ * Sets the test field.  If this field is set the drag and drop uses intersect instead of pointer.
+ */
+ds.Canvas.prototype.setTest = function() {
+	this.test = true;
+}
+
+/**
  * Sets the template. This is used when a new template is created, or an old template is reopened.
  */
 ds.Canvas.prototype.setTemplate = function(template, activeLayout) {
@@ -65,6 +72,10 @@ ds.Canvas.prototype.repaint = function() {
 	$contents.html(rendererOutput);
 	console.timeEnd("displayArticle");
 
+	console.time("addRuntime");
+	ds.addRuntime();
+	console.timeEnd("addRuntime");
+
 	// Update the selection.
 	if (this.selection != null) {
 		var element = document.getElementById(this.selection.component.uniqueID);
@@ -79,6 +90,11 @@ ds.Canvas.prototype.repaint = function() {
  */
 ds.Canvas.prototype.addCanvasInteraction = function() {
 	var that = this;
+
+	// If
+	var toleranceValue = "pointer";
+	if (this.test)
+		toleranceValue = "intersect"; // Silenium Webdriver does not support pointer based DND correctly on Firefox.
 
 	// Click to select an object
 	$(".selectable").click(function(event) {
@@ -98,7 +114,7 @@ ds.Canvas.prototype.addCanvasInteraction = function() {
 
 	// Drop an object on a grid
 	$(".gridCell").droppable({
-	    tolerance: "intersect",
+	    tolerance: toleranceValue,
 		accept: function( event) {
 			var draggable = $(event.context);
 			if (draggable.hasClass("componentListItem"))
@@ -120,7 +136,7 @@ ds.Canvas.prototype.addCanvasInteraction = function() {
 
 	// Drop an object on a flow
 	$(".flow").droppable({
-	    tolerance: "intersect",
+	    tolerance: toleranceValue,
   		hoverClass: "dropTarget",
 		drop: function( event, ui ) {
 			console.log("drop on flow");

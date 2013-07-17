@@ -47,6 +47,8 @@ $(function () {
 
 		// Init the canvas.
 		canvas = new ds.Canvas("#canvasFrame", template, activeLayout, sampleArticle, typeLibrary, onComponentSelected);
+		if (getQueryParameter("test"))
+			canvas.setTest();
 		renderTemplate();
 
 		// Initialize the menus
@@ -68,6 +70,18 @@ $(function () {
 
 		// Init the command stack
 		commandStack = new ds.CommandStack();
+	}
+
+	function getQueryParameter(search_for) {
+		var query = window.location.search.substring(1);
+		var parms = query.split('&');
+		for (var i=0; i<parms.length; i++) {
+			var pos = parms[i].indexOf('=');
+			if (pos > 0  && search_for == parms[i].substring(0,pos)) {
+				return parms[i].substring(pos+1);;
+			}
+		}
+		return null;
 	}
 
 	function isDescendant(parentElement, childElement) {
@@ -144,8 +158,11 @@ $(function () {
 	 */
 	function saveHTML() {
 		// Run the template.
+		var activeLayout = getActiveLayout();
+		activeLayout.designTime = false;
 		var renderer = new ds.ArticleRenderer();
 		var result = renderer.renderPage(template, sampleArticle);
+		activeLayout.designTime = true;
 
 		// Format the output.
 		result = result.replace(/<(\/?)[a-zA-Z]+(?:[^>"']+|"[^"]*"|'[^']*')*>/g, function($0, $1) {

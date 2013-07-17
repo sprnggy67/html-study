@@ -22,7 +22,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class CanvasTests {
 
-	private static String BASE_URL = "http://localhost:8888/TemplateDesigner/designer.html";
+	private static String BASE_URL = "http://localhost:8888/TemplateDesigner/designer.html?test=true";
 	private WebDriver driver;
 
 	@Before

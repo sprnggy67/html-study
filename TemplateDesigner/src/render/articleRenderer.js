@@ -156,7 +156,10 @@ ds.ArticleRenderer._initClass = function() {
 			'{{if componentType==="body" tmpl="body"/}}' +
 			'{{if componentType==="image" tmpl="image"/}}' +
 			'{{if componentType==="flow" tmpl="flow"/}}' +
-			'{{if componentType==="grid" tmpl="grid"/}}',
+			'{{if componentType==="grid" tmpl="grid"/}}' +
+			'{{if componentType==="test" tmpl="test"/}}',
+		test: 
+			'test',
 		headline: 
 			'<h1 class="{{:~getClass(#data)}}"' +
 				'{{if uniqueID}}' +
@@ -200,7 +203,7 @@ ds.ArticleRenderer._initClass = function() {
 			'{{:realData.body}}' +
 			'</span>',
 		image: 
-			'<img class="{{:~getClass(#data)}}" style="width:100%;"' +
+			'<img class="{{:~getClass(#data)}}"' +
 				'{{if uniqueID}}' +
 					' id="{{:uniqueID}}" ' +
 				'{{/if}}' +

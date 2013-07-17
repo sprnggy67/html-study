@@ -1,9 +1,17 @@
-(function() {
+/**
+ * A set of functions which add runtime behaviour where necessary to the article renderer output
+ */
 
-console.info("Loaded renderRuntime.js");
+var ds = ds || {};
 
-function loaded() {
-	$(".link").click(tapToNavigate);
+ds.addRuntime = function() {
+	ds.addRuntimeInteraction();
+	ds.addRuntimeStyles();
+}
+
+ds.addRuntimeInteraction = function() {
+	$(".link").click(ds.tapToNavigate);
+
 	$(".scroll").each(function() {
 		myScroll = new iScroll(this,{ hideScrollbar:true, hscroll:false,
 		    onBeforeScrollStart: function ( e ) {
@@ -14,17 +22,41 @@ function loaded() {
 		    }
 		});
 	});
+
+	//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 }
 
-//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+ds.addRuntimeStyles = function() {
+	$(".gridData>img").each(function() {
+		// Get the aspect ratio of the div
+		var parentDiv = this.parentNode;
+		var refW = $(parentDiv).width();
+		var refH = $(parentDiv).height();
+		var refRatio = refW/refH;
 
-document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+		// Get the aspect ratio of the image
+		var imgW = $(this).width();
+		var imgH = $(this).height();
+		var imgRatio = imgW/imgH;
 
-document.addEventListener("refreshTemplate", loaded);
+		// Calculate the fill.
+		if ( imgRatio < refRatio ) { 
+			$(this).addClass("fillWidth");
+			var scalingFactor = refW / imgW;
+			var marginTop = - (imgH * scalingFactor - refH) / 2;
+			$(this).css('margin-top', marginTop +'px');
+		} else {
+			$(this).addClass("fillHeight");
+			var scalingFactor = refH / imgH;
+			var marginLeft = - (imgW * scalingFactor - refW) / 2;
+			$(this).css('margin-left', marginLeft +'px');
+		}
+	});
+	$(".flow>img").each(function() {
+		$(this).addClass("fillWidth");
+	});
+}
 
-function tapToNavigate() {
+ds.tapToNavigate = function() {
 	calliOSFunction("navigateTo", this.dataset.article_id);
 }
-
-}) ();
-

@@ -67,6 +67,17 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
+	it("should generate a test component", function() {
+		var renderer = new ds.ArticleRenderer();
+		var component = {
+			componentType:"test",
+		};
+		var expectedOutput = 'test';
+		var actualOutput = renderer.renderComponent(component, navigationArticle);
+		expect(actualOutput).toEqual(expectedOutput);
+	});
+
+
 	it("should generate the first headline component", function() {
 		var renderer = new ds.ArticleRenderer();
 		var component = {
@@ -149,7 +160,7 @@ describe("ds.ArticleRenderer", function() {
 			dataPath:"children",
 			dataIndex:0
 		};
-		var expectedOutput = '<img class="selectable" style="width:100%;" src="img1.jpg">';
+		var expectedOutput = '<img class="selectable" src="img1.jpg">';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -283,7 +294,7 @@ describe("ds.ArticleRenderer", function() {
 		var expectedOutput = '<div class="selectable">' +
 			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:0px; width:256px; height:256px;"><h1 class="selectable">h1</h1></div>' +
 			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:256px; width:256px; height:512px;"><span class="selectable">body1</span></div>' +
-			'<div class="gridData" style="position:absolute; overflow:hidden; left:256px; top:0px; width:768px; height:768px;"><img class="selectable" style="width:100%;" src="img1.jpg"></div>' +
+			'<div class="gridData" style="position:absolute; overflow:hidden; left:256px; top:0px; width:768px; height:768px;"><img class="selectable" src="img1.jpg"></div>' +
 			'</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
@@ -295,7 +306,7 @@ describe("ds.ArticleRenderer", function() {
 		var expectedOutput = '<div class="selectable">' +
 			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:0px; width:200px; height:200px;"><h1 class="selectable">h1</h1></div>' +
 			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:200px; width:200px; height:400px;"><span class="selectable">body1</span></div>' +
-			'<div class="gridData" style="position:absolute; overflow:hidden; left:200px; top:0px; width:600px; height:600px;"><img class="selectable" style="width:100%;" src="img1.jpg"></div>' +
+			'<div class="gridData" style="position:absolute; overflow:hidden; left:200px; top:0px; width:600px; height:600px;"><img class="selectable" src="img1.jpg"></div>' +
 			'</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle, { width:800, height:600 });
 		expect(actualOutput).toEqual(expectedOutput);
@@ -314,29 +325,23 @@ describe("ds.ArticleRenderer", function() {
 			columnGutter:10,
 			children: [
 				{
-					componentType:"headline",
-					dataPath:"children",
-					dataIndex:0,
+					componentType:"test",
 					position: { left:0, top:0, width:1, height:1 }
 				},
 				{
-					componentType:"body",
-					dataPath:"children",
-					dataIndex:0,
+					componentType:"test",
 					position: { left:0, top:1, width:1, height:1 },
 				},
 				{
-					componentType:"image",
-					dataPath:"children",
-					dataIndex:0,
+					componentType:"test",
 					position: { left:1, top:0, width:1, height:2 },
 				},
 			]
 		};
 		var expectedOutput = '<div class="selectable">' +
-			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:0px; width:245px; height:245px;"><h1 class="selectable">h1</h1></div>' +
-			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:255px; width:245px; height:245px;"><span class="selectable">body1</span></div>' +
-			'<div class="gridData" style="position:absolute; overflow:hidden; left:255px; top:0px; width:245px; height:500px;"><img class="selectable" style="width:100%;" src="img1.jpg"></div>' +
+			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:0px; width:245px; height:245px;">test</div>' +
+			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:255px; width:245px; height:245px;">test</div>' +
+			'<div class="gridData" style="position:absolute; overflow:hidden; left:255px; top:0px; width:245px; height:500px;">test</div>' +
 			'</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
