@@ -73,7 +73,7 @@ ds.Canvas.prototype.repaint = function() {
 	console.timeEnd("displayArticle");
 
 	console.time("addRuntime");
-	ds.addRuntime();
+	ds.addRuntimeStyles();
 	console.timeEnd("addRuntime");
 
 	// Update the selection.
