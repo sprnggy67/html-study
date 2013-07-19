@@ -147,7 +147,7 @@ describe("ds.ArticleRenderer", function() {
 			dataPath:"children",
 			dataIndex:0
 		};
-		var expectedOutput = '<span class="selectable">body1</span>';
+		var expectedOutput = '<span class="selectable" style="display:table-cell;">body1</span>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -160,7 +160,7 @@ describe("ds.ArticleRenderer", function() {
 			dataPath:"children",
 			dataIndex:0
 		};
-		var expectedOutput = '<span class="selectable" style="font-size:20px">body1</span>';
+		var expectedOutput = '<span class="selectable" style="display:table-cell;font-size:20px">body1</span>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -213,13 +213,13 @@ describe("ds.ArticleRenderer", function() {
 					dataIndex:0
 				},
 				{
-					componentType:"body",
+					componentType:"test",
 					dataPath:"children",
 					dataIndex:0
 				}
 			]
 		};
-		var expectedOutput = '<div class="selectable flow"><h1 class="selectable">h1</h1><span class="selectable">body1</span></div>';
+		var expectedOutput = '<div class="selectable flow"><h1 class="selectable">h1</h1>test</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -235,13 +235,13 @@ describe("ds.ArticleRenderer", function() {
 					dataIndex:1
 				},
 				{
-					componentType:"body",
+					componentType:"test",
 					dataPath:"children",
 					dataIndex:1
 				}
 			]
 		};
-		var expectedOutput = '<div class="selectable flow"><h1 class="selectable">h2</h1><span class="selectable">body2</span></div>';
+		var expectedOutput = '<div class="selectable flow"><h1 class="selectable">h2</h1>test</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -254,19 +254,14 @@ describe("ds.ArticleRenderer", function() {
 			componentType:"flow",
 			children: [
 				{
-					componentType:"headline",
-					dataPath:"children",
-					dataIndex:0
-				},
-				{
-					componentType:"body",
+					componentType:"test",
 					dataPath:"children",
 					dataIndex:0
 				}
 			],
 			link:true
 		};
-		var expectedOutput = '<div class="selectable flow link" data-article_id="001.1"><h1 class="selectable">h1</h1><span class="selectable">body1</span></div>';
+		var expectedOutput = '<div class="selectable flow link" data-article_id="001.1">test</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
 		expect(actualOutput).toEqual(expectedOutput);
 	});
@@ -305,7 +300,7 @@ describe("ds.ArticleRenderer", function() {
 		var component = gridComponent;
 		var expectedOutput = '<div class="selectable">' +
 			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:0px; width:256px; height:256px;"><h1 class="selectable">h1</h1></div>' +
-			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:256px; width:256px; height:512px;"><span class="selectable">body1</span></div>' +
+			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:256px; width:256px; height:512px;"><span class="selectable" style="display:table-cell;">body1</span></div>' +
 			'<div class="gridData" style="position:absolute; overflow:hidden; left:256px; top:0px; width:768px; height:768px;"><img class="selectable" src="img1.jpg"></div>' +
 			'</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle);
@@ -317,7 +312,7 @@ describe("ds.ArticleRenderer", function() {
 		var component = gridComponent;
 		var expectedOutput = '<div class="selectable">' +
 			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:0px; width:200px; height:200px;"><h1 class="selectable">h1</h1></div>' +
-			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:200px; width:200px; height:400px;"><span class="selectable">body1</span></div>' +
+			'<div class="gridData" style="position:absolute; overflow:hidden; left:0px; top:200px; width:200px; height:400px;"><span class="selectable" style="display:table-cell;">body1</span></div>' +
 			'<div class="gridData" style="position:absolute; overflow:hidden; left:200px; top:0px; width:600px; height:600px;"><img class="selectable" src="img1.jpg"></div>' +
 			'</div>';
 		var actualOutput = renderer.renderComponent(component, navigationArticle, { width:800, height:600 });
@@ -402,16 +397,14 @@ describe("ds.ArticleRenderer", function() {
 		expect(actualOutput).toEqual(expectedOutput);
 	});
 
-	it("should generate a simple HTML page with a headline component", function() {
+	it("should generate a simple HTML page with a test component", function() {
 		var renderer = new ds.ArticleRenderer();
 		var template = {
 			targets: [
 				{
 					name:"default",
 					layout: {
-						componentType:"headline",
-						dataPath:"children",
-						dataIndex:0
+						componentType:"test",
 					}
 				}
 			]
@@ -421,7 +414,7 @@ describe("ds.ArticleRenderer", function() {
 				ds.ArticleRenderer.BOILER_PLATE +
 			'</head>' +
 			'<body>' +
-				'<h1 class="selectable">h1</h1>' +
+				'test' +
 			'</body>' + 
 			'</html>';
 		var actualOutput = renderer.renderPage(template, navigationArticle);
@@ -452,7 +445,7 @@ describe("ds.ArticleRenderer", function() {
 				ds.ArticleRenderer.BOILER_PLATE +
 			'</head>' +
 			'<body>' +
-				'<span class="selectable">body1</span>' +
+				'<span class="selectable" style="display:table-cell;">body1</span>' +
 			'</body>' + 
 			'</html>';
 		var actualOutput = renderer.renderPage(template, navigationArticle, { orientation:"landscape"} );
