@@ -89,11 +89,17 @@ ds.ArticleRenderer.prototype.renderPage = function(template, article, options) {
 	orientation: portrait or landscape
 	width: in pixels
 	height: in pixels
+	horizontalScroll: a boolean to indicate if this is a horizontal iscroll rendering
  }
  */
 ds.ArticleRenderer.prototype.renderBody = function(template, article, options) {
 	var layout = ds.template.getActiveLayout(template, options);
-	return this.renderComponent(layout, article, options);
+	if (options && options.horizontalScroll)
+		layout.horizontalScroll = true;
+	var result = this.renderComponent(layout, article, options);
+	if (options && options.horizontalScroll)
+		layout.horizontalScroll = null;
+	return result;
 };
 
 /**
@@ -289,6 +295,8 @@ ds.ArticleRenderer._initClass = function() {
 				classes = classes + " flow";
 			} if (component.link) {
 				classes = classes + " link";
+			} if (component.horizontalScroll) {
+				classes += " horizontalScroll";
 			}
 			return classes;
 		},
