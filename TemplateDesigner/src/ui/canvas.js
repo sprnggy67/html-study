@@ -19,7 +19,7 @@ ds.Canvas = function(rootElementID, template, activeLayout, sampleArticle, typeL
 	this.selection = null;
 	this.onComponentSelected = onComponentSelected;
 	this.activeArticleIndex = 0;
-	this.debug = true;
+	this.debug = false;
 }
 
 /**

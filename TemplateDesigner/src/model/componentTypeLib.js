@@ -44,12 +44,14 @@ ds.ComponentTypeLib.prototype.loadRegistry = function() {
 	// Flow
 	component = new ds.ComponentType('flow', 'Flow', ds.ComponentTypeLib.createFlow);
 	component.addPropertyDescriptor("backgroundColor", "Background color", ds.ComponentType.PROPERTY_COLOR);
+	component.addPropertyDescriptor("style", "Style (font-size:20px;)");
 	component.addPropertyDescriptor("scroll", "Scroll", ds.ComponentType.PROPERTY_BOOLEAN);
 	this.add(component);
 
 	// Grid
 	component = new ds.ComponentType('grid', 'Grid', ds.ComponentTypeLib.createGrid);
 	component.addPropertyDescriptor("backgroundColor", "Background color", ds.ComponentType.PROPERTY_COLOR);
+	component.addPropertyDescriptor("style", "Style (font-size:20px;)");
 	component.addPropertyDescriptor("rows", "Rows");
 	component.addPropertyDescriptor("columns", "Columns");
 	component.addPropertyDescriptor("rowGutter", "Row Gutter");
